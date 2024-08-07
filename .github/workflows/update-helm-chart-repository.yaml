@@ -32,7 +32,7 @@ jobs:
       contents: write
       packages: write
     steps:
-    - name: Git Checkout
+    - name: Git Checkout main
       uses: actions/checkout@v2
 
     - name: Configure Git
@@ -49,6 +49,11 @@ jobs:
       uses: helm/chart-releaser-action@v1.6.0
       env:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+    - name: Git Checkout gh-pages
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
 
     - name: Push Helm to ${{ github.repository_owner }} GitHub OCI Registry
       run: |
