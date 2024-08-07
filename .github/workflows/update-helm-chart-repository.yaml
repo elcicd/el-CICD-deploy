@@ -32,8 +32,16 @@ jobs:
       contents: write
       packages: write
     steps:
-    - name: Git Checkout main
+    - name: Git Checkout gh-pages
       uses: actions/checkout@v2
+
+    - name: Merge main -> gh-pages
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        from_branch: main
+        target_branch: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Configure Git
       run: |
@@ -45,23 +53,28 @@ jobs:
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-    - name: Run chart-releaser
-      uses: helm/chart-releaser-action@v1.6.0
-      env:
-        CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
     - name: Push Helm to ${{ github.repository_owner }} GitHub OCI Registry
       run: |
         set -ex
         echo ${{secrets.GITHUB_TOKEN}} | helm registry login -u NOT_NEEDED --password-stdin ghcr.io
 
         cd charts
+        git rm -f *.tgz
+
         for CHART_DIR in $(ls -d */)
         do
           helm package --dependency-update ./${CHART_DIR} -d .
+          rm -rf ./${CHART_DIR}/charts
+          rm -f ./${CHART_DIR}/Chart.lock
 
           CHART_VERSION=$(grep '^version:' ./${CHART_DIR}/Chart.yaml | awk '{print $2}' | tr -d '"')
           CHART_NAME=$(grep '^name:' ./${CHART_DIR}/Chart.yaml | awk '{print $2}')
 
-          helm push ${CHART_NAME}-${CHART_VERSION}.tgz oci://ghcr.io/${{ github.repository_owner }} 
+          helm push ${CHART_NAME}-${CHART_VERSION}.tgz oci://ghcr.io/elcicd
         done
+
+        helm repo index .
+
+        git add *.tgz index.yaml
+        git commit -m "Update Helm Index Workflow: updating packages and index of all elCicd Helm charts"
+        git push
