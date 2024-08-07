@@ -59,7 +59,7 @@ jobs:
         echo ${{secrets.GITHUB_TOKEN}} | helm registry login -u NOT_NEEDED --password-stdin ghcr.io
 
         cd charts
-        git rm -f *.tgz
+        git rm -f *.tgz || :
 
         for CHART_DIR in $(ls -d */)
         do
