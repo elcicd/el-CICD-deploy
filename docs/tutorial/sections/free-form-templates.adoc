@@ -27,7 +27,7 @@ Converting an already working Helm chart is may not be feasible or is probably n
 kustomization.yaml files can also be templated with el-CICD Chart and piped to Kustomize.
 
 [discrete]
-==== Create and save the following file as `elcicd-demo-4.yaml`
+==== Create and save the following file as `elcicd-demo-5.yaml`
 
 [source,YAML,linenums]
 ----

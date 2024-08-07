@@ -27,7 +27,7 @@ The part of the tutorial will demonstrate deploying a default English and a MULT
 [discrete]
 ==== Create and save the following file as `elcicd-demo-4.yaml`
 
-[source,YAML]
+[source,YAML,linenums]
 ----
 elCicdDefs:
   MULTI_LINGUAL_PROFILE: MULTI_LINGUAL
