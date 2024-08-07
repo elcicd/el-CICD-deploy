@@ -1,0 +1,95 @@
+apiVersion: v1
+entries:
+  elcicd-chart:
+  - apiVersion: v2
+    created: "2024-08-07T00:45:53.404964846Z"
+    dependencies:
+    - name: elcicd-library
+      repository: file://../elcicd-library
+      version: 0.1.0
+    description: A generic helm chart used to deploy any size group of components
+      onto a kubernetes cluster.
+    digest: d9a5c31d7d2b3aff3761f006c05e454b64a720efdcb6aca8b886f9c3118695bd
+    name: elcicd-chart
+    type: application
+    urls:
+    - elcicd-chart-0.1.0.tgz
+    version: 0.1.0
+  elcicd-common:
+  - apiVersion: v2
+    created: "2024-08-07T00:45:53.405117083Z"
+    description: A library chart with basic, common functionality shared by all elCicd
+      charts.
+    digest: ce3887bb27d13a3f16505320c52a6a4978e217c2c4de64c5287e421440720f9a
+    keywords:
+    - generic
+    - parameterized
+    - profiles
+    name: elcicd-common
+    sources:
+    - https://github.com/elcicd/el-CICD-deploy/tree/main/charts
+    type: library
+    urls:
+    - elcicd-common-0.1.0.tgz
+    version: 0.1.0
+  elcicd-kubernetes:
+  - apiVersion: v2
+    created: "2024-08-07T00:45:53.405655978Z"
+    description: A library chart with the a complete set of Kubernetes resources that
+      might be needed for application deployments. Built to be used in conjunction
+      with the elcicd-renderer for rendering as a general Helm-based deployment solution
+      across multiple environments.
+    digest: d709091ccf60515f5de3ba8deab0a6feb3bb40cb42be7b8cbb5f911a1e068ca6
+    keywords:
+    - generic
+    - parameterized
+    - profiles
+    name: elcicd-kubernetes
+    sources:
+    - https://github.com/elcicd/el-CICD-deploy/tree/main/charts
+    type: library
+    urls:
+    - elcicd-kubernetes-0.1.0.tgz
+    version: 0.1.0
+  elcicd-library:
+  - apiVersion: v2
+    created: "2024-08-07T00:45:53.407319139Z"
+    dependencies:
+    - name: elcicd-renderer
+      repository: file://../elcicd-renderer
+      version: 0.1.0
+    - name: elcicd-kubernetes
+      repository: file://../elcicd-kubernetes
+      version: 0.1.0
+    - name: elcicd-common
+      repository: file://../elcicd-common
+      version: 0.1.0
+    description: 'A generic helm library chart that can be leveraged to deploy any
+      size group of components onto a kubernetes cluster. Library charts included:
+      elcicd-renderer, elcicd-kubernetes, elcicd-common.'
+    digest: 3cdcd64dd52f2a5e4178303b7b29da1e80e7682c10a9cacf54b37ef02dcfad1c
+    name: elcicd-library
+    type: library
+    urls:
+    - elcicd-library-0.1.0.tgz
+    version: 0.1.0
+  elcicd-renderer:
+  - apiVersion: v2
+    created: "2024-08-07T00:45:53.407703753Z"
+    description: A chart meant to be added as a dependency for rendering parameterized
+      values.yml files with profiles.
+    digest: 196be2cb60e769fb7e8200a0956bbdb3f05edfb452690ba692a046c95eee7016
+    keywords:
+    - values.yml
+    - parameterized
+    - profiles
+    - parameters
+    - variables
+    name: elcicd-renderer
+    sources:
+    - https://github.com/elcicd/el-CICD-deploy/tree/main/charts
+    type: library
+    urls:
+    - elcicd-renderer-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-08-07T00:45:53.40455279Z"
