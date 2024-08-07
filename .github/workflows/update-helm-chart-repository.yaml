@@ -34,6 +34,8 @@ jobs:
     steps:
     - name: Git Checkout gh-pages
       uses: actions/checkout@v2
+      with:
+        ref: gh-pages
 
     - name: Merge main -> gh-pages
       uses: devmasx/merge-branch@master
@@ -47,6 +49,7 @@ jobs:
       run: |
         git config --global user.name "elcicd"
         git config --global user.email "elcicd@donotreply.org"
+        git pull
 
     - name: Helm Installation
       uses: azure/setup-helm@v3
