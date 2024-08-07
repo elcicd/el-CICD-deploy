@@ -50,18 +50,15 @@ jobs:
       env:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-    - name: Git Checkout gh-pages
-      uses: actions/checkout@v2
-      with:
-        ref: gh-pages
-
     - name: Push Helm to ${{ github.repository_owner }} GitHub OCI Registry
       run: |
         set -ex
+        echo ${{secrets.GITHUB_TOKEN}} | helm registry login -u NOT_NEEDED --password-stdin ghcr.io
+
         cd charts
         for CHART_DIR in $(ls -d */)
         do
-          echo ${{secrets.GITHUB_TOKEN}} | helm registry login -u NOT_NEEDED --password-stdin ghcr.io
+          helm package --dependency-update ./${CHART_DIR} -d .
 
           CHART_VERSION=$(grep '^version:' ./${CHART_DIR}/Chart.yaml | awk '{print $2}' | tr -d '"')
           CHART_NAME=$(grep '^name:' ./${CHART_DIR}/Chart.yaml | awk '{print $2}')
