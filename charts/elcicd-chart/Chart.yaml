@@ -8,6 +8,12 @@ type: application
 version: "0.1.0"
 
 dependencies:
-- name: elcicd-library
+- name: elcicd-renderer
   version: 0.1.0
-  repository: file://../elcicd-library
+  repository: file://../elcicd-renderer
+- name: elcicd-kubernetes
+  version: 0.1.0
+  repository: file://../elcicd-kubernetes
+- name: elcicd-common
+  version: 0.1.0
+  repository: file://../elcicd-common
