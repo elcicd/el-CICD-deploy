@@ -3,8 +3,7 @@
 Add and update the el-CICD Chart repository.  This will pull the chart from the GitHub repository to your local machine for use.
 
 ```
-$ helm repo add elcicd-charts \
-  https://raw.githubusercontent.com/elcicd/el-CICD-deploy/main/charts/
+$ helm repo add elcicd-charts https://elcicd.github.io/el-CICD-deploy/charts/
 $ helm repo update
 ```
 Output::
