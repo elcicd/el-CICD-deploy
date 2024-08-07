@@ -315,6 +315,9 @@
     {{- include "elcicd-renderer.deepCopyDict" (list $.Values.elCicdDefaults $template.elCicdDefaults) }}
 
     {{- include "elcicd-renderer.replaceVarRefsInMap" (list $ $template $tplElCicdDefs list dict) }}
+    {{- if and ($template.objName) (not (regexMatch $.Values.__EC_OBJNAME_REGEX $template.objName)) }}
+      {{- fail (printf "objName \"%s\" does match regex naming requirements , \"%s\"" $objName $.Values.__EC_PROFILE_NAMING_REGEX) }}
+    {{- end }}
 
     {{- $_ := set $template "tplElCicdDefs" $tplElCicdDefs }}
   {{- end }}
