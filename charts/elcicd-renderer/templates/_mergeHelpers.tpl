@@ -49,7 +49,7 @@
 
   {{- range $profile := $.Values.elCicdProfiles }}
     {{- if not (regexMatch $.Values.__EC_PROFILE_REGEX $profile) }}
-      {{- fail (printf "profile \"%s\" does match regex naming requirements , \"%s\"" $profile $.Values.__EC_PROFILE_REGEX) }}
+      {{- fail (printf "profile \"%s\" does match regex naming requirements, \"%s\"" $profile $.Values.__EC_PROFILE_REGEX) }}
     {{- end }}
     {{- $profileDefs := get $elCicdDefsMap (printf "elCicdDefs|%s" $profile }}
     {{- include "elcicd-renderer.deepCopyDict" (list $profileDefs $destElCicdDefs) }}

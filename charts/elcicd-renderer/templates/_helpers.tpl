@@ -25,6 +25,8 @@
 {{- define "elcicd-renderer.initElCicdRenderer" }}
   {{- $ := . }}
 
+  {{- include "elcicd-renderer.setInternalConstants" $ }}
+
   {{- $_ := set $.Values "global" ($.Values.global | default dict) }}
 
   {{- $_ := set $.Values "elCicdDefaults" ($.Values.elCicdDefaults | default dict) }}
@@ -37,26 +39,24 @@
 
   {{- if or $.Values.elCicdProfiles $.Values.global.elCicdProfiles }}
     {{- $_ := set $.Values "elCicdProfiles" ($.Values.global.elCicdProfiles | default $.Values.elCicdProfiles | default list) }}
+    {{- $_ := set $.Values "elCicdProfiles" (compact $.Values.elCicdProfiles) }}
     {{- if not (kindIs "slice" $.Values.elCicdProfiles) }}
       {{- fail (printf "Profiles must be specified as an array: %s" $.Values.elCicdProfiles) }}
     {{- end }}
   {{- end }}
 
   {{- include "elcicd-renderer.gatherElCicdDefaults" $ }}
-      {{- include "elcicd-kubernetes.initElCicdDefaults" $ }}
 
   {{- range $dep := $.Chart.Dependencies }}
     {{- if (eq $dep.Name "elcicd-kubernetes") }}
       {{- include "elcicd-kubernetes.initElCicdDefaults" $ }}
     {{- end }}
   {{- end }}
-
-  {{- include "elcicd-renderer.setInternalConstants" $ }}
 {{- end }}
 
 {{/*
   ======================================
-  elcicd-renderer.setECvalues
+  elcicd-renderer.setInternalConstants
   ======================================
 */}}
 {{- define "elcicd-renderer.setInternalConstants" }}
@@ -103,7 +103,7 @@
   {{- range $profile := $.Values.elCicdProfiles }}
     {{- $profileDefaultsMap := (get $.Values (printf "elCicdDefaults-%s" $profile)) }}
     {{- if $profileDefaultsMap }}
-      {{- $_ set $.Values "elCicdProfiles"  (mergeOverwrite $.Values.elCicdDefaults) }}
+      {{- $_ set $.Values "elCicdProfiles" (mergeOverwrite $.Values.elCicdDefaults) }}
     {{- end }}
   {{- end }}
 {{- end }}
