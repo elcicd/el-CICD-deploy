@@ -51,34 +51,34 @@
     {{- if not (regexMatch $.Values.__EC_PROFILE_REGEX $profile) }}
       {{- fail (printf "profile \"%s\" does match regex naming requirements, \"%s\"" $profile $.Values.__EC_PROFILE_REGEX) }}
     {{- end }}
-    {{- $profileDefs := get $elCicdDefsMap (printf "elCicdDefs|%s" $profile) }}
+    {{- $profileDefs := get $elCicdDefsMap (printf "elCicdDefs-%s" $profile) }}
     {{- include "elcicd-renderer.deepCopyDict" (list $profileDefs $destElCicdDefs) }}
   {{- end }}
 
   {{- if ne $baseObjName $objName }}
-    {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs|%s" $baseObjName) }}
+    {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s" $baseObjName) }}
     {{- include "elcicd-renderer.deepCopyDict" (list $baseObjNameDefs $destElCicdDefs) }}
   {{- end }}
 
   {{- if $objName }}
-    {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs|%s" $objName) }}
+    {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s" $objName) }}
     {{- include "elcicd-renderer.deepCopyDict" (list $objNameDefs $destElCicdDefs) }}
   {{- end }}
 
   {{- range $profile := $elCicdDefsMap.elCicdProfiles }}
     {{- if ne $baseObjName $objName }}
-      {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs|%s|%s" $profile $baseObjName) }}
+      {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $profile $baseObjName) }}
       {{- include "elcicd-renderer.deepCopyDict" (list $baseObjNameDefs $destElCicdDefs) }}
 
-      {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs|%s|%s" $baseObjName $profile) }}
+      {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $baseObjName $profile) }}
       {{- include "elcicd-renderer.deepCopyDict" (list $baseObjNameDefs $destElCicdDefs) }}
     {{- end }}
 
     {{- if $objName }}
-      {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs|%s|%s" $profile $objName) }}
+      {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $profile $objName) }}
       {{- include "elcicd-renderer.deepCopyDict" (list $objNameDefs $destElCicdDefs) }}
 
-      {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs|%s|%s" $objName $profile) }}
+      {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $objName $profile) }}
       {{- include "elcicd-renderer.deepCopyDict" (list $objNameDefs $destElCicdDefs) }}
     {{- end }}
   {{- end }}
