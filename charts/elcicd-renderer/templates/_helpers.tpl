@@ -25,8 +25,6 @@
 {{- define "elcicd-renderer.initElCicdRenderer" }}
   {{- $ := . }}
 
-  {{- include "elcicd-renderer.setInternalConstants" $ }}
-
   {{- $_ := set $.Values "global" ($.Values.global | default dict) }}
 
   {{- $_ := set $.Values "elCicdDefaults" ($.Values.elCicdDefaults | default dict) }}
@@ -52,6 +50,8 @@
       {{- include "elcicd-kubernetes.initElCicdDefaults" $ }}
     {{- end }}
   {{- end }}
+
+  {{- include "elcicd-renderer.setInternalConstants" $ }}
 {{- end }}
 
 {{/*
@@ -103,7 +103,7 @@
   {{- range $profile := $.Values.elCicdProfiles }}
     {{- $profileDefaultsMap := (get $.Values (printf "elCicdDefaults-%s" $profile)) }}
     {{- if $profileDefaultsMap }}
-      {{- $_ set $.Values "elCicdProfiles" (mergeOverwrite $.Values.elCicdDefaults) }}
+      {{- $_ set $.Values "elCicdProfiles"  (mergeOverwrite $.Values.elCicdDefaults) }}
     {{- end }}
   {{- end }}
 {{- end }}
