@@ -6,13 +6,13 @@
 
 .Features demonstrated
 ****
-* Creating compound templates by combining el-CICD Chart templates.
-* Leveraging helper attributes within compound el-CICD Chart templates.
+* Creating more concise compound templates by combining el-CICD Chart templates.
+* Leveraging shared helper attributes within compound el-CICD Chart templates.
 ****
 
 In <<el-CICD Chart Templates>>, we demonstrated how concise and modular el-CICD Chart templates can be when defining deployments.  We will now show how to combine el-CICD Chart templates into single, __compound template__ for even more concise deployment definitions.
 
-TIP: **Any el-CICD Chart built-in template can be compounded into a single template definition as long as any overlapping helper attributes refer to the same data.**
+TIP: **Any el-CICD Chart built-in template can be compounded into a single template definition as long as any overlapping helper attributes refer to the same, basic data.**
 
 [discrete]
 ==== Create and save the following file as `elcicd-demo-2.yaml`
@@ -27,14 +27,14 @@ elCicdTemplates:
   targetPort: 8080 # <2>
 ----
 
-<1> Compound templates are listed under the `templateNames` attribute, versus the `templateName` for a single attribute.
-.. Since YAML is superset of JSON, we can use JSON list notation if we wish.
+<1> Compound templates are listed under the `templateNames` attribute, versus `templateName` for a single attribute.
+.. Since YAML is superset of JSON, JSON list notation is acceptable.
 .. The `templateName` attribute is merely a convenience when rendering a single template.
 <2> In compound templates, all helper attributes are shared among the el-CICD templates.
-.. `image` is unique to the deployment template.
-.. `host` is unique to the ingress el-CICD Chart template.
+.. `image` is unique to the `deployment` template.
+.. `host` is unique to the `ingress` el-CICD Chart template.
 .. `port` is shared and used by all three listed el-CICD Chart templates.
-.. `targetPort` is shared by the service and deployment templates, and take precedence over the `port` attribute when defined.
+.. `targetPort` is shared by the `service` and `deployment` templates, and take precedence over the `port` attribute when defined.
 
 NOTE: In <<el-CICD Chart Templates>>, we promised to explain why we contrived a different port and target port as a tutorial contrivance, and it was to demonstrate how overlapping helper attributes would behave in compound templates.
 
@@ -43,9 +43,8 @@ NOTE: In <<el-CICD Chart Templates>>, we promised to explain why we contrived a 
 
 .What to expect
 ****
-* An httpd Pod will be created and accessible from outside the cluster using a single, compound el-CICD Chart templates.
-* The el-CICD Chart templates used will include a single, compound single, compound el-CICD Chart template created from the deployment, service, and ingress.
 * A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.
+* An httpd Pod will be created and accessible in the browser from outside the cluster.
 * The httpd server's test page will be reachable and visible in the browser.
 ****
 

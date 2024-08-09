@@ -6,10 +6,9 @@
 
 .Features demonstrated
 ****
-* Templating deployment definitions without the use of Helm templates, and only using values.yaml file(s).
 * Defining arbitrary el-CICD Chart variables in deployment definitions.
-* Using el-CICD Chart variables as templates.
-* Easily mounting ConfigMaps in Pods with the projectedVolumes helper attribute.
+* Using el-CICD Chart variables as YAML templates.
+* Easily mounting ConfigMaps in Pods with the `projectedVolumes` helper attribute.
 ****
 
 Both <<el-CICD Chart Templates>> and <<Compound el-CICD Chart Templates>> made use of el-CICD Chart's built-in variables to help define their host domain.  This part of the tutorial will focus on user-defined variables.
@@ -42,46 +41,43 @@ elCicdTemplates:
   image: registry.redhat.io/rhel8/httpd-24
   host: httpd-$<NAME_SPACE>.apps-crc.testing
   projectedVolumes: # <2>
-  - name: $<HELM_RELEASE_NAME>
+  - name: $<HELM_RELEASE_NAME> # <3>
     mountPath: /var/www/html/
     configMaps:
       $<INDEX_HTML_NAME>: {}
 
 - templateName: configMap
-  objName: $<INDEX_HTML_NAME> # <3>
+  objName: $<INDEX_HTML_NAME> # <4>
   data:
-    $<OBJ_NAME>: $<HTML_PAGE> # <3>
+    $<OBJ_NAME>: $<HTML_PAGE> # <4>
 ----
 
 <1> All el-CICD Chart variables are defined under maps starting with `elCicdDefs`.
 .. Keys in the `elCicdDefs` map are the names of the variables.
-.. By convention and similar to shell scripting, variable names are ALL CAPS snake case.
-.. Defining variables and their can be any valid YAML.
+.. Variables and their values can be any valid YAML.
+.. By convention and similar to shell scripting, variable names use UPPER_SNAKE_CASE.
 .. Variables are referenced using the syntax `$<VARIABLE_NAME>`.
-.. Variables values can reference other variables.
+.. Variables can references other variables.
 ... The order variables are declared is irrelevant.
-... Variable names can be dynamically generated
-.... `$<HELM_RELEASE_NAME>` is another built-in el-CICD Chart variable that corresponds to `.Release.Name` in a Helm template.
-.... $<HELM_RELEASE_NAME>_foo: some-value` will generate a new value derived from the name of the release.
+... Variable names can be dynamically generated.
 <2> `projectedVolumes` is a helper attribute for generating https://kubernetes.io/docs/concepts/storage/projected-volumes/[projectedVolumes,window=read-later].
 .. In this example it will generate a `volume` entry for ConfigMap in the Deployment.
-.. It will also create a volumeMount of the `volume` on the container at the given `mountPath`.
-.. Per the projectedVolume standard, any number of ConfigMaps, Secrets, etc., can be listed.
-<3> `objName` is a helper attribute that will render as the name of a resource or resources; i.e.`metadata.name`.
+.. It will also create a `volumeMount` of the `volume` in the container definition.
+<3> `$<HELM_RELEASE_NAME>` is another built-in el-CICD Chart variable that corresponds to `.Release.Name` in a Helm template.
+<4> `objName` is a helper attribute that will render as the name of a resource or resources; i.e.`metadata.name`.
 .. `objName` must follow the same naming rules as `.metadata.name`.
 .. `$<OBJ_NAME>` is another built-in el-CICD Chart variable referring to the el-CICD Chart template's objName in which it is realized.
-.. `objName` and `OBJ_NAME` will default to the chart's release name, `HELM_RELEASE_NAME`, if left undefined by the user.
+.. `objName` and `OBJ_NAME` will default to the chart's release name, `$<HELM_RELEASE_NAME>`, if left undefined by the user.
 
 [discrete]
 ==== Tutorial steps
 
 .What to expect
 ****
-* An httpd Pod will be created and accessible from outside the cluster using a single, compound el-CICD Chart templates.
-* The el-CICD Chart templates used will include a single, compound single, compound el-CICD Chart template created from the deployment, service, and ingress.
+* An httpd Pod will be created and accessible in the browser from outside the cluster.
 * A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.
-* The index.html web page will be generated from an template made up of multiple el-CICD Chart variables. 
-* A ConfigMap containing generated index.html file will be deployed to the cluster and mounted inside the httpd Pod, and be visible within the browser.
+* An index.html web page will be generated from multiple el-CICD Chart variables. 
+* A ConfigMap containing the generated index.html file will be deployed to the cluster, mounted inside the httpd Pod, and be visible within the browser.
 ****
 
 . {empty}

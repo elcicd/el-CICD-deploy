@@ -27,15 +27,15 @@ Software and tools required::
 
 This tutorial was written and tested on https://github.com/crc-org/crc[CRC,window=read-later], a local OKD/OpenShift cluster provided by Red Hat for developer testing, and thus all URL's in the tutorial will use the wildcard domain `*.app-crc.testing`.  Other desktop options for development testing of Kubernetes clusters like https://github.com/kubernetes/minikube[minikube,window=read-later] or https://kind.sigs.k8s.io/[kind,window=read-later] will work equally well.  Any Kubernetes compatible cluster will suffice for running the tutorial, as long as internet access is available to pull el-CICD Chart and the test image.  You will need to adjust your endpoint URL's to your own cluster's wildcard if not using CRC.
 
-The tutorial will focus on deploying the https://httpd.apache.org/[Apache Web Server,window=read-later] using https://catalog.redhat.com/software/containers/ubi8/httpd-24/6065b844aee24f523c207943[Red Hat's official image,window=read-later] and will not deploy Secrets, so that whether you are deploying on vanilla Kubernetes or a more security conscious cluster like OpenShift this tutorial will run smoothly with only basic developer permissions required.
+The tutorial will mostly focus on deploying the https://httpd.apache.org/[Apache Web Server,window=read-later] using https://catalog.redhat.com/software/containers/ubi8/httpd-24/6065b844aee24f523c207943[Red Hat's official image,window=read-later] and will not deploy Secrets, so that whether you are deploying on vanilla Kubernetes or a more security conscious cluster like OpenShift this tutorial will run smoothly with only basic developer permissions required.
 
 include::sections/overview.adoc[]
 
 == Tutorial
 
-This tutorial will demonstrate how the el-CICD Chart can make defining and templating Kubernetes deployment definitions, easier, more readable, and more concise as well as directly supporting configuration management.
+This tutorial will demonstrate how el-CICD Chart can make defining and templating Kubernetes deployment definitions, easier, more readable, and more concise as well as directly supporting configuration management.
 
-IMPORTANT: All commands used below will refer to `kubectl`, but if on OpenShift `oc` will work just as well.
+IMPORTANT: **All commands used below will refer to `kubectl`, but if on OpenShift `oc` will work just as well.**
 
 include::sections/helm-repo-add-update.adoc[]
 
