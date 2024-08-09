@@ -1,6 +1,6 @@
 == Overview
 
-Helm is an excellent package management tool for Kubernetes, but it falls short when it comes to defining Kubernetes manifests.  Creating templates in Helm can be difficult to learn and master, and it provides no support for basic Kubernetes resources or configuration management.
+Helm is an excellent package management tool for Kubernetes, but it falls short when it comes to defining Kubernetes manifests.  Creating templates in Helm can be difficult to learn let alone master, and it provides no support for basic Kubernetes resources or configuration management.
 
 === Starter Helm chart
 
@@ -18,7 +18,7 @@ Go Template syntax (everything between double-brackets) and the supporting Sprig
 
 Brittle::
 
-Many common deployment practices aren't supported; e.g. mounting a ConfigMap or defining environment variables in the container.  Deployments across multiple environments isn't supported; e.g. during development or testing. This means structural changes will almost certainly be required.
+Many common deployment practices aren't directly supported; e.g. mounting a ConfigMap or defining environment variables in a container.  Deployments across multiple environments aren't supported; e.g. during development or testing. This means structural changes will almost certainly be required.
 
 It's code::
 
@@ -30,18 +30,20 @@ el-CICD Chart was created with the intention of leveraging all the package manag
 
 Simpler::
 
-Defining and templating deployment definitions should be simple and easy.  Beginners should be able to quickly get to work with little effort.  Experts should be able to define very complex deployments without fighting the tool that will define it.  Both should be able to read deployment definitions and templates easily with minimal training.  Deployment definitions and templates should NOT require testing outside of the context of what is being deployed.  Templates should be easy, modular, and intuitive to define.
+Defining and templating deployment definitions should be simple and easy.  Beginners should be able to quickly get to work with little effort.  Experts should be able to define very complex deployments without fighting the tool that will define it.  Users of any level of experience should be able to read deployment definitions and templates easily with minimal training.  Deployment definitions and templates should NOT require testing outside of the context of what is being deployed.  Templates should be easy, modular, and intuitive to define.
+
+TIP: **In el-CICD Chart parlance, the collection of values.yaml file(s) are also referred to as __deployment definitions__.**
 
 More concise::
 
-Follow the https://en.wikipedia.org/wiki/Don%27t_repeat_yourself[DRY (Don't Repeat Yourself) Principle,window=read-later] and aggressively and easily support and promote reuse of deployment definitions and templates.  As much as possible, define basic Kubernetes resources with reasonable defaults deployment definitions and templates are confined as much as possible to the problem at hand.
+Follow the https://en.wikipedia.org/wiki/Don%27t_repeat_yourself[DRY (Don't Repeat Yourself) Principle,window=read-later] aggressively, and promote reuse of deployment definitions and templates.  As much as possible, define basic Kubernetes resources with reasonable defaults so deployment definitions and templates are confined as much as possible to the problem at hand.
 
 Support configuration management::
 
-Deployments of applications in different configurations and environments is standard practice whether in development (e.g. dev to QA to prod) or in production (e.g. deploying to different locales with different languages and/or regulatory regimes to support).  To that end, flexible configuration management within deployment definitions should be easily defined and supported.
+Deployments of applications in different configurations and environments is standard practice whether in development or production; e.g. dev to test to prod, or deploying to different locales with different languages and/or regulatory regimes to support, respectively.  To that end, flexible configuration management within deployment definitions should be easily defined and supported.
 
 Extensible::
 
-Kubernetes is very extensible, as the abundance of https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resource Definitions,window=read-later] illustrates.  Deployment definitions should be able include all of them easily without requiring new code.
+Kubernetes is very extensible, as the abundance of https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resource Definitions,window=read-later] illustrates.  Deployment definitions should be able include all of them easily without requiring new Helm template code.
 
 The following tutorial will demonstrate how el-CICD Chart realizes these enhancements.

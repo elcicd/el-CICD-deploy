@@ -9,8 +9,6 @@ pod/elcicd-chart-demo-878f4b9d5-ng28g   1/1     Running   0          3m49s
 
 NAME                                 DATA   AGE
 configmap/index.html                 1      3m49s
-configmap/kube-root-ca.crt           1      2d
-configmap/openshift-service-ca.crt   1      2d
 
 NAME                        TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
 service/elcicd-chart-demo   ClusterIP   10.217.5.142   <none>        8080/TCP   3m49s

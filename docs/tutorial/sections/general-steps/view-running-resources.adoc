@@ -1,7 +1,7 @@
 View the running `elcicd-chart-demo` resources in the cluster:
 +
 ```
-$ kubectl get -n elcicd-chart-demo deploy,rs,pod,cm,service,ingress
+$ kubectl get -n elcicd-chart-demo -l elcicd.io/selector deploy,rs,pod,cm,service,ingress
 ```
 +
 Output::

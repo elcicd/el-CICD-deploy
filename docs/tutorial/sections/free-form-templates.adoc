@@ -6,9 +6,9 @@
 * Using el-CICD Chart matrices to deploy copies of the same el-CICD template across namespaces.
 ****
 
-So far this tutorial has focused on the easy deployments for applications using built-in helper el-CICD Chart templates.  Unfortunately, because Kubernetes has many dozens of resources, and it is infinitely extensible with https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resource Definitions,window=read-later] (CRD), creating helper templates for every resource deployable to a Kubernetes cluster is not feasible.
+So far this tutorial has focused on the easy deployments of services using built-in helper el-CICD Chart templates.  Unfortunately, because Kubernetes has many dozens of resources, and it is infinitely extensible with https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resource Definitions,window=read-later] (CRD), creating helper templates for every resource deployable to a Kubernetes cluster is not feasible.
 
-To address this, el-CICD Chart templates support fully templating arbitrary YAML, and in particular Kubernetes resources.  Rather than using a named helper template with `templateName(s)`, the full YAML of the resource is written under the `template` key.  While more verbose than their helper template counterparts, they still allow for the use of el-CICD Chart variables, deployment profiles, and matrices; thus, they will still be able to take advantage of the most powerful features of the el-CICD Chart, user-defined variables and deployment profiles in the values.yaml file(s).
+To address this, el-CICD Chart supports templating arbitrary YAML as an el-CICD Chart templates, and in particular Kubernetes resources.  Rather than using a named helper template with `templateName(s)`, the full YAML of the resource is written under the `template` key.  While more verbose than their helper template counterparts, they still allow for the use of el-CICD Chart variables, deployment profiles, and matrices; thus, they will still be able to take advantage of the most powerful features of the el-CICD Chart.
 
 Example use cases for free form templates::
 * Any resource without a corresponding el-CICD Chart helper template
@@ -21,10 +21,10 @@ Some use cases involve YAML that does not represent a Kubernetes object directly
 
 ** Third party chart integration
 +
-Converting an already working Helm chart is may not be feasible or is probably not worth the time.  el-CICD Chart can generate values.yaml files, which in turn allows end users to take advantage of deployment profiles.
+Converting an already working Helm chart may not be feasible and/or is probably not worth the time.  el-CICD Chart can be used as a general YAML templating tool to generate values.yaml files for other Helm charts via Helm https://helm.sh/docs/topics/advanced/#post-rendering[post-renderering].
 ** Dynamic Kustomizations
 +
-kustomization.yaml files can also be templated with el-CICD Chart and piped to Kustomize.
+kustomization.yaml files are very statically declared.  If you need to dynamically generate one, they can also be templated with el-CICD Chart and `kustomize` applied during Helm post-rendering.
 
 [discrete]
 ==== Create and save the following file as `elcicd-demo-5.yaml`
@@ -88,20 +88,22 @@ elCicdTemplates:
           restartPolicy: Never
 ----
 
-<1> Like `objNames`, `namespaces` is a ell-CICD Chart matrix.
+<1> Like `objNames`, `namespaces` is an el-CICD Chart matrix.
 +
-Each element in the `namespaces` list will generate a copy of the el-CICD Chart template, and set `.metadata.namespace` to the element value.
-<2> Both `objNames` and `namespaces` can use patterns against the elements in the matrices to further specialize the values.
+Each element in the `namespaces` list will generate a copy of the el-CICD Chart template, and assign the value to `.metadata.namespace`.
+<2> Both `objNames` and `namespaces` can use patterns to further decorate the final matrix values.
 .. $<> refers the element in the matrix; e.g. job-en`.
 .. $<#> refers to the index of the element in the matrix; e.g. the pattern `$<>-$<#>` would generate `job-en-1` and `job-en-2`.
-.. In the deployment definition above, the base name is decorated with either `-helper` or `-raw` so the pods generated from either the helper template or the raw YAML templates can be identified on site.
-.. In templates generated form matrices with patterns, use `$<BASE_OBJ_NAME>` to refer to the undecorated element from the list that generated `$<OBJ_NAME>`.
+.. In the deployment definition above, the __base name__ is decorated with either `-helper` or `-raw` so the pods generated from either the helper template or the raw YAML templates can be identified on site.
+.. In templates generated from matrices with patterns, use `$<BASE_OBJ_NAME>` to refer to the undecorated element from the list that generated `$<OBJ_NAME>`.
 <3> The `template` helper attribute marks the start of the YAML defining any arbitrary YAML to be deployed to Kubernetes.
-.. Matrices, variables, and deployment profiles can be used as usual with raw YAML el-CICD Chart template.
-.. The `metadata` section is optional in free form templates.  el-CICD Chart is able to generate those values regardless of whether its a helper template or raw YAML.
+.. Matrices, variables, and deployment profiles can be used as usual with free form el-CICD Chart template.
+.. The `metadata` section is optional in a free form template.
+... el-CICD Chart will attempt generate a `metadata` automatically if it is missing.
+... If `rawYaml: true` is set on the el-CICD Chart template, the metadata section will not be generated if missing.
 <4> Defining environment variables in a container is the same whether using helper or raw templates.
 
-NOTE: There is never a reason to use a raw template when deploying any Kubernetes resource workload to a cluster.  All of them have helper templates.  This example is for demonstration purposes only.
+NOTE: There is never a reason to use a raw template when deploying any Kubernetes resource workload (e.g. Deployment, Pod, Job, etc.) to a cluster.  All of them have helper templates.  This example is for demonstration purposes only.
 
 [discrete]
 ==== Tutorial steps
@@ -111,11 +113,11 @@ NOTE: There is never a reason to use a raw template when deploying any Kubernete
 
 .What to expect
 ****
-* A namespace will be created from a namespace helper template, and managed by Helm.  The chart will deploy to both the release namespace and the new namespace.
-* From a job el-CICD Chart helper template, four Jobs (two per namespace) will be deployed on the cluster, based on two `objNames` and two `namespaces`.
-* From an el-CICD Chart YAML template, four Jobs (two per namespace) will be deployed on the cluster, based on two `objNames` and two `namespaces`.
+* A second namespace will be created from a namespace helper template, and managed by Helm.
+* Using a `job` el-CICD Chart helper template, four Jobs (two per namespace) will be deployed on the cluster, based on two `objNames` and two `namespaces`.
+* Using a `job` el-CICD Chart free form template, four Jobs (two per namespace) will be deployed on the cluster, based on two `objNames` and two `namespaces`.
 * All Job containers will be created from a simple CentOS 9 Stream minimal image.
-* The manifests between the four helper template generated Jobs and YAML template generated Jobs will be exactly the same **except** for their `metadata.name` values and the WELCOME_MSG value.
+* The manifests between all eight Jobs deployed will be identical **except** for `metadata.name`, `metadata.namespace`, and the `WELCOME_MSG` value.
 * Each Job Pod will log a few welcome messages based on the environment variable set in the Pod before completing, either in English or Spanish, based on their object names.
 ****
 
@@ -143,7 +145,7 @@ Output::
 include::general-steps/kubectl-gets/{kubectl-get-file}.adoc[]
 ```
 
-. Check the logs of each job ):
+. Check the logs of the Jobs:
 +
 NOTE: Only two of the eight jobs are displayed for brevity.
 +

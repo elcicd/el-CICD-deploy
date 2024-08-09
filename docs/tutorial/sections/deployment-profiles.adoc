@@ -15,14 +15,12 @@ Example use cases for deployment profiles::
 Development, test, and production environments almost always vary in how they're configured for deployment.
 * Different locales
 +
-Different nations, and most nations with provinces or states, tend to have different regulatory and/or language requirements between them.
+Different nations, as well the provinces or states within them, tend to have different regulatory and/or language requirements between them.
 * High availability and persistence options
 +
-A particular component may or may not need to be deployed as highly available and/or with data persistence options.  A separate profile for each that could be mixed and matched would appropriate in this case.
+One or more services of an an application need to be deployed as highly available and/or with data persistence options, either in production or for testing purposes.
 
-Deployment profiles are most useful whenever any significant amount of data/or and configuration within a deployment needs to change in unison based on a single deployment.
-
-The part of the tutorial will demonstrate deploying a default English and a MULTI_LINGUAL deployment of our contrived web application.  Because the `MULTI_LINGUAL` profile will be specified, content of index.html will change, and two extra ConfigMaps will be deployed.
+Deployment profiles are most useful in any case where the same service or application needs to be deployed differently in more than one situation or environment, which is almost always.
 
 [discrete]
 ==== Create and save the following file as `elcicd-demo-4.yaml`
@@ -50,8 +48,8 @@ elCicdTemplates:
     mountPath: /var/www/html/
     configMaps:
       $<INDEX_HTML_NAME>: {}
-      $<ENGLISH>: {}
-      $<ESPANOL>: {}
+      $<ENGLISH>: {} # <2>
+      $<ESPANOL>: {} # <2>
 
 - templateName: configMap
   objName: $<INDEX_HTML_NAME>
@@ -64,9 +62,9 @@ elCicdTemplates:
   - $<ESPANOL>
   mustHaveAnyProfile:
   - $<MULTI_LINGUAL_PROFILE> # <1>
-  elCicdDefs-$<ENGLISH>: # <2>
+  elCicdDefs-$<ENGLISH>: # <4>
     PAGE_CONTENT:  $<DEFAULT_PAGE_CONTENT>
-  elCicdDefs-$<ESPANOL>: # <2>
+  elCicdDefs-$<ESPANOL>: # <4>
     PAGE_CONTENT: <h1>¡Hola desde $<OBJ_NAME> en el lanzamiento $<HELM_RELEASE_NAME>!<h1>
   data:
     $<OBJ_NAME>: $<HTML_PAGE>
@@ -74,7 +72,7 @@ elCicdTemplates:
 <1> Deployment profiles are declared whenever an el-CICD Chart template and/or `elCicdDefs` variable map is marked for them.
 .. Deployment profiles must consist of upper case alphanumeric characters, '_' or '.', and must start and end with an alphanumeric character.
 .. `elCicdDefs-$<MULTI_LINGUAL_PROFILE>` declares the `$<MULTI_LINGUAL_PROFILE>` (`MULTI_LINGUAL`) profile.
-... Variables defined under this map will only be realized when the `MULTI_LINGUAL` profile is active.
+... Variables and values defined under this map will only be realized when the `MULTI_LINGUAL` profile is active.
 ... `elCicdDefs` maps may only reference one profile at a time.
 .. `mustHaveAnyProfile` similarly declares the `$<MULTI_LINGUAL_PROFILE>` (`MULTI_LINGUAL`) profile.
 ... The `[$<ENGLISH>, $<ESPANOL>]` configMap template will only be processed when the `MULTI_LINGUAL` profile is active.
@@ -83,24 +81,34 @@ elCicdTemplates:
 .... `mustHaveEveryProfile`
 .... `mustNotHaveAnyProfile`
 .... `mustNotHaveEveryProfile`
-<2> el-Cicd Chart variables are overridden based on more specific `elCicdDefs` variable maps.
-.. `elCicdDefs` variable maps can be declared for specific profiles, a particular `objName`, and/or specific templates.
-... Append an objName and/or profile to and `elCicdDefs` map declaration using snake case.
-... `objName` must precede the profile.
-... e.g. `elCicdDefs-<some objName>-<some profile>`.  `obj
-... Variable references in lieu of static declarations, e.g. elCicdDefs-$<MULTI_LINGUAL_PROFILE>.
-+
-If a variable map name ends with `-` (e.g. `elCicdDefs-`) because a variable in the name was undefined, the map will be ignored.
-... Order of precedence for variable value assignment, from least to greatest.  This list applies at the top-level first, and then per template.
-.... `elCicdDefs`
-.... `elCicdDefs-<__profile-name__>`: variables defined for a specific active profile.
-.... `elCicdDefs-<__objName__>`: variables defined for a specific el-CICD Chart template.
-.... `elCicdDefs-<__objName__>-<__profile-name__>`: variables defined for el-CICD Chart template and specific profile.
+<2> If keys in maps or values in maps or lists evaluate to empty or null values after processing, they will be removed.
+.. `$<ENGLISH>` and `$<ESPANOL>` will only be realized if the `MULTI_LINGUAL` deployment profile is active.
+.. If the `MULTI_LINGUAL` deployment profile is inactive, the keys evaluate to null, and each member of the `configMaps` list is removed.
 <3> `objNames` is one of two el-CICD Chart matrices that can be defined on an el-CICD Chart template.
-.. Matrices are lists that generate a copy of the template for each element in the list.
+.. Matrices are lists that will tell el-CICD Chart to generate a copy of the template for each element in the list.
 .. `objName` will be assigned for each copy corresponding to an element in the `objNames` list used to generate it.
 .. All elements of the `objNames` matrix must follow the same naming rules as `.metadata.name`.
 .. This deployment definition will result in two configMap templates, `$<ENGLISH>` (`english.html) and `$<ESPANOL>` (`espanol.html`).
+<4> el-Cicd Chart variables are overridden based on more specific `elCicdDefs` variable maps.
+.. `elCicdDefs` variable maps can be declared for specific profiles, a particular `objName`, and/or under specific el-CICD Chart templates.
+... `objName` and/or profiles are appended `elCicdDefs` using a `-` as a delimiter; e.g.
+... `elCicdDefs-foo` for `objName` `foo`.
+... `elCicdDefs-BAR` for defployment profile `BAR`.
+... `elCicdDefs-foo-BAR` or `elCicdDefs-BAR-foo` for `objName` `foo` and profile `BAR`.
+... Variable references in lieu of static declarations, e.g. elCicdDefs-$<MULTI_LINGUAL_PROFILE>.
++
+If a variable map name ends with `-` (e.g. `elCicdDefs-`or `elCicdDefs-foo-`) because a variable in the name was undefined, the map will be ignored.
+... Top level `elCicdDefs` maps are processed first, and the process is repeated for each el-CICD Chart template maps as they are processed.
+.... This means that every el-CICD Chart template specific variable map has precedence over all top level maps.
+.... Order of precedence of maps, from least to greatest:
++
+CAUTION: This is **not** a comprehensive list.
+
+* `elCicdDefs`
+* `elCicdDefs-<__profile-name__>`: variables defined for an active profile.
+* `elCicdDefs-<__objName__>`: variables defined for a specific `objName` match.
+* `elCicdDefs-<__profile-name__>-<__objName__>`: variables defined for an active profile and specific `objName` match.
+* `elCicdDefs-<__objName__>-<__profile-name__>`: variables defined for a specific `objName` match and active profile.
 
 ==== Deploy the httpd server without an active deployment profile
 :helm-update-command: helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
@@ -115,11 +123,10 @@ Deploying without a deployment profile with the above deployment definition will
 
 .What to expect
 ****
-* An httpd Pod will be created and accessible from outside the cluster using a single, compound el-CICD Chart templates.
-* The el-CICD Chart templates used will include a single, compound single, compound el-CICD Chart template created from the deployment, service, and ingress.
+* An httpd Pod will be created and accessible in the browser from outside the cluster.
 * A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.
-* The index.html web page will be generated from an template made up of multiple el-CICD Chart variables. 
-* A ConfigMap containing generated index.html file will be deployed to the cluster and mounted inside the httpd Pod, and be visible within the browser.
+* An index.html web page will be generated from multiple el-CICD Chart variables. 
+* A ConfigMap containing the generated index.html file will be deployed to the cluster, mounted inside the httpd Pod, and be visible within the browser.
 ****
 
 . {empty}
@@ -139,9 +146,9 @@ include::general-steps/uninstall-chart.adoc[]
 
 ==== Install the httpd server with the `MULTI_LINGUAL` deployment profile
 :helm-update-command: helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace --set elCicdProfiles='{MULTI_LINGUAL}' -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
-:result-image: deployment-profiles-MULTI_LINGUAL-screenshot.png
-:helm-manifest-file: deployment-profiles-MULTI_LINGUAL-manifest
-:kubectl-get-file: deployment-profiles-MULTI_LINGUAL-kubectl-get
+:result-image: deployment-profiles-multi-lingual-screenshot.png
+:helm-manifest-file: deployment-profiles-multi-lingual-manifest
+:kubectl-get-file: deployment-profiles-multi-lingual-kubectl-get
 
 el-CICD Chart deployment profiles are defined in `elCicdProfiles` as a list.  It only makes sense to define the active profile list outside of the deployment definition and at deployment time, or that would defeat their purpose.  The `helm update --install` command is modified to apply deployment profile `--set elCicdProfiles='{MULTI_LINGUAL}'` clause.  If more than one deployment profile is specified, the order of precedence is from least to greatest in determining the values of variables; e.g. if `elCicdProfiles={FOO,BAR}`, all values defined in the `BAR` profile would take precedence over `FOO`.
 
@@ -152,13 +159,11 @@ This part of the demonstration will change the opening page to a pair of links t
 
 .What to expect
 ****
-* The deployment will take place with the `MULTI_LINGUAL` deployment profile active.
-* An httpd Pod will be created and accessible from outside the cluster using a single, compound el-CICD Chart templates.
-* The el-CICD Chart templates used will include a single, compound single, compound el-CICD Chart template created from the deployment, service, and ingress.
+* An httpd Pod will be created and accessible in the browser from outside the cluster.
 * A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.
-* The index.html web page will be generated from an template made up of multiple el-CICD Chart variables.
-* Two other web pages, one in English and the other in Spanish, will be generated from an template made up of multiple el-CICD Chart variables.
-* Three ConfigMaps containing each containing a specific web page, will be deployed to the cluster and mounted inside the httpd Pod, and be visible within the browser.
+* An index.html, english.html, and spanish.html web page will be generated from multiple el-CICD Chart variables.
+* The index.html page will contain links to the english.html and spanish.html pages.
+* Three ConfigMaps, each containing the generated index.html, english.html, or spanish.html files, will be deployed to the cluster, mounted inside the httpd Pod, and be visible within the browser.
 ****
 
 . {empty}

@@ -3,7 +3,3 @@ pod/job-en-helper-5c4bb   0/1     Completed   0          44s
 pod/job-en-raw-mvwgp      0/1     Completed   0          44s
 pod/job-es-helper-9jzdw   0/1     Completed   0          44s
 pod/job-es-raw-qd5nj      0/1     Completed   0          44s
-
-NAME                                 DATA   AGE
-configmap/kube-root-ca.crt           1      3d20h
-configmap/openshift-service-ca.crt   1      3d20h

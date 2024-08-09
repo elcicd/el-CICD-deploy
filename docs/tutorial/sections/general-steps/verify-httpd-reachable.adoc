@@ -12,6 +12,6 @@ httpd-elcicd-chart-demo.apps-crc.testing
 +
 Open your browser and go to https://httpd-elcicd-chart-demo.apps-crc.testing[https://httpd-elcicd-chart-demo.apps-crc.testing,window=read-later].
 +
-NOTE: If not using CRC, you'll definitely need to run the `kubectl get` command above.
+NOTE: If not using CRC, you'll definitely need to run the `kubectl get` command above to get the correct host.
 +
 image::sections/general-steps/images/{result-image}[]

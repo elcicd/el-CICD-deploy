@@ -11,8 +11,6 @@ NAME                                 DATA   AGE
 configmap/english.html               1      5m23s
 configmap/espanol.html               1      5m23s
 configmap/index.html                 1      5m23s
-configmap/kube-root-ca.crt           1      2d1h
-configmap/openshift-service-ca.crt   1      2d1h
 
 NAME                        TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
 service/elcicd-chart-demo   ClusterIP   10.217.5.97   <none>        8080/TCP   5m23s

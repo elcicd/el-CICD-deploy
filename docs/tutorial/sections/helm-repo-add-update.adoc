@@ -6,6 +6,8 @@ Add and update the el-CICD Chart repository.  This will pull the chart from the 
 $ helm repo add elcicd-charts https://elcicd.github.io/el-CICD-deploy/charts/
 $ helm repo update
 ```
+NOTE: Deploying Helm charts from OCI repositories is better, but GitHub currently makes is easy to server Helm charts from GiHub pages 
++
 Output::
 ```
 "elcicd-charts" has been added to your repositories

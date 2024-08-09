@@ -4,7 +4,3 @@ pod/job-en-helper-kzlwx   0/1     Completed   0          23s
 pod/job-en-raw-zhx7c      0/1     Completed   0          23s
 pod/job-es-helper-tlp6b   0/1     Completed   0          23s
 pod/job-es-raw-bbpjg      0/1     Completed   0          23s
-
-NAME                                 DATA   AGE
-configmap/kube-root-ca.crt           1      23s
-configmap/openshift-service-ca.crt   1      23s
