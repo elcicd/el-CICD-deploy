@@ -11,11 +11,11 @@ While el-CICD Chart has been used extensively within the larger el-CICD project 
 **Feedback is needed and would be appreciated.  Please work through the tutorial (nothing but Helm and a Kubernetes cluster required) and let us know what you think.**
 ====
 
-== Reference Documentation
+== Documentation
 
 link:https://elcicd.github.io/el-CICD-deploy/docs/tutorial/tutorial.html[el-CICD Chart Tutorial,window=read-later]::
 
-el-CICD Chart User Guide [**Coming Soon**]::
+link:https://elcicd.github.io/el-CICD-deploy/docs/reference.adoc[el-CICD Chart Reference Documentation]::
 
 {empty}
 

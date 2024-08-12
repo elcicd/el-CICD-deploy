@@ -34,7 +34,7 @@ elCicdDefs:
   PAGE_CONTENT: $<DEFAULT_PAGE_CONTENT>
   HTML_PAGE: <!DOCTYPE html><html><body>$<PAGE_CONTENT></body></html>
 
-elCicdDefs-$<MULTI_LINGUAL_PROFILE>: # <1>
+elCicdDefs-$<MULTI_LINGUAL_PROFILE>: # <.>
   PAGE_CONTENT: <h1><a href="$<ENGLISH>">English</a>&nbsp;<a href="$<ESPANOL>">Español</a></h1>
   ENGLISH: english.html
   ESPANOL: espanol.html
@@ -48,8 +48,8 @@ elCicdTemplates:
     mountPath: /var/www/html/
     configMaps:
       $<INDEX_HTML_NAME>: {}
-      $<ENGLISH>: {} # <2>
-      $<ESPANOL>: {} # <2>
+      $<ENGLISH>: {} # <.>
+      $<ESPANOL>: {} # <.>
 
 - templateName: configMap
   objName: $<INDEX_HTML_NAME>
@@ -57,19 +57,19 @@ elCicdTemplates:
     $<OBJ_NAME>: $<HTML_PAGE>
 
 - templateName: configMap
-  objNames: # <3>
+  objNames: # <.>
   - $<ENGLISH>
   - $<ESPANOL>
   mustHaveAnyProfile:
-  - $<MULTI_LINGUAL_PROFILE> # <1>
-  elCicdDefs-$<ENGLISH>: # <4>
+  - $<MULTI_LINGUAL_PROFILE> # <.>
+  elCicdDefs-$<ENGLISH>: # <.>
     PAGE_CONTENT:  $<DEFAULT_PAGE_CONTENT>
-  elCicdDefs-$<ESPANOL>: # <4>
+  elCicdDefs-$<ESPANOL>: # <.>
     PAGE_CONTENT: <h1>¡Hola desde $<OBJ_NAME> en el lanzamiento $<HELM_RELEASE_NAME>!<h1>
   data:
     $<OBJ_NAME>: $<HTML_PAGE>
 ----
-<1> Deployment profiles are declared whenever an el-CICD Chart template and/or `elCicdDefs` variable map is marked for them.
+<.> Deployment profiles are declared whenever an el-CICD Chart template and/or `elCicdDefs` variable map is marked for them.
 .. Deployment profiles must consist of upper case alphanumeric characters, '_' or '.', and must start and end with an alphanumeric character.
 .. `elCicdDefs-$<MULTI_LINGUAL_PROFILE>` declares the `$<MULTI_LINGUAL_PROFILE>` (`MULTI_LINGUAL`) profile.
 ... Variables and values defined under this map will only be realized when the `MULTI_LINGUAL` profile is active.
@@ -81,15 +81,15 @@ elCicdTemplates:
 .... `mustHaveEveryProfile`
 .... `mustNotHaveAnyProfile`
 .... `mustNotHaveEveryProfile`
-<2> If keys in maps or values in maps or lists evaluate to empty or null values after processing, they will be removed.
+<.> If keys in maps or values in maps or lists evaluate to empty or null values after processing, they will be removed.
 .. `$<ENGLISH>` and `$<ESPANOL>` will only be realized if the `MULTI_LINGUAL` deployment profile is active.
 .. If the `MULTI_LINGUAL` deployment profile is inactive, the keys evaluate to null, and each member of the `configMaps` list is removed.
-<3> `objNames` is one of two el-CICD Chart matrices that can be defined on an el-CICD Chart template.
+<.> `objNames` is one of two el-CICD Chart matrices that can be defined on an el-CICD Chart template.
 .. Matrices are lists that will tell el-CICD Chart to generate a copy of the template for each element in the list.
 .. `objName` will be assigned for each copy corresponding to an element in the `objNames` list used to generate it.
-.. All elements of the `objNames` matrix must follow the same naming rules as `.metadata.name`.
+.. All elements of the `objNames` matrix must follow the same naming rules as `metadata.name`.
 .. This deployment definition will result in two configMap templates, `$<ENGLISH>` (`english.html) and `$<ESPANOL>` (`espanol.html`).
-<4> el-Cicd Chart variables are overridden based on more specific `elCicdDefs` variable maps.
+<.> el-Cicd Chart variables are overridden based on more specific `elCicdDefs` variable maps.
 .. `elCicdDefs` variable maps can be declared for specific profiles, a particular `objName`, and/or under specific el-CICD Chart templates.
 ... `objName` and/or profiles are appended `elCicdDefs` using a `-` as a delimiter; e.g.
 ... `elCicdDefs-foo` for `objName` `foo`.

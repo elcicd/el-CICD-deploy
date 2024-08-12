@@ -20,7 +20,7 @@ A fundamental goal of el-CICD Chart is to eliminate Helm templates and move all 
 
 [source,YAML,linenums]
 ----
-elCicdDefs: # <1>
+elCicdDefs: # <.>
   INDEX_HTML_NAME: index.html
   DEFAULT_PAGE_CONTENT: <h1>Howdy from $<OBJ_NAME> in release $<HELM_RELEASE_NAME>!<h1>
   PAGE_CONTENT: $<DEFAULT_PAGE_CONTENT>
@@ -40,19 +40,19 @@ elCicdTemplates:
 - templateNames: [deployment, service, ingress]
   image: registry.redhat.io/rhel8/httpd-24
   host: httpd-$<NAME_SPACE>.apps-crc.testing
-  projectedVolumes: # <2>
-  - name: $<HELM_RELEASE_NAME> # <3>
+  projectedVolumes: # <.>
+  - name: $<HELM_RELEASE_NAME> # <.>
     mountPath: /var/www/html/
     configMaps:
       $<INDEX_HTML_NAME>: {}
 
 - templateName: configMap
-  objName: $<INDEX_HTML_NAME> # <4>
+  objName: $<INDEX_HTML_NAME> # <.>
   data:
-    $<OBJ_NAME>: $<HTML_PAGE> # <4>
+    $<OBJ_NAME>: $<HTML_PAGE> # <.>
 ----
 
-<1> All el-CICD Chart variables are defined under maps starting with `elCicdDefs`.
+<.> All el-CICD Chart variables are defined under maps starting with `elCicdDefs`.
 .. Keys in the `elCicdDefs` map are the names of the variables.
 .. Variables and their values can be any valid YAML.
 .. By convention and similar to shell scripting, variable names use UPPER_SNAKE_CASE.
@@ -60,12 +60,12 @@ elCicdTemplates:
 .. Variables can references other variables.
 ... The order variables are declared is irrelevant.
 ... Variable names can be dynamically generated.
-<2> `projectedVolumes` is a helper attribute for generating https://kubernetes.io/docs/concepts/storage/projected-volumes/[projectedVolumes,window=read-later].
+<.> `projectedVolumes` is a helper attribute for generating https://kubernetes.io/docs/concepts/storage/projected-volumes/[projectedVolumes,window=read-later].
 .. In this example it will generate a `volume` entry for ConfigMap in the Deployment.
 .. It will also create a `volumeMount` of the `volume` in the container definition.
-<3> `$<HELM_RELEASE_NAME>` is another built-in el-CICD Chart variable that corresponds to `.Release.Name` in a Helm template.
-<4> `objName` is a helper attribute that will render as the name of a resource or resources; i.e.`metadata.name`.
-.. `objName` must follow the same naming rules as `.metadata.name`.
+<.> `$<HELM_RELEASE_NAME>` is another built-in el-CICD Chart variable that corresponds to `.Release.Name` in a Helm template.
+<.> `objName` is a helper attribute that will render as the name of a resource or resources; i.e.`metadata.name`.
+.. `objName` must follow the same naming rules as `metadata.name`.
 .. `$<OBJ_NAME>` is another built-in el-CICD Chart variable referring to the el-CICD Chart template's objName in which it is realized.
 .. `objName` and `OBJ_NAME` will default to the chart's release name, `$<HELM_RELEASE_NAME>`, if left undefined by the user.
 

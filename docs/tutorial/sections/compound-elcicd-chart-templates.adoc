@@ -20,17 +20,17 @@ TIP: **Any el-CICD Chart built-in template can be compounded into a single templ
 [source,YAML,linenums]
 ----
 elCicdTemplates:
-- templateNames: [deployment, service, ingress] # <1>
+- templateNames: [deployment, service, ingress] # <.>
   image: registry.redhat.io/rhel8/httpd-24
   host: httpd-$<HELM_RELEASE_NAMESPACE>.apps-crc.testing
-  port: 8081 # <2>
-  targetPort: 8080 # <2>
+  port: 8081 # <.>
+  targetPort: 8080 # <.>
 ----
 
-<1> Compound templates are listed under the `templateNames` attribute, versus `templateName` for a single attribute.
+<.> Compound templates are listed under the `templateNames` attribute, versus `templateName` for a single attribute.
 .. Since YAML is superset of JSON, JSON list notation is acceptable.
 .. The `templateName` attribute is merely a convenience when rendering a single template.
-<2> In compound templates, all helper attributes are shared among the el-CICD templates.
+<.> In compound templates, all helper attributes are shared among the el-CICD templates.
 .. `image` is unique to the `deployment` template.
 .. `host` is unique to the `ingress` el-CICD Chart template.
 .. `port` is shared and used by all three listed el-CICD Chart templates.
