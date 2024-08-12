@@ -21,31 +21,31 @@ NOTE: The example below is purposefully contrived to be more complicated than ne
 
 [source,YAML,linenums]
 ----
-elCicdTemplates: # <1>
-- templateName: deployment # <2>
+elCicdTemplates: # <.>
+- templateName: deployment # <.>
   image: registry.redhat.io/rhel8/httpd-24
 
-- templateName: service # <2>
-  port: 8081 # <3>
-  targetPort: 8080 # <3>
+- templateName: service # <.>
+  port: 8081 # <.>
+  targetPort: 8080 # <.>
 
-- templateName: ingress # <2>
-  host: httpd-$<HELM_RELEASE_NAMESPACE>.apps-crc.testing <4>
-  port: 8081 # <3>
+- templateName: ingress # <.>
+  host: httpd-$<HELM_RELEASE_NAMESPACE>.apps-crc.testing <.>
+  port: 8081 # <.>
 ----
-<1> All el-CICD Chart templates are defined in a list called `elCicdTemplates`.
+<.> All el-CICD Chart templates are defined in a list called `elCicdTemplates`.
 +
 TIP: **If you want to spread your templates out over multiple values.yaml files, more template lists can be defined as `elCicdTemplates-*`. The suffix is meaningless and only needs to be unique and valid YAML, so that Helm doesn't overwrite the disparate lists.**
-<2> By convention, there is a one-to-one relation between el-CICD Chart templates and the Kubernetes resources they render.
+<.> By convention, there is a one-to-one relation between el-CICD Chart templates and the Kubernetes resources they render.
 ... `deployment` for a Kubernetes Deployment
 ... `service` for a Kubernetes Service
 ... `ingress` for a Kubernetes Ingress
 ... el-CICD Chart templates are all named by convention with lowerCamelCase.
-<3> _Helper attributes_ are el-CICD Chart template top level keys; e.g. some standard el-CICD attributes every template has:
+<.> _Helper attributes_ are el-CICD Chart template top level keys; e.g. some standard el-CICD attributes every template has:
 ... `templatName`: the name of the el-CICD Chart template to render.
 ... `objName`: maps directly `metadata.name`.
 ... `template`: custom el-CICD template definitions when built-in templates aren't used.
-<4> `$<HELM_RELEASE_NAMESPACE>` references a built-in el-CICD Chart variable.
+<.> `$<HELM_RELEASE_NAMESPACE>` references a built-in el-CICD Chart variable.
 ... In a Helm template this corresponds to `.Release.Namespace`; i.e. the namespace the chart is deployed in.
 +
 NOTE: The release namespace is not necessarily the same as where the Kubernetes resources are deployed.

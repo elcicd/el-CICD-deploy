@@ -41,7 +41,7 @@ elCicdDefs:
   - name: WELCOME_MSG
     value: $<WELCOME_MSG>
   JOB_NAMESPACE_2: elcicd-chart-demo-2
-  NAMESPACES: # <1>
+  NAMESPACES: # <.>
   - $<HELM_RELEASE_NAMESPACE>
   - $<JOB_NAMESPACE_2>
   COMMAND: ["bash", "-c"]
@@ -63,17 +63,17 @@ elCicdTemplates:
 
 - templateName: job
   objNames: $<OBJ_NAMES>
-  namespaces: $<NAMESPACES> # <1>
-  objName: $<>-helper # <2>
+  namespaces: $<NAMESPACES> # <.>
+  objName: $<>-helper # <.>
   image: quay.io/centos/centos:stream9-minimal
   command: $<COMMAND>
   args: $<JOB_SCRIPT>
-  env: $<ENV> # <4>
+  env: $<ENV> # <.>
 
 - objNames: $<OBJ_NAMES>
-  namespaces: $<NAMESPACES> # <1>
-  objName: $<>-raw # <2>
-  template: # <3>
+  namespaces: $<NAMESPACES> # <.>
+  objName: $<>-raw # <.>
+  template: # <.>
     apiVersion: batch/v1
     kind: Job
     spec:
@@ -84,24 +84,24 @@ elCicdTemplates:
             image: quay.io/centos/centos:stream9-minimal
             command: $<COMMAND>
             args: $<JOB_SCRIPT>
-            env: $<ENV> # <4>
+            env: $<ENV> # <.>
           restartPolicy: Never
 ----
 
-<1> Like `objNames`, `namespaces` is an el-CICD Chart matrix.
+<.> Like `objNames`, `namespaces` is an el-CICD Chart matrix.
 +
 Each element in the `namespaces` list will generate a copy of the el-CICD Chart template, and assign the value to `.metadata.namespace`.
-<2> Both `objNames` and `namespaces` can use patterns to further decorate the final matrix values.
+<.> Both `objNames` and `namespaces` can use patterns to further decorate the final matrix values.
 .. $<> refers the element in the matrix; e.g. job-en`.
 .. $<#> refers to the index of the element in the matrix; e.g. the pattern `$<>-$<#>` would generate `job-en-1` and `job-en-2`.
 .. In the deployment definition above, the __base name__ is decorated with either `-helper` or `-raw` so the pods generated from either the helper template or the raw YAML templates can be identified on site.
 .. In templates generated from matrices with patterns, use `$<BASE_OBJ_NAME>` to refer to the undecorated element from the list that generated `$<OBJ_NAME>`.
-<3> The `template` helper attribute marks the start of the YAML defining any arbitrary YAML to be deployed to Kubernetes.
+<.> The `template` helper attribute marks the start of the YAML defining any arbitrary YAML to be deployed to Kubernetes.
 .. Matrices, variables, and deployment profiles can be used as usual with free form el-CICD Chart template.
 .. The `metadata` section is optional in a free form template.
 ... el-CICD Chart will attempt generate a `metadata` automatically if it is missing.
 ... If `rawYaml: true` is set on the el-CICD Chart template, the metadata section will not be generated if missing.
-<4> Defining environment variables in a container is the same whether using helper or raw templates.
+<.> Defining environment variables in a container is the same whether using helper or raw templates.
 
 NOTE: There is never a reason to use a raw template when deploying any Kubernetes resource workload (e.g. Deployment, Pod, Job, etc.) to a cluster.  All of them have helper templates.  This example is for demonstration purposes only.
 
