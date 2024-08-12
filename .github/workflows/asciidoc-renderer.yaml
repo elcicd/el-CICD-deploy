@@ -41,13 +41,19 @@ jobs:
         git config --global user.email "${{ github.repository_owner }}@donotreply.org"
         git pull
 
-    - name: Build HTML
+    - name: Build Tutorial HTML
       uses: tonynv/asciidoctor-action@master
       with:
         program: "asciidoctor -D ./docs/tutorial -w -t docs/tutorial/tutorial.adoc"
 
+    - name: Build Reference Documentation HTML
+      uses: tonynv/asciidoctor-action@master
+      with:
+        program: "asciidoctor -D ./docs -w -t docs/reference.adoc"
+
     - name: Add and commit
       run: |
         git add ./docs/tutorial/tutorial.html
-        git commit -m "generated tutorial.html"
+        git add ./docs/reference.html
+        git commit -m "generated reference.html and tutorial.html"
         git push

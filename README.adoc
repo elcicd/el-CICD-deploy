@@ -15,7 +15,7 @@ While el-CICD Chart has been used extensively within the larger el-CICD project 
 
 link:https://elcicd.github.io/el-CICD-deploy/docs/tutorial/tutorial.html[el-CICD Chart Tutorial,window=read-later]::
 
-link:https://elcicd.github.io/el-CICD-deploy/docs/reference.adoc[el-CICD Chart Reference Documentation]::
+link:https://elcicd.github.io/el-CICD-deploy/docs/reference.html[el-CICD Chart Reference Documentation]::
 
 {empty}
 
