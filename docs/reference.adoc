@@ -4,6 +4,7 @@
 :sectnums:
 :sectnumlevels: 4
 :toc:
+:toclevels: 3
 
 ====
 CAUTION: **WORK IN PROGRESS**
@@ -660,26 +661,180 @@ elCicdTemplates:
 
 TIP: To null a variable out, define it with an empty value in a higher precedence `elCicdDefs` map.
 
-===== Default helper attributes
+== Rendering Process Overview
 
-All helper attributes on templates can reference variables, but default helper attributes are only able to reference deployment variables, and not template specific variables.
+A high level overview of how el-CICD Chart processes and renders deployment definitions.  How and when variables are realized is also explained.
 
-== Alternative use-cases and utilities
+. **Realize Dynamic `elCicdDefs-*` Names**
++
+`elCicdDefs` map names may be defined with variables; e.g. `elCicdDefs-$<FOO>`.  All of the deployment `elCicdDefs` map names are processed first.
++
+IMPORTANT: **ONLY values defined in the default deployment `elCicdDefs` can be used to define deployment `elCicdDefs-*` maps.**
 
-=== projectedVolumes
+. **Create Profile-based `elCicdDefs`**
++
+Collect final values `elCicdDefs` based on deployment profiles only; i.e. consider only `elCicdDefs-<PROFILE>` maps.
+
+. **Collect and Filter All Templates**
++
+`elCicdTemplate-*` lists are collected and concatenated to create an intermediate `elCicdTemplates` list.  <<Template filtering,Filter>> this list based on the active profiles.
+
+. **Expand Matrixes:**
++
+<<Matrices,Matrix>> values and lists can be parameterized with variables; e.g. `namespaces: $<NAMESPACE_LIST>` or `objNames: [$<FOO>,$<BAR>]`.  Using the profiles-based `elCicdDefs` map, process the matrix variable references, and then generate all copies for any templates with matrices defined to create a final `elCicdTemplates` list.
++
+IMPORTANT: **Only values derived from profile-based deployment `elCicdDefs` map can be used as variables in matrices.**
+
+. **Process Templates**
++
+For each template in the final template list:
++
+.. Use the active profiles and the `objName` to derive the final deployment `elCicdDefs` for the template.
+.. Using the final deployment `elCicdDefs` map as the starting point, process all template `elCicdDefs` to derive the final `elCicdDefs` map for the template.
+.. Using the final `elCicdDefs` map for the template, replace ALL remaining variable references in the template.
+.. If any escaped el-CICD Chart variable references exist, remove the backslash; e.g. `\$<FOO>` becomes `$<FOO>`.
+
+. **Render the Templates to YAML**
+
+.. If `templateName` or `templateNames` are defined, process the named templates.
+.. If `templateName` or `templateNames` are NOT defined, render the value of `template`.
+
+. **Output Final Metadata**
++
+In YAML comments, output:
+
+* The list of active profiles
+* A list of each template skipped due to filtering.
+* A list of each template rendered.
+
+This concludes the el-CICD Chart rendering process.
+
+== Specialized Utilities
+
+=== projectedVolumes by labels
 
 === copyResources
 
-=== FILE and CONFIG variables
+== Debugging utilities
 
-=== Third party Helm charts
+el-CICD Chart supports two utilities to help with debugging deployment definitions.
+
+outputValuesYaml::
+
+If true, output all merged values.yaml files as YAML and exit.  No el-CICD Chart processing takes place.  Templates will **NOT** be rendered to YAML.  Useful for inspecting how Helm merges multiple deployment definition files.
+
+`helm template --set outputValuesYaml=true ...`
+
+valuesYamlToStdOut::
+
+If true, output all values of a processed el-CICD Chart deployment definition as YAML and exit.  Includes all values belonging `elCicdTemplates` and `elCicdDefs` maps and the `elCicdProfiles` list.  Templates will **NOT** be rendered to YAML.  Useful for inspecting the results of a processed deployment definition before the templates are rendered.
++
+`helm template --set valuesYamlToStdOut=true ...`
+
+== Unconventional use-cases
+
+Below are a just a few unconventional ways el-CICD Chart can be used.
+
+=== Third-party Helm charts
+
+There are many applications that already Helm charts created for them, and rewriting them to use el-CICD Chart directly might not be possible or useful for a myriad of reasons.  So how can el-CICD Chart still be leveraged for configuration management?  The answer is to define a deployment definition that results in a values.yaml file and pipe it or post-render with a second Helm call to the other chart.
+
+.Example deployment definition for third-party Helm chart
+[source,YAML,linenums]
+----
+elCicdDefs:
+  SOME_3RD_PARTY_VALUES_YAML_VAR: a-value
+
+elCicdDefs-SOME_PROFILE:
+  SOME_3RD_PARTY_VALUES_YAML_VAR: b-value
+
+elCicdTemplates:
+- rawYaml: true # <1>
+  objName: values-yaml-comp-1 # <2>
+  template: # <3>
+    ... 
+- rawYaml: true # <1>
+  objName: values-yaml-comp-n # <2>
+  template: # <3>
+    ... 
+----
+<1> Set `rawYaml` to true so el-CICD only outputs the processed YAML template exactly as written.
+<2> Any number of values files can be defined in a single deployment definition.
+<3> Create a YAML template for the values.yaml files of the third-party chart.
+
+.Example deploy-to-helm.sh
+----
+#!/bin/bash
+cat - > third-party-chart-values.yaml
+
+helm upgrade --install -f third-party-chart-values.yaml third-party-release elcicd-charts/elcicd-chart 
+----
+
+.Example using el-CICD Chart with a Helm `--post-renderer` to deploy third-party chart
+----
+helm template -f deployment-def.yaml --post-renderer deploy-to-helm.sh 
+----
+
+.Example  el-CICD Chart with a pipe to deploy third-party chart
+----
+helm template -f deployment-def.yaml gen-values-file elcicd-charts/elcicd-chart | \
+  helm upgrade --install -f - third-party-release elcicd-charts/elcicd-chart 
+----
 
 === Kustomize
 
-== API Reference
+Helm is not good at some things that el-CICD Chart cannot fix on its own; e.g. labeling and/or annotating a random collection of Kubernetes resources.  Or patching resources, for that matter.  https://kustomize.io/[Kustomize] fills the gap in functionality that Helm or el-CICD Chart templates can't address.
+
+`kustomization.yaml` files, though, are notoriously static in nature by design.  Using el-CICD Chart to create a template of a Kustomization in order to make the files dynamic (e.g. for a CICD system) is trivial.
+
+.Example deployment definition kustomization-values.yaml for kustomization.yaml
+[source,YAML,linenums]
+----
+elCicdDefs: {}  # <1>
+
+elCicdTemplates:
+- templateName: kustomization # <2>
+  fields:  # <3>
+    resources:
+    - $<RESOURCES_FILE>
+
+    commonLabels:
+      elcicd.io/teamid: $<TEAM_ID>
+      elcicd.io/projectid: $<PROJECT_ID>
+----
+<1> `elCicdDefs` is only defined here to note that all variables in this example are expected to be passed in via the command line.
+<2> el-CICD Chart has a `kustomization` built-in template so that the normal headers don't need to be defined.
+<3> Create the Kustomization definition, and parameterize it where necessary.
+
+.Example `--post-renderer` kustomize.sh 
+[source,YAML,linenums]
+----
+#!/bin/bash
+cat - > manifests.yaml
+
+helm template -f kustomization-values.yaml \
+  --set-string elCicdDefs.RESOURCES_FILE=manifests.yaml \
+  --set-string elCicdDefs.TEAM_ID=my-team \
+  --set-string elCicdDefs.PROJECT_ID=my-team-project \
+  kustomization-release \
+  elcicd-charts/elcicd-chart > kustomization.yaml
+
+kustomize build .
+----
+
+.Example using el-CICD Chart with a Helm `--post-renderer` to deploy third-party chart
+----
+helm upgrade --install -f deployment-def.yaml --post-renderer kustomize.sh my-app elcicd-charts/elcicd-chart
+----
+
+== Reference
+
+=== Built-in Objects
 
 === Built-in Variables
 
 === Built-in Defaults
+
+=== Default Template Helper Attributes
 
 === Built-in Templates

@@ -1,37 +1,40 @@
 = el-CICD Chart
-:important-caption: :heavy_exclamation_mark:
+:source-highlighter: rouge
+:icons: font
+:sectnums:
+:toc:
+
+== Status [ALPHA]
 
 [IMPORTANT]
 ====
-[discrete]
-== Status
+This sub-project is currently being tested, documented, and packaged for wider release, and we are targeting beta release for fall of 2024.
 
-While el-CICD Chart has been used extensively within the larger el-CICD project for two years, **we still consider this an alpha product**.  This sub-project is currently being tested, documented, and packaged for wider release, and we are targeting fall of 2024, at which time we will promote it to being feature complete and a beta release.
-
-**Feedback is needed and would be appreciated.  Please work through the tutorial (nothing but Helm and a Kubernetes cluster required) and let us know what you think.**
+**Feedback is needed and would be appreciated.**
 ====
 
+== Overview
+
+Helm is an excellent packaging and deployment tool, which makes sense given that that is the tool's focus.  What it is not as good at is templating and configuration management.  el-CICD Chart was created to better address these issues.
+
+It offers the following features:
+
+* 100% Helm compatible (**no need for extra plugins**).
+* `values.yaml` variables and templates.  **NO** need for Helm templates.
+* Configuration management through user-defined deployment profiles.
+* Pre-defined Kubernetes resources.
+
+We believe these innovations let Helm do what it does best, while enabling the user to easily, quickly, and concisely create templates and define multiple deployment configurations for Kubernetes and more.
+
 == Documentation
+
+CAUTION: **WORK IN PROGRESS**
 
 link:https://elcicd.github.io/el-CICD-deploy/docs/tutorial/tutorial.html[el-CICD Chart Tutorial,window=read-later]::
 
 link:https://elcicd.github.io/el-CICD-deploy/docs/reference.html[el-CICD Chart Reference Documentation]::
 
 {empty}
-
-== Overview
-
-Helm is an excellent packaging and deployment tool, which makes sense given that that is the tool's focus.  What it is not as good at is its templating and configuration management capabilities.  Helm also expects the end users to have a significant understanding of Kubernetes, which for many can be a steep barrier of entry, especially for those whose role didn't traditionally involve deployments.
-
-el-CICD Chart was created to overcome these difficulties.  It offers the following features:
-
-* `values.yaml` variables and parameterization
-* Configuration management through user-defined profiles
-* Pre-defined Kubernetes resources
-* **NO** need for Helm templates
-* 100% Helm compatible (**no need for extra plugins**)
-
-We believe these innovations make Helm accessible and let Helm do what it does best, while enabling user to easily, quickly, and concisely define multiple deployment configurations.
 
 == Licensing
 
