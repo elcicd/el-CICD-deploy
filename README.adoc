@@ -4,13 +4,15 @@
 :sectnums:
 :toc:
 
-== Status [ALPHA]
+[discrete]
+=== Status
 
+ALPHA:: 
 [IMPORTANT]
 ====
-This sub-project is currently being tested, documented, and packaged for wider release, and we are targeting beta release for fall of 2024.
-
 **Feedback is needed and would be appreciated.**
+
+This sub-project is under active development, and we are targeting a beta release for fall of 2024.  
 ====
 
 == Overview
