@@ -1,19 +1,19 @@
 apiVersion: v2
 name: elcicd-chart
-description: |-
-  A generic helm chart used to deploy any size group of components onto a kubernetes cluster.
+description: |
+  An all-in-one chart meant with the ability to define variables and deployment profiles in values.yml files.
+keywords:
+- values.yml
+- parameterized
+- profiles
+- deployment profiles
+- variables
 
 type: application
 
 version: "0.1.0"
 
 dependencies:
-- name: elcicd-renderer
+- name: elcicd-lib
   version: 0.1.0
-  repository: file://../elcicd-renderer
-- name: elcicd-kubernetes
-  version: 0.1.0
-  repository: file://../elcicd-kubernetes
-- name: elcicd-common
-  version: 0.1.0
-  repository: file://../elcicd-common
+  repository: file://../elcicd-lib

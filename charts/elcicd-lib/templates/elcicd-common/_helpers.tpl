@@ -25,8 +25,8 @@
 {{- define "elcicd-common.apiObjectHeader" }}
 {{- $ := index . 0 }}
 {{- $template := index . 1 }}
-apiVersion: {{ $template.apiVersion }}
-kind: {{ $template.kind }}
+apiVersion: {{ $template.apiVersion | default "v1"}}
+kind: {{ required "Kubernetes API objects require a \"kind\"" $template.kind }}
 {{- if $template.metadata }}
 metadata:
 {{ toYaml $template.metadata | nindent 2 }}
