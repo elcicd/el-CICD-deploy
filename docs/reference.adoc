@@ -56,6 +56,37 @@ Define __deployment profiles__, which allow multiple definitions of the same res
 
 Adding these easy to use features to Helm's values.yaml files significantly reduces the amount of boilerplate necessary to define Kubernetes deployments, as well as significantly reducing the learning curve needed to write them.
 
+== Helm Repository contents and usage
+
+el-CICD Chart as a project is made up of two charts, a https://helm.sh/docs/topics/library_charts/[Helm library chart] and an application chart:
+
+
+.Provided elcicd-charts with usage example
+* **elcicd-lib**: library chart
++
+[source,YAML,linenums]
+----
+# Chart.yaml
+dependencies:
+- name: elcicd-lib
+  version: 0.1.0
+  repository: https://elcicd.github.io/el-CICD-deploy/charts/
+----
+
+* **elcicd-chart**: application chart
++
+[source,YAML,linenums]
+----
+$ helm repo add elcicd-charts https://elcicd.github.io/el-CICD-deploy/charts/
+$ helm repo update
+----
+
+Because library charts cannot render anything by definition, the application chart is provided as a convenience chart that merely references the library chart as a dependency so that end users aren't required to create their own charts.
+
+GitHub pages is the current hosting platform for the charts.  The charts is also provided from GitHub's OCI registry, but Helm must be authenticated with GitHub before attempting to use this method:
+
+`helm registry login --username ${USERNAME} oci://ghcr.io/elcicd`
+
 == Deployment definitions
 
 In el-CICD Chart, a collection of one or more https://helm.sh/docs/chart_template_guide/values_files/[Helm values.yaml files] defining a deployment will be referred to as a **__deployment definition__**.  These are the only files required to be written by the end user for deploying to Kubernetes when used in conjunction with Helm and el-CICD Chart.  It was a fundamental requirement when designing el-CICD Chart that it remain 100% compatible with Helm, and only requiring values.yaml files for use was how the requirement was met.
