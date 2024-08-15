@@ -2,78 +2,42 @@ apiVersion: v1
 entries:
   elcicd-chart:
   - apiVersion: v2
-    created: "2024-08-08T02:56:29.457127469Z"
+    created: "2024-08-15T00:15:11.720855585Z"
     dependencies:
-    - name: elcicd-renderer
-      repository: file://../elcicd-renderer
+    - name: elcicd-lib
+      repository: file://../elcicd-lib
       version: 0.1.0
-    - name: elcicd-kubernetes
-      repository: file://../elcicd-kubernetes
-      version: 0.1.0
-    - name: elcicd-common
-      repository: file://../elcicd-common
-      version: 0.1.0
-    description: A generic helm chart used to deploy any size group of components
-      onto a kubernetes cluster.
-    digest: 180bbee555c9f05c96e82a5ff691fa837bed562cf69512a1a8e9cc06e4aab292
+    description: 'An all-in-one chart meant with the ability to define variables and
+      deployment profiles in values.yml files. '
+    digest: f3b1d4c1890997f82a070ab47e277260891c14df27d38789077bfbb022b089cf
+    keywords:
+    - values.yml
+    - parameterized
+    - profiles
+    - deployment profiles
+    - variables
     name: elcicd-chart
     type: application
     urls:
     - elcicd-chart-0.1.0.tgz
     version: 0.1.0
-  elcicd-common:
+  elcicd-lib:
   - apiVersion: v2
-    created: "2024-08-08T02:56:29.457324938Z"
-    description: A library chart with basic, common functionality shared by all elCicd
-      charts.
-    digest: 97aef6248a4900a0ee696ad4ea20ad64d72fcaceade9e4a1341c9bb3f160a687
-    keywords:
-    - generic
-    - parameterized
-    - profiles
-    name: elcicd-common
-    sources:
-    - https://github.com/elcicd/el-CICD-deploy/tree/main/charts
-    type: library
-    urls:
-    - elcicd-common-0.1.0.tgz
-    version: 0.1.0
-  elcicd-kubernetes:
-  - apiVersion: v2
-    created: "2024-08-08T02:56:29.457713145Z"
-    description: A library chart with the a complete set of Kubernetes resources that
-      might be needed for application deployments. Built to be used in conjunction
-      with the elcicd-renderer for rendering as a general Helm-based deployment solution
-      across multiple environments.
-    digest: 2caef1418b199f69ced691d286ba0d428ddadec72c7a5d4949170a2644aed857
-    keywords:
-    - generic
-    - parameterized
-    - profiles
-    name: elcicd-kubernetes
-    sources:
-    - https://github.com/elcicd/el-CICD-deploy/tree/main/charts
-    type: library
-    urls:
-    - elcicd-kubernetes-0.1.0.tgz
-    version: 0.1.0
-  elcicd-renderer:
-  - apiVersion: v2
-    created: "2024-08-08T02:56:29.458099037Z"
-    description: A chart meant to be added as a dependency for rendering parameterized
-      values.yml files with profiles.
-    digest: 87cb1e7e333dd47af86ad3f5e8fcf9f49ceda79535168cbc5232e6e52c47e5ec
+    created: "2024-08-15T00:15:11.721548601Z"
+    description: 'An all-in-one library chart meant to be added as a dependency for
+      enabling variables and deployment profiles in values.yml files. '
+    digest: ffe0218995eb6956c6d81fbb1f4fd81a7a11e36acd60254196df1b9fc1ca0867
     keywords:
     - values.yml
     - parameterized
     - profiles
-    - parameters
+    - deployment profiles
     - variables
-    name: elcicd-renderer
+    name: elcicd-lib
     sources:
     - https://github.com/elcicd/el-CICD-deploy/tree/main/charts
     type: library
     urls:
-    - elcicd-renderer-0.1.0.tgz
+    - elcicd-lib-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-08T02:56:29.455696412Z"
+generated: "2024-08-15T00:15:11.719856168Z"
