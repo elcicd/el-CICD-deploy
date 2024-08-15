@@ -1,0 +1,16 @@
+apiVersion: v2
+name: elcicd-lib
+description: |
+  An all-in-one library chart meant to be added as a dependency for enabling variables and deployment profiles in values.yml files.
+keywords:
+- values.yml
+- parameterized
+- profiles
+- deployment profiles
+- variables
+
+sources: [https://github.com/elcicd/el-CICD-deploy/tree/main/charts]
+
+type: library
+
+version: "0.1.0"

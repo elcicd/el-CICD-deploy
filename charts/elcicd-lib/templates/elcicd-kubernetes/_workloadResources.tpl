@@ -263,6 +263,34 @@ spec:
 
 {{/*
   ======================================
+  elcicd-kubernetes.pod
+  ======================================
+
+  PARAMETERS LIST:
+    . -> should always be root of chart
+    $podValues -> elCicd template for Pod
+
+  ======================================
+
+  el-CICD SUPPORTING TEMPLATES
+  ---
+    "elcicd-common.apiObjectHeader"
+    "elcicd-kubernetes.jobSpec"
+
+  ======================================
+
+  Defines a el-CICD template for a Kubernetes Job.
+*/}}
+{{- define "elcicd-kubernetes.pod" }}
+{{- $ := index . 0 }}
+{{- $podValues := index . 1 }}
+{{- $_ := set $podValues "kind" "Pod" }}
+{{- include "elcicd-common.apiObjectHeader" . }}
+{{- include "elcicd-kubernetes.podTemplate" . }}
+{{- end }}
+
+{{/*
+  ======================================
   elcicd-kubernetes.statefulset
   ======================================
 

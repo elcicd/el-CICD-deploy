@@ -45,11 +45,7 @@
 
   {{- include "elcicd-renderer.gatherElCicdDefaults" $ }}
 
-  {{- range $dep := $.Chart.Dependencies }}
-    {{- if (eq $dep.Name "elcicd-kubernetes") }}
-      {{- include "elcicd-kubernetes.initElCicdDefaults" $ }}
-    {{- end }}
-  {{- end }}
+  {{- include "elcicd-kubernetes.initElCicdDefaults" $ }}
 
   {{- include "elcicd-renderer.setInternalConstants" $ }}
 {{- end }}

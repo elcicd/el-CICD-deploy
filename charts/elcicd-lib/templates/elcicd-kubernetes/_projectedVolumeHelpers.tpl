@@ -104,7 +104,11 @@
     {{- $_ := set $secSources $dApiSources.name (dict "downwardAPI" $dApiToken) }}
   {{- end }}
 
-  {{- $_ := set $volume.projected "sources" (concat (values $cmSources) (values $secSources) (values $saTokenSources) (values $dApiSources)) }}
+  {{- $volumeSources := concat (values $cmSources) (values $secSources) (values $saTokenSources) (values $dApiSources) }}
+  {{- if and (not $volumeSources) (not $.Values.renderValuesForKust) }}
+    {{- fail (printf "no projected sources found for %s" $projectedVolume.name) }}
+  {{- end }}
+  {{- $_ := set $volume.projected "sources" $volumeSources }}
   {{- $_ := set $podValues "volumes" (append ($podValues.volumes | default list) $volume) }}
 {{- end }}
 
