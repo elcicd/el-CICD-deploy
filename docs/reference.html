@@ -569,24 +569,47 @@ pre.rouge .gs {
 <ul class="sectlevel2">
 <li><a href="#_basic_structure">2.1. Basic structure</a></li>
 <li><a href="#_deployment_profiles">2.2. Deployment Profiles</a></li>
-<li><a href="#_templates">2.3. Templates</a></li>
-<li><a href="#_variables">2.4. Variables</a></li>
+<li><a href="#_templates">2.3. Templates</a>
+<ul class="sectlevel3">
+<li><a href="#_types_of_templates">2.3.1. Types of templates</a></li>
+<li><a href="#_helper_attributes">2.3.2. Helper attributes</a></li>
+<li><a href="#_built_in_templates">2.3.3. Built-in templates</a></li>
+<li><a href="#_free_form_templates">2.3.4. Free Form Templates</a></li>
 </ul>
 </li>
-<li><a href="#_alternative_use_cases_and_utilities">3. Alternative use-cases and utilities</a>
-<ul class="sectlevel2">
-<li><a href="#_projectedvolumes">3.1. projectedVolumes</a></li>
-<li><a href="#_copyresources">3.2. copyResources</a></li>
-<li><a href="#_file_and_config_variables">3.3. FILE and CONFIG variables</a></li>
-<li><a href="#_third_party_helm_charts">3.4. Third party Helm charts</a></li>
-<li><a href="#_kustomize">3.5. Kustomize</a></li>
+<li><a href="#_variables">2.4. Variables</a>
+<ul class="sectlevel3">
+<li><a href="#_defining">2.4.1. Defining</a></li>
+<li><a href="#_referencing">2.4.2. Referencing</a></li>
+<li><a href="#_built_in_variables">2.4.3. Built-in variables</a></li>
+<li><a href="#_scoping">2.4.4. Scoping</a></li>
+<li><a href="#_overriding">2.4.5. Overriding</a></li>
 </ul>
 </li>
-<li><a href="#_api_reference">4. API Reference</a>
+</ul>
+</li>
+<li><a href="#_rendering_process_overview">3. Rendering Process Overview</a></li>
+<li><a href="#_specialized_utilities">4. Specialized Utilities</a>
 <ul class="sectlevel2">
-<li><a href="#_built_in_variables_2">4.1. Built-in Variables</a></li>
-<li><a href="#_built_in_defaults">4.2. Built-in Defaults</a></li>
-<li><a href="#_built_in_templates_2">4.3. Built-in Templates</a></li>
+<li><a href="#_projectedvolumes_by_labels">4.1. projectedVolumes by labels</a></li>
+<li><a href="#_copyresources">4.2. copyResources</a></li>
+</ul>
+</li>
+<li><a href="#_debugging_utilities">5. Debugging utilities</a></li>
+<li><a href="#_unconventional_use_cases">6. Unconventional use-cases</a>
+<ul class="sectlevel2">
+<li><a href="#_third_party_helm_charts">6.1. Third-party Helm charts</a></li>
+<li><a href="#_kustomize">6.2. Kustomize</a></li>
+</ul>
+</li>
+<li><a href="#_el_cicd_chart_reference">7. el-CICD Chart Reference</a>
+<ul class="sectlevel2">
+<li><a href="#_glossary">7.1. Glossary</a></li>
+<li><a href="#_keywords">7.2. Keywords</a></li>
+<li><a href="#_built_in_variables_2">7.3. Built-in Variables</a></li>
+<li><a href="#_built_in_defaults">7.4. Built-in Defaults</a></li>
+<li><a href="#_default_template_helper_attributes">7.5. Default Template Helper Attributes</a></li>
+<li><a href="#_built_in_templates_2">7.6. Built-in Templates</a></li>
 </ul>
 </li>
 </ul>
@@ -2026,54 +2049,551 @@ To null a variable out, define it with an empty value in a higher precedence <co
 </table>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_default_helper_attributes">2.4.5.2. Default helper attributes</h5>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rendering_process_overview">3. Rendering Process Overview</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>All helper attributes on templates can reference variables, but default helper attributes are only able to reference deployment variables, and not template specific variables.</p>
+<p>A high level overview of how el-CICD Chart processes and renders deployment definitions.  How and when variables are realized is also explained.</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Realize Dynamic <code>elCicdDefs-*</code> Names</strong></p>
+<div class="paragraph">
+<p><code>elCicdDefs</code> map names may be defined with variables; e.g. <code>elCicdDefs-$&lt;FOO&gt;</code>.  All of the deployment <code>elCicdDefs</code> map names are processed first.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>ONLY values defined in the default deployment <code>elCicdDefs</code> can be used to define deployment <code>elCicdDefs-*</code> maps.</strong>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p><strong>Create Profile-based <code>elCicdDefs</code></strong></p>
+<div class="paragraph">
+<p>Collect final values <code>elCicdDefs</code> based on deployment profiles only; i.e. consider only <code>elCicdDefs-&lt;PROFILE&gt;</code> maps.</p>
+</div>
+</li>
+<li>
+<p><strong>Collect and Filter All Templates</strong></p>
+<div class="paragraph">
+<p><code>elCicdTemplate-*</code> lists are collected and concatenated to create an intermediate <code>elCicdTemplates</code> list.  <a href="#_template_filtering">Filter</a> this list based on the active profiles.</p>
+</div>
+</li>
+<li>
+<p><strong>Expand Matrixes:</strong></p>
+<div class="paragraph">
+<p><a href="#_matrices">Matrix</a> values and lists can be parameterized with variables; e.g. <code>namespaces: $&lt;NAMESPACE_LIST&gt;</code> or <code>objNames: [$&lt;FOO&gt;,$&lt;BAR&gt;]</code>.  Using the profiles-based <code>elCicdDefs</code> map, process the matrix variable references, and then generate all copies for any templates with matrices defined to create a final <code>elCicdTemplates</code> list.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>Only values derived from profile-based deployment <code>elCicdDefs</code> map can be used as variables in matrices.</strong>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p><strong>Process Templates</strong></p>
+<div class="paragraph">
+<p>For each template in the final template list:</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Use the active profiles and the <code>objName</code> to derive the final deployment <code>elCicdDefs</code> for the template.</p>
+</li>
+<li>
+<p>Using the final deployment <code>elCicdDefs</code> map as the starting point, process all template <code>elCicdDefs</code> to derive the final <code>elCicdDefs</code> map for the template.</p>
+</li>
+<li>
+<p>Using the final <code>elCicdDefs</code> map for the template, replace ALL remaining variable references in the template.</p>
+</li>
+<li>
+<p>If any escaped el-CICD Chart variable references exist, remove the backslash; e.g. <code>\$&lt;FOO&gt;</code> becomes <code>$&lt;FOO&gt;</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Render the Templates to YAML</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If <code>templateName</code> or <code>templateNames</code> are defined, process the named templates.</p>
+</li>
+<li>
+<p>If <code>templateName</code> or <code>templateNames</code> are NOT defined, render the value of <code>template</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Output Final Metadata</strong></p>
+<div class="paragraph">
+<p>In YAML comments, output:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The list of active profiles</p>
+</li>
+<li>
+<p>A list of each template skipped due to filtering.</p>
+</li>
+<li>
+<p>A list of each template rendered.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This concludes the el-CICD Chart rendering process.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_specialized_utilities">4. Specialized Utilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>el-CICD Chart has a some extra functionality built in to make creating deployment definitions easier, as well as enabling new means of defining deployment definitions for more dynamic deployments.</p>
+</div>
+<div class="sect2">
+<h3 id="_projectedvolumes_by_labels">4.1. projectedVolumes by labels</h3>
+<div class="paragraph">
+<p>While Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a> support mounting ConfigMaps and Secrets as volumes, there are some limitations.  To address these limitations, Kubernetes added the concept of <a href="https://kubernetes.io/docs/concepts/storage/projected-volumes/">projected volumes</a>.  The advantage of Projected volumes is that several different resources&#8201;&#8212;&#8201;and not just ConfigMaps and Secrets&#8201;&#8212;&#8201;could be mounted to a single directly in a container.</p>
+</div>
+<div class="paragraph">
+<p>Unfortunately, like most tools associated with deploying to Kubernetes, the manifests for mounting Secrets and ConfigMaps, whether individually or in projected volumes, had to be statically declared; i.e. the deployment manifests had to know all the resources to be mounted as volumes beforehand.</p>
+</div>
+<div class="paragraph">
+<p>In order to enable more dynamic behavior, el-CICD Chart implemented functionality that would mount a collection of ConfigMaps and/or Secrets into a projected volume by their labels.  Lists of labels can be provided, and the namespace of the Pod will be scanned for matching resources, all of which will be mounted into the container.  The values of the labels are not relevant to this functionality.  Only whether the label exists on the resource.</p>
+</div>
+<h4 id="_example_using_projectedvolumes_configmapsbylabels_for_job" class="discrete">Example using <code>projectedVolumes.configMapsByLabels</code> for Job</h4>
+<div class="listingblock">
+<div class="title">ConfigMaps are deployed first:</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre>elCicdTemplates:
+- templateName: configMap
+  objName: cm-1
+  labels:
+    foo: "doesn't matter"
+  data:
+    cm-1.txt: some text
+
+- templateName: configMap
+  objName: cm-2
+  labels:
+    foo: "doesn't matter"
+  data:
+    cm-2.txt: some text
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The ConfigMaps must be deployed <strong>before</strong> using <code>projectedVolumes.configMapsByLabels</code>.  Helm will only find resources already deployed in the sane namespace.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Deploy Job that is using <code>projectedVolumes.configMapsByLabels</code>:</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre>elCicdTemplates:
+- templateName: job
+  objName: cm-by-labels-example
+  image: &lt;some-image&gt;:latest
+  projectedVolumes:
+  - name: foo-label-volume
+    mountPath: /mnt/testing
+    configMapsByLabels:
+      foo: {}
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Partial pseudo-manifest generated by el-CICD Chart from deployment definition above:</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td><td class="code"><pre>apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cm-by-labels-example
+spec:
+  template:
+    metadata:
+      labels:
+      name: cm-by-labels-example
+      namespace: elcicd-chart-demo
+    spec:
+      containers:
+      - name: cm-by-labels-example
+        image: &lt;some-image&gt;:latest
+        ...
+        volumeMounts:
+        - mountPath: /mnt/testing
+          name: foo-label-volume
+          readOnly: false
+        ...
+      volumes:
+      - name: foo-label-volume
+        projected:
+          sources:
+          - configMap:
+              name: cm-1
+          - configMap:
+              name: cm-2
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_copyresources">4.2. copyResources</h3>
+<div class="paragraph">
+<p>Sometimes it makes sense to copy resources from one namespace to another.  From a design perspective, this is analogous to the prototype pattern.</p>
+</div>
+<div class="paragraph">
+<p>Example use cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A pull secret used by many or all applications on the cluster can be deployed in a master namespace.  It&#8217;s easier to copy the ConfigMap from the master namespace to the application namespaces than have every application manage its own copy directly.</p>
+</li>
+<li>
+<p>Similarly, a common set of configuration values is defined in a ConfigMap and deployed in a master namespace, and they are used by many or all applications on the cluster.  It&#8217;s easier to copy the ConfigMap from the master namespace to the application namespaces as needed than have every application manage its own copy directly.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>el-CICD Chart has implemented a utility helper template that will copy a resource from one namespace to any other.</p>
+</div>
+<div class="listingblock">
+<div class="title"><code>copyResource</code> built-in template structure</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre>- templateName: copyResource
+  objName: copy-example
+  kind: &lt;<em>some resource kind</em>&gt;
+  fromNamespace: &lt;<em>source namespace</em>&gt;
+  toNamespace: &lt;<em>target namespace</em>&gt;
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In conjunction with the <code>objNames</code> namespace, a single template declaration can copy a resource as many times as it needs.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_debugging_utilities">5. Debugging utilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>el-CICD Chart supports two utilities to help with debugging deployment definitions.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">outputValuesYaml</dt>
+<dd>
+<p>If true, output all merged values.yaml files as YAML and exit.  No el-CICD Chart processing takes place.  Templates will <strong>NOT</strong> be rendered to YAML.  Useful for inspecting how Helm merges multiple deployment definition files.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>helm template --set outputValuesYaml=true &#8230;&#8203;</code></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">valuesYamlToStdOut</dt>
+<dd>
+<p>If true, output all values of a processed el-CICD Chart deployment definition as YAML and exit.  Includes all values belonging <code>elCicdTemplates</code> and <code>elCicdDefs</code> maps and the <code>elCicdProfiles</code> list.  Templates will <strong>NOT</strong> be rendered to YAML.  Useful for inspecting the results of a processed deployment definition before the templates are rendered.</p>
+<div class="paragraph">
+<p><code>helm template --set valuesYamlToStdOut=true &#8230;&#8203;</code></p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_unconventional_use_cases">6. Unconventional use-cases</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Below are a just a few unconventional ways el-CICD Chart can be used.</p>
+</div>
+<div class="sect2">
+<h3 id="_third_party_helm_charts">6.1. Third-party Helm charts</h3>
+<div class="paragraph">
+<p>There are many applications that already Helm charts created for them, and rewriting them to use el-CICD Chart directly might not be possible or useful for a myriad of reasons.  So how can el-CICD Chart still be leveraged for configuration management?  The answer is to define a deployment definition that results in a values.yaml file and pipe it or post-render with a second Helm call to the other chart.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example deployment definition for third-party Helm chart</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="code"><pre>elCicdDefs:
+  SOME_3RD_PARTY_VALUES_YAML_VAR: a-value
+
+elCicdDefs-SOME_PROFILE:
+  SOME_3RD_PARTY_VALUES_YAML_VAR: b-value
+
+elCicdTemplates:
+- rawYaml: true <i class="conum" data-value="1"></i><b>(1)</b>
+  objName: values-yaml-comp-1 <i class="conum" data-value="2"></i><b>(2)</b>
+  template: <i class="conum" data-value="3"></i><b>(3)</b>
+    ...
+- rawYaml: true <i class="conum" data-value="1"></i><b>(1)</b>
+  objName: values-yaml-comp-n <i class="conum" data-value="2"></i><b>(2)</b>
+  template: <i class="conum" data-value="3"></i><b>(3)</b>
+    ...
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Set <code>rawYaml</code> to true so el-CICD only outputs the processed YAML template exactly as written.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Any number of values files can be defined in a single deployment definition.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Create a YAML template for the values.yaml files of the third-party chart.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example deploy-to-helm.sh</div>
+<div class="content">
+<pre>#!/bin/bash
+cat - &gt; third-party-chart-values.yaml
+
+helm upgrade --install -f third-party-chart-values.yaml third-party-release elcicd-charts/elcicd-chart</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example using el-CICD Chart with a Helm <code>--post-renderer</code> to deploy third-party chart</div>
+<div class="content">
+<pre>helm template -f deployment-def.yaml --post-renderer deploy-to-helm.sh</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example  el-CICD Chart with a pipe to deploy third-party chart</div>
+<div class="content">
+<pre>helm template -f deployment-def.yaml gen-values-file elcicd-charts/elcicd-chart | \
+  helm upgrade --install -f - third-party-release elcicd-charts/elcicd-chart</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kustomize">6.2. Kustomize</h3>
+<div class="paragraph">
+<p>Helm is not good at some things that el-CICD Chart cannot fix on its own; e.g. labeling and/or annotating a random collection of Kubernetes resources.  Or patching resources, for that matter.  <a href="https://kustomize.io/">Kustomize</a> fills the gap in functionality that Helm or el-CICD Chart templates can&#8217;t address.</p>
+</div>
+<div class="paragraph">
+<p><code>kustomization.yaml</code> files, though, are notoriously static in nature by design.  Using el-CICD Chart to create a template of a Kustomization in order to make the files dynamic (e.g. for a CICD system) is trivial.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example deployment definition kustomization-values.yaml for a dynamic kustomization.yaml</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+</pre></td><td class="code"><pre>elCicdDefs: {}  <i class="conum" data-value="1"></i><b>(1)</b>
+
+elCicdTemplates:
+- templateName: kustomization <i class="conum" data-value="2"></i><b>(2)</b>
+  fields:  <i class="conum" data-value="3"></i><b>(3)</b>
+    resources:
+    - $&lt;RESOURCES_FILE&gt;
+
+    commonLabels:
+      elcicd.io/teamid: $&lt;TEAM_ID&gt;
+      elcicd.io/projectid: $&lt;PROJECT_ID&gt;
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>elCicdDefs</code> is only defined here to note that all variables in this example are expected to be passed in via the command line.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>el-CICD Chart has a <code>kustomization</code> built-in template so that the normal headers don&#8217;t need to be defined.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Create the Kustomization definition, and parameterize it where necessary.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example <code>--post-renderer</code> kustomize.sh</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+</pre></td><td class="code"><pre>#!/bin/bash
+cat &lt;&amp;0 &gt; manifests.yaml
+
+helm template -f kustomization-values.yaml \
+  --set-string elCicdDefs.RESOURCES_FILE=manifests.yaml \
+  --set-string elCicdDefs.TEAM_ID=my-team \
+  --set-string elCicdDefs.PROJECT_ID=my-team-project \
+  kustomization-release \
+  elcicd-charts/elcicd-chart &gt; kustomization.yaml
+
+kustomize build .
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example using el-CICD Chart with a Helm <code>--post-renderer</code> to deploy third-party chart</div>
+<div class="content">
+<pre>helm upgrade --install -f deployment-def.yaml --post-renderer kustomize.sh my-app elcicd-charts/elcicd-chart</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_alternative_use_cases_and_utilities">3. Alternative use-cases and utilities</h2>
+<h2 id="_el_cicd_chart_reference">7. el-CICD Chart Reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_projectedvolumes">3.1. projectedVolumes</h3>
+<h3 id="_glossary">7.1. Glossary</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_copyresources">3.2. copyResources</h3>
+<h3 id="_keywords">7.2. Keywords</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_file_and_config_variables">3.3. FILE and CONFIG variables</h3>
+<h3 id="_built_in_variables_2">7.3. Built-in Variables</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_third_party_helm_charts">3.4. Third party Helm charts</h3>
+<h3 id="_built_in_defaults">7.4. Built-in Defaults</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_kustomize">3.5. Kustomize</h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_api_reference">4. API Reference</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_built_in_variables_2">4.1. Built-in Variables</h3>
+<h3 id="_default_template_helper_attributes">7.5. Default Template Helper Attributes</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_built_in_defaults">4.2. Built-in Defaults</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_built_in_templates_2">4.3. Built-in Templates</h3>
+<h3 id="_built_in_templates_2">7.6. Built-in Templates</h3>
 
 </div>
 </div>
@@ -2081,7 +2601,7 @@ To null a variable out, define it with an empty value in a higher precedence <co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-12 23:47:28 UTC
+Last updated 2024-08-15 00:23:08 UTC
 </div>
 </div>
 </body>
