@@ -1,4 +1,4 @@
-name:  asciidoc-tutorial-renderer
+name:  asciidoc-renderer
 
 on:
   push:
