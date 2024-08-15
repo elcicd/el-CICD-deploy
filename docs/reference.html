@@ -565,51 +565,52 @@ pre.rouge .gs {
 <li><a href="#_a_better_way_to_create_templates_in_helm">1.2. A better way to create templates in Helm</a></li>
 </ul>
 </li>
-<li><a href="#_deployment_definitions">2. Deployment definitions</a>
+<li><a href="#_helm_repository_contents_and_usage">2. Helm Repository contents and usage</a></li>
+<li><a href="#_deployment_definitions">3. Deployment definitions</a>
 <ul class="sectlevel2">
-<li><a href="#_basic_structure">2.1. Basic structure</a></li>
-<li><a href="#_deployment_profiles">2.2. Deployment Profiles</a></li>
-<li><a href="#_templates">2.3. Templates</a>
+<li><a href="#_basic_structure">3.1. Basic structure</a></li>
+<li><a href="#_deployment_profiles">3.2. Deployment Profiles</a></li>
+<li><a href="#_templates">3.3. Templates</a>
 <ul class="sectlevel3">
-<li><a href="#_types_of_templates">2.3.1. Types of templates</a></li>
-<li><a href="#_helper_attributes">2.3.2. Helper attributes</a></li>
-<li><a href="#_built_in_templates">2.3.3. Built-in templates</a></li>
-<li><a href="#_free_form_templates">2.3.4. Free Form Templates</a></li>
+<li><a href="#_types_of_templates">3.3.1. Types of templates</a></li>
+<li><a href="#_helper_attributes">3.3.2. Helper attributes</a></li>
+<li><a href="#_built_in_templates">3.3.3. Built-in templates</a></li>
+<li><a href="#_free_form_templates">3.3.4. Free Form Templates</a></li>
 </ul>
 </li>
-<li><a href="#_variables">2.4. Variables</a>
+<li><a href="#_variables">3.4. Variables</a>
 <ul class="sectlevel3">
-<li><a href="#_defining">2.4.1. Defining</a></li>
-<li><a href="#_referencing">2.4.2. Referencing</a></li>
-<li><a href="#_built_in_variables">2.4.3. Built-in variables</a></li>
-<li><a href="#_scoping">2.4.4. Scoping</a></li>
-<li><a href="#_overriding">2.4.5. Overriding</a></li>
+<li><a href="#_defining">3.4.1. Defining</a></li>
+<li><a href="#_referencing">3.4.2. Referencing</a></li>
+<li><a href="#_built_in_variables">3.4.3. Built-in variables</a></li>
+<li><a href="#_scoping">3.4.4. Scoping</a></li>
+<li><a href="#_overriding">3.4.5. Overriding</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_rendering_process_overview">3. Rendering Process Overview</a></li>
-<li><a href="#_specialized_utilities">4. Specialized Utilities</a>
+<li><a href="#_rendering_process_overview">4. Rendering Process Overview</a></li>
+<li><a href="#_specialized_utilities">5. Specialized Utilities</a>
 <ul class="sectlevel2">
-<li><a href="#_projectedvolumes_by_labels">4.1. projectedVolumes by labels</a></li>
-<li><a href="#_copyresources">4.2. copyResources</a></li>
+<li><a href="#_projectedvolumes_by_labels">5.1. projectedVolumes by labels</a></li>
+<li><a href="#_copyresources">5.2. copyResources</a></li>
 </ul>
 </li>
-<li><a href="#_debugging_utilities">5. Debugging utilities</a></li>
-<li><a href="#_unconventional_use_cases">6. Unconventional use-cases</a>
+<li><a href="#_debugging_utilities">6. Debugging utilities</a></li>
+<li><a href="#_unconventional_use_cases">7. Unconventional use-cases</a>
 <ul class="sectlevel2">
-<li><a href="#_third_party_helm_charts">6.1. Third-party Helm charts</a></li>
-<li><a href="#_kustomize">6.2. Kustomize</a></li>
+<li><a href="#_third_party_helm_charts">7.1. Third-party Helm charts</a></li>
+<li><a href="#_kustomize">7.2. Kustomize</a></li>
 </ul>
 </li>
-<li><a href="#_el_cicd_chart_reference">7. el-CICD Chart Reference</a>
+<li><a href="#_el_cicd_chart_reference">8. el-CICD Chart Reference</a>
 <ul class="sectlevel2">
-<li><a href="#_glossary">7.1. Glossary</a></li>
-<li><a href="#_keywords">7.2. Keywords</a></li>
-<li><a href="#_built_in_variables_2">7.3. Built-in Variables</a></li>
-<li><a href="#_built_in_defaults">7.4. Built-in Defaults</a></li>
-<li><a href="#_default_template_helper_attributes">7.5. Default Template Helper Attributes</a></li>
-<li><a href="#_built_in_templates_2">7.6. Built-in Templates</a></li>
+<li><a href="#_glossary">8.1. Glossary</a></li>
+<li><a href="#_keywords">8.2. Keywords</a></li>
+<li><a href="#_built_in_variables_2">8.3. Built-in Variables</a></li>
+<li><a href="#_built_in_defaults">8.4. Built-in Defaults</a></li>
+<li><a href="#_default_template_helper_attributes">8.5. Default Template Helper Attributes</a></li>
+<li><a href="#_built_in_templates_2">8.6. Built-in Templates</a></li>
 </ul>
 </li>
 </ul>
@@ -700,7 +701,59 @@ pre.rouge .gs {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deployment_definitions">2. Deployment definitions</h2>
+<h2 id="_helm_repository_contents_and_usage">2. Helm Repository contents and usage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>el-CICD Chart as a project is made up of two charts, a <a href="https://helm.sh/docs/topics/library_charts/">Helm library chart</a> and an application chart:</p>
+</div>
+<div class="ulist">
+<div class="title">Provided elcicd-charts with usage example</div>
+<ul>
+<li>
+<p><strong>elcicd-lib</strong>: library chart</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre># Chart.yaml
+dependencies:
+- name: elcicd-lib
+  version: 0.1.0
+  repository: https://elcicd.github.io/el-CICD-deploy/charts/
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>elcicd-chart</strong>: application chart</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>$ helm repo add elcicd-charts https://elcicd.github.io/el-CICD-deploy/charts/
+$ helm repo update
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Because library charts cannot render anything by definition, the application chart is provided as a convenience chart that merely references the library chart as a dependency so that end users aren&#8217;t required to create their own charts.</p>
+</div>
+<div class="paragraph">
+<p>GitHub pages is the current hosting platform for the charts.  The charts is also provided from GitHub&#8217;s OCI registry, but Helm must be authenticated with GitHub before attempting to use this method:</p>
+</div>
+<div class="paragraph">
+<p><code>helm registry login --username ${USERNAME} oci://ghcr.io/elcicd</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deployment_definitions">3. Deployment definitions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In el-CICD Chart, a collection of one or more <a href="https://helm.sh/docs/chart_template_guide/values_files/">Helm values.yaml files</a> defining a deployment will be referred to as a <strong><em>deployment definition</em></strong>.  These are the only files required to be written by the end user for deploying to Kubernetes when used in conjunction with Helm and el-CICD Chart.  It was a fundamental requirement when designing el-CICD Chart that it remain 100% compatible with Helm, and only requiring values.yaml files for use was how the requirement was met.</p>
@@ -721,7 +774,7 @@ For the remainder of this document, "templates" will refer only to el-CICD Chart
 </table>
 </div>
 <div class="sect2">
-<h3 id="_basic_structure">2.1. Basic structure</h3>
+<h3 id="_basic_structure">3.1. Basic structure</h3>
 <div class="paragraph">
 <p>The basic structure of an el-CICD Chart deployment definition is as follows:</p>
 </div>
@@ -810,7 +863,7 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 </div>
 </div>
 <div class="sect2">
-<h3 id="_deployment_profiles">2.2. Deployment Profiles</h3>
+<h3 id="_deployment_profiles">3.2. Deployment Profiles</h3>
 <div class="paragraph">
 <p><strong><em>Deployment profiles</em></strong> are the primary mechanism by which el-CICD Chart supports configuration management within a deployment definition.</p>
 </div>
@@ -840,7 +893,7 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 </div>
 </div>
 <div class="sect2">
-<h3 id="_templates">2.3. Templates</h3>
+<h3 id="_templates">3.3. Templates</h3>
 <div class="paragraph">
 <p>el-CICD Chart templates are defined in one or more lists starting with <code>elCicdTemplates</code>:</p>
 </div>
@@ -911,7 +964,7 @@ elCicdTemplates-WITH_YAML:
 </div>
 </div>
 <div class="sect3">
-<h4 id="_types_of_templates">2.3.1. Types of templates</h4>
+<h4 id="_types_of_templates">3.3.1. Types of templates</h4>
 <div class="paragraph">
 <p>el-CICD Chart supports two types of templates:</p>
 </div>
@@ -940,7 +993,7 @@ elCicdTemplates-WITH_YAML:
 </div>
 </div>
 <div class="sect3">
-<h4 id="_helper_attributes">2.3.2. Helper attributes</h4>
+<h4 id="_helper_attributes">3.3.2. Helper attributes</h4>
 <div class="paragraph">
 <p>All el-CICD templates, whether YAML or helper, have a number of helper attributes.  Helper attributes are any attributes not under the <code>template</code> key.  The list and their function is as follows.</p>
 </div>
@@ -964,7 +1017,7 @@ elCicdTemplates-WITH_YAML:
 </ul>
 </div>
 <div class="sect4">
-<h5 id="_template_filtering">2.3.2.1. Template filtering</h5>
+<h5 id="_template_filtering">3.3.2.1. Template filtering</h5>
 <div class="paragraph">
 <p><strong><em>Filters</em></strong> are special types of helper attributes the determine whether a template is rendered or not.  Each is a list of one or more profiles.  The act of defining an element in any of the lists below is one way in which profiles are defined in deployment definitions.</p>
 </div>
@@ -1068,7 +1121,7 @@ elCicdTemplates-with-yaml:
 </div>
 </div>
 <div class="sect4">
-<h5 id="_matrices">2.3.2.2. Matrices</h5>
+<h5 id="_matrices">3.3.2.2. Matrices</h5>
 <div class="paragraph">
 <p><strong><em>Matrices</em></strong> are a special kind of helper attribute.  Matrices are lists of strings, and el-CICD Chart will generate a <em>copy of the template</em> for each element in the matrix.</p>
 </div>
@@ -1188,7 +1241,7 @@ When using the <code>namespaces</code> matrix, you must explicitly list the rele
 </div>
 </div>
 <div class="sect3">
-<h4 id="_built_in_templates">2.3.3. Built-in templates</h4>
+<h4 id="_built_in_templates">3.3.3. Built-in templates</h4>
 <div class="paragraph">
 <p>el-CICD Chart defines a number of pre-defined templates in order to further reduce end-user boilerplate, and these are referred to as <strong><em>built-in templates</em></strong>.  By convention, the names of built-in templates reflect the Kubernetes object they are to render; e.g. <code>deployment</code> for a Deployment and <code>horizontalPodAutoscaler</code> for a HorizontalPodAutoscaler.  Built-in templates are requested via the <code>templateName</code> key.</p>
 </div>
@@ -1297,7 +1350,7 @@ The current set of built-in templates focus almost exclusively on application de
 </table>
 </div>
 <div class="sect4">
-<h5 id="_compound_built_in_templates">2.3.3.1. Compound Built-in templates</h5>
+<h5 id="_compound_built_in_templates">3.3.3.1. Compound Built-in templates</h5>
 <div class="paragraph">
 <p>In order to further reduce excess boilerplate, el-CICD Chart allows defining <strong><em>compound built-in templates</em></strong>.  Compound built-in templates combine more than one built-in template definitions into a single definition with each individual built-in re-using any shared helper attributes.  Compound built-in templates are defined as a list of one more strings under the <code>templateNames</code> key.</p>
 </div>
@@ -1407,7 +1460,7 @@ For more concise compound templates, take advantage of the fact that YAML is a s
 </div>
 </div>
 <div class="sect4">
-<h5 id="_default_values">2.3.3.2. Default Values</h5>
+<h5 id="_default_values">3.3.3.2. Default Values</h5>
 <div class="paragraph">
 <p>Many built-in templates have reasonable default values defined in order to further reduce boilerplate; e.g. if the <code>port</code> and <code>targetPort</code> are the same and the default value (8080) is sufficient, and the release name is sufficient as a <code>metadata.name</code>:</p>
 </div>
@@ -1429,7 +1482,7 @@ For more concise compound templates, take advantage of the fact that YAML is a s
 </div>
 </div>
 <div class="sect3">
-<h4 id="_free_form_templates">2.3.4. Free Form Templates</h4>
+<h4 id="_free_form_templates">3.3.4. Free Form Templates</h4>
 <div class="paragraph">
 <p>If more complex template definitions are required, or a built-in template doesn&#8217;t exist for a resource, a <strong><em>free form template</em></strong> can be defined. Free form templates are just fully defined YAML definitions of resources.  While more verbose than using the simpler, built-in templates, Kubernetes is infinitely extensible with <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">Custom Resource Definitions</a> (CRD&#8217;s), and having free form templates means that no matter what CRD&#8217;s are introduced now or in the future, el-CICD Chart deployment definitions can adapt without requiring the user to resort to creating new Helm/Go templates.</p>
 </div>
@@ -1480,13 +1533,13 @@ For more concise compound templates, take advantage of the fact that YAML is a s
 </div>
 </div>
 <div class="sect2">
-<h3 id="_variables">2.4. Variables</h3>
+<h3 id="_variables">3.4. Variables</h3>
 <div class="paragraph">
 <p>In traditional Helm, <a href="https://helm.sh/docs/chart_template_guide/values_files/">Helm values.yaml files</a> are static YAML files that are fed to a chart consisting of
 Helm/Go templates and processed to produce resource definitions for deployment to Kubernetes.  In order to simplify defining templates and move away from Helm/Go templates, defining variables in deployment definitions was implemented.</p>
 </div>
 <div class="sect3">
-<h4 id="_defining">2.4.1. Defining</h4>
+<h4 id="_defining">3.4.1. Defining</h4>
 <div class="paragraph">
 <p>Variables are defined in YAML maps named starting with <code>elCicdDefs</code> either at the root of a document or within a <a href="#_templates">template</a>.  Variables may contain any any valid YAML syntax and type.</p>
 </div>
@@ -1609,7 +1662,7 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_referencing">2.4.2. Referencing</h4>
+<h4 id="_referencing">3.4.2. Referencing</h4>
 <div class="paragraph">
 <p>Variables are referenced with the following syntax:</p>
 </div>
@@ -1694,12 +1747,12 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_built_in_variables">2.4.3. Built-in variables</h4>
+<h4 id="_built_in_variables">3.4.3. Built-in variables</h4>
 <div class="paragraph">
 <p>el-CICD Chart defines a number of built-in variables for use in templates, Helm and template.</p>
 </div>
 <div class="sect4">
-<h5 id="_helm_built_in_variables">2.4.3.1. Helm built-in variables</h5>
+<h5 id="_helm_built_in_variables">3.4.3.1. Helm built-in variables</h5>
 <div class="paragraph">
 <p>el-CICD Chart has a few built-in variables derived from <a href="https://helm.sh/docs/chart_template_guide/builtin_objects/">Helm&#8217;s built-in objects</a>.</p>
 </div>
@@ -1729,7 +1782,7 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect4">
-<h5 id="_template_built_in_variables">2.4.3.2. Template built-in variables</h5>
+<h5 id="_template_built_in_variables">3.4.3.2. Template built-in variables</h5>
 <div class="paragraph">
 <p>Each template has it&#8217;s own set of built-in variables set when being processed for use in deployment definitions:</p>
 </div>
@@ -1772,7 +1825,7 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_scoping">2.4.4. Scoping</h4>
+<h4 id="_scoping">3.4.4. Scoping</h4>
 <div class="paragraph">
 <p><code>elCicdDefs</code> map definitions have two different scopes:</p>
 </div>
@@ -1832,7 +1885,7 @@ elCicdTemplates:
 </div>
 </div>
 <div class="sect3">
-<h4 id="_overriding">2.4.5. Overriding</h4>
+<h4 id="_overriding">3.4.5. Overriding</h4>
 <div class="paragraph">
 <p>Variables may be overridden in el-CICD Chart by defining more specific`elCicdDefs` maps.  The types of <code>elCicdDefs</code> maps are:</p>
 </div>
@@ -1916,7 +1969,7 @@ elCicdDefs-obj-name-PROFILE: <i class="conum" data-value="4"></i><b>(4)</b>
 <p>Every type of <code>elCicdDefs</code> maps may be defined for the deployment or a specific template.</p>
 </div>
 <div class="sect4">
-<h5 id="_order_of_precedence">2.4.5.1. Order of precedence</h5>
+<h5 id="_order_of_precedence">3.4.5.1. Order of precedence</h5>
 <div class="paragraph">
 <p>Order of precedence determines which <code>elCicdDefs</code> map determines the ultimate value of a variable if it is defined in multiple variable maps.</p>
 </div>
@@ -2054,7 +2107,7 @@ To null a variable out, define it with an empty value in a higher precedence <co
 </div>
 </div>
 <div class="sect1">
-<h2 id="_rendering_process_overview">3. Rendering Process Overview</h2>
+<h2 id="_rendering_process_overview">4. Rendering Process Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A high level overview of how el-CICD Chart processes and renders deployment definitions.  How and when variables are realized is also explained.</p>
@@ -2171,13 +2224,13 @@ To null a variable out, define it with an empty value in a higher precedence <co
 </div>
 </div>
 <div class="sect1">
-<h2 id="_specialized_utilities">4. Specialized Utilities</h2>
+<h2 id="_specialized_utilities">5. Specialized Utilities</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>el-CICD Chart has a some extra functionality built in to make creating deployment definitions easier, as well as enabling new means of defining deployment definitions for more dynamic deployments.</p>
 </div>
 <div class="sect2">
-<h3 id="_projectedvolumes_by_labels">4.1. projectedVolumes by labels</h3>
+<h3 id="_projectedvolumes_by_labels">5.1. projectedVolumes by labels</h3>
 <div class="paragraph">
 <p>While Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a> support mounting ConfigMaps and Secrets as volumes, there are some limitations.  To address these limitations, Kubernetes added the concept of <a href="https://kubernetes.io/docs/concepts/storage/projected-volumes/">projected volumes</a>.  The advantage of Projected volumes is that several different resources&#8201;&#8212;&#8201;and not just ConfigMaps and Secrets&#8201;&#8212;&#8201;could be mounted to a single directly in a container.</p>
 </div>
@@ -2322,7 +2375,7 @@ spec:
 </div>
 </div>
 <div class="sect2">
-<h3 id="_copyresources">4.2. copyResources</h3>
+<h3 id="_copyresources">5.2. copyResources</h3>
 <div class="paragraph">
 <p>Sometimes it makes sense to copy resources from one namespace to another.  From a design perspective, this is analogous to the prototype pattern.</p>
 </div>
@@ -2365,7 +2418,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_debugging_utilities">5. Debugging utilities</h2>
+<h2 id="_debugging_utilities">6. Debugging utilities</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>el-CICD Chart supports two utilities to help with debugging deployment definitions.</p>
@@ -2395,13 +2448,13 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_unconventional_use_cases">6. Unconventional use-cases</h2>
+<h2 id="_unconventional_use_cases">7. Unconventional use-cases</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Below are a just a few unconventional ways el-CICD Chart can be used.</p>
 </div>
 <div class="sect2">
-<h3 id="_third_party_helm_charts">6.1. Third-party Helm charts</h3>
+<h3 id="_third_party_helm_charts">7.1. Third-party Helm charts</h3>
 <div class="paragraph">
 <p>There are many applications that already Helm charts created for them, and rewriting them to use el-CICD Chart directly might not be possible or useful for a myriad of reasons.  So how can el-CICD Chart still be leveraged for configuration management?  The answer is to define a deployment definition that results in a values.yaml file and pipe it or post-render with a second Helm call to the other chart.</p>
 </div>
@@ -2481,7 +2534,7 @@ helm upgrade --install -f third-party-chart-values.yaml third-party-release elci
 </div>
 </div>
 <div class="sect2">
-<h3 id="_kustomize">6.2. Kustomize</h3>
+<h3 id="_kustomize">7.2. Kustomize</h3>
 <div class="paragraph">
 <p>Helm is not good at some things that el-CICD Chart cannot fix on its own; e.g. labeling and/or annotating a random collection of Kubernetes resources.  Or patching resources, for that matter.  <a href="https://kustomize.io/">Kustomize</a> fills the gap in functionality that Helm or el-CICD Chart templates can&#8217;t address.</p>
 </div>
@@ -2570,30 +2623,30 @@ kustomize build .
 </div>
 </div>
 <div class="sect1">
-<h2 id="_el_cicd_chart_reference">7. el-CICD Chart Reference</h2>
+<h2 id="_el_cicd_chart_reference">8. el-CICD Chart Reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_glossary">7.1. Glossary</h3>
+<h3 id="_glossary">8.1. Glossary</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_keywords">7.2. Keywords</h3>
+<h3 id="_keywords">8.2. Keywords</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_built_in_variables_2">7.3. Built-in Variables</h3>
+<h3 id="_built_in_variables_2">8.3. Built-in Variables</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_built_in_defaults">7.4. Built-in Defaults</h3>
+<h3 id="_built_in_defaults">8.4. Built-in Defaults</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_default_template_helper_attributes">7.5. Default Template Helper Attributes</h3>
+<h3 id="_default_template_helper_attributes">8.5. Default Template Helper Attributes</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_built_in_templates_2">7.6. Built-in Templates</h3>
+<h3 id="_built_in_templates_2">8.6. Built-in Templates</h3>
 
 </div>
 </div>
@@ -2601,7 +2654,7 @@ kustomize build .
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-15 00:23:08 UTC
+Last updated 2024-08-15 18:00:05 UTC
 </div>
 </div>
 </body>
