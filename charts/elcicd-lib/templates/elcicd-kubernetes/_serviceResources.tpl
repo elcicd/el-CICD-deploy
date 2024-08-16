@@ -99,7 +99,7 @@ spec:
   {{- end }}
   {{- if $ingressValues.tls }}
   tls: {{ $ingressValues.tls | toYaml | nindent 4 }}
-  {{- else if or $ingressValues.secretName (eq $ingressValues.allowHttp "false") }}
+  {{- else if or $ingressValues.secretName (eq (toString $ingressValues.allowHttp) "false") }}
   tls:
   - secretName: {{ $ingressValues.secretName }}
   {{- end }}
