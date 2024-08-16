@@ -67,9 +67,7 @@
 
 {{- $_ := set $ingressValues "kind" "Ingress" }}
 {{- $_ := set $ingressValues "apiVersion" "networking.k8s.io/v1" }}
-{{- $_ := set $ingressValues "allowHttp" ($ingressValues.allowHttp | default "false") }}
 {{- $_ := set $ingressValues "annotations" ($ingressValues.annotations | default dict) }}
-{{- $_ := set $ingressValues.annotations "kubernetes.io/ingress.allow-http" $ingressValues.allowHttp }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "defaultBackend"
@@ -99,7 +97,7 @@ spec:
   {{- end }}
   {{- if $ingressValues.tls }}
   tls: {{ $ingressValues.tls | toYaml | nindent 4 }}
-  {{- else if or $ingressValues.secretName (eq (toString $ingressValues.allowHttp) "false") }}
+  {{- else }}
   tls:
   - secretName: {{ $ingressValues.secretName }}
   {{- end }}
