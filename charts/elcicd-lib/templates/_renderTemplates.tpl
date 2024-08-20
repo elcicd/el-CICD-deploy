@@ -4,15 +4,15 @@
   ======================================
   elcicd-renderer.render
   ======================================
-  
+
   PARAMETERS LIST:
     . -> should always be root of chart
-  
+
   ======================================
 
   ENTRY POINT for el-CICD Charts.  To use el-CICD Charts create a Helm chart with a single .tpl file.
   See the sibling elcicd-chart or usable example:
-  
+
   {{- if eq .Values.outputMergedValuesYaml true }}
     {{- $_ := unset .Values "outputMergedValuesYaml" }}
     {{- .Values | toYaml }}
@@ -35,7 +35,7 @@
     repository: file://../elcicd-common
 
   The elcicd-kubernetes and elcicd-common library charts are technically optional, but should be added if
-  deploying to Kubernetes.  Both of the those charts support el-CICD templates for common application 
+  deploying to Kubernetes.  Both of the those charts support el-CICD templates for common application
   deployment Kubernetes resources.
 
   =====================================
@@ -60,7 +60,7 @@
     relative to the profile and then the objName.
 
     Variables are defined and referenced in templates in the following manner:
-      
+
     elCicdDefs:
       FIRST_VAR: a string
       SECOND_VAR:
@@ -86,44 +86,44 @@
       <template values to set>
 
       objName and objNames are mutually exclusive, with objNames given precedence.  One or the other MUST be defined.
-      namespace and namespaces are mutually exclusive and optional, with namespaces given precedence.  They only needed 
+      namespace and namespaces are mutually exclusive and optional, with namespaces given precedence.  They only needed
       if the resource is to be rendered outside the chart's namespace.  elCicdVariables can be used for either.  namespaces
       and objNames are defined as lists.
-      
+
       elCicdDefs defined in the specific template are given precedence.  Note the optional use objName when defining elCicdDefs,
       since the list of objNames implies multiple different objNames.
-      
+
       Special objName namespace references for inserting for generating an objName or namespace values:
       $<> - insert the baseObjName/baseNamespaceName from the objNames/namespaces list
       $<#> - index of current baseObjName/baseNamespaceName in the objNames/namespaces list
       For example:
-      
+
       namespaces:
       - foo
       - bar
       namespace: $<>-$<#>
-      
+
       Will be rendered as:
       metadata:
         namespace: foo-1
-        
+
       metadata:
         namespace: bar-2
-      
+
       If objNames and owere used in the above:
       objNames:
       - foo
       - bar
       objeName: $<>-$<#>
-      
+
       Would produce:
       metadata:
         name: foo-1
-        
+
       metadata:
         name: bar-2
-    
-    
+
+
   valuesYamlToStdOut
     If set to true, will NOT render the chart, but instead render the el-CICD processed Values object for debugging purposes.
 
@@ -138,15 +138,18 @@
   4. Realize the complete list of templates to be rendered based on any objNames or namespaces matrices per template.
   5. Process all templates, replacing el-CICD variable references with their values.
   5. Add comments describing which templates were rendered and which were skipped due to profile filtering.
-  
+
   NOTE: if valuesYamlToStdOut or global.valuesYamlToStdOut is true, then only the processed Values values will
         be output.
 */}}
 {{- define "elcicd-renderer.render" }}
   {{- $ := . }}
 
+  {{/* HACK (v3.15): global values map not automatically initialized in library charts.  Works if globals defined in chart, though. */}}
+  {{- $_ := set $.Values "global" ($.Values.global | default dict) }}
+
   {{- if (or $.Values.renderPreprocessedValues $.Values.global.renderPreprocessedValues) }}
-    {{- .Values | toYaml }}
+    {{- $.Values | toYaml }}
   {{- else }}
     {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME" (now | date "Mon Jan 2 15:04:05 MST 2006") }}
     {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME_NUM" (now | date "2006_01_02_15_04_05") }}
@@ -173,10 +176,10 @@
       {{- range $template := $.Values.allTemplates }}
         {{- include "elcicd-renderer.renderTemplate" (list $ $template) }}
       {{- end }}
-  ---
-  # Profiles: {{ $.Values.elCicdProfiles }}
+---
+# Profiles: {{ $.Values.elCicdProfiles }}
       {{- range $skippedTemplate := $.Values.skippedTemplates }}
-  # EXCLUDED BY PROFILES: {{ index $skippedTemplate 0 }} -> {{ index $skippedTemplate 1 }}
+# EXCLUDED BY PROFILES: {{ index $skippedTemplate 0 }} -> {{ index $skippedTemplate 1 }}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -185,7 +188,7 @@
 {{- define "elcicd-renderer.renderTemplate" }}
   {{- $ := index . 0 }}
   {{- $template := index . 1 }}
-  
+
   {{- $templateName := $template.templateName | default "elcicd-renderer.__render-default" }}
   {{- if not (contains "." $templateName) }}
     {{- if eq $templateName "copyResource" }}
@@ -205,7 +208,7 @@
 {{- define "elcicd-renderer.__render-default" }}
   {{- $ := index . 0 }}
   {{- $template := index . 1 }}
-  
+
   {{- $_ := required "template or templateName must be defined for an el-CICD Chart template" $template.template }}
 
   {{- if not (eq (toString $template.kubeObject) "false") }}
@@ -228,7 +231,7 @@
     {{- $_ := set $template "labels" ($template.labels | default dict) }}
     {{- $_ := set $metadata "labels" (merge $metadata.labels $template.labels) }}
   {{- end }}
-  
+
   {{- toYaml $template.template }}
 # Rendered YAML Template -> kind: "{{ $template.template.kind }}" name: "{{ (($template.template).metadata).name }}"
 {{- end }}
