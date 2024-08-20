@@ -995,26 +995,32 @@ elCicdTemplates-WITH_YAML:
 <div class="sect3">
 <h4 id="_helper_attributes">3.3.2. Helper attributes</h4>
 <div class="paragraph">
-<p>All el-CICD templates, whether YAML or helper, have a number of helper attributes.  Helper attributes are any attributes not under the <code>template</code> key.  The list and their function is as follows.</p>
+<p>All el-CICD templates, whether free form or built-in, have a number of helper attributes.  All attributes that are not <code>template</code>,</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code><strong>rawYaml</strong></code>: Only applies to free form templates.  If <code>true</code>, el-CICD Chart will not attempt to render the required Kubernetes <code>metadata</code> map.</p>
+<p><code><strong>kubeObject</strong></code>: Default value is <code>true</code>.  Set to <code>false</code> to disable generating the Kubernetes object fields such as <code>apiVersion</code> or the <code>metadata</code> map.  Only applies to free form templates.</p>
 </li>
 <li>
-<p><code><strong>objName</strong></code>: Name of the resource to be rendered.  For Kubernetes compatible resources, this corresponds directly to <code>metadata.name</code>.</p>
+<p><code><strong>objName</strong></code>: Directly corresponds to <code>metadata.name</code>.</p>
 </li>
 <li>
-<p><code><strong>namespace</strong></code>: Kubernetes namespace to deploy the resource.  Directly corresponds to <code>metadata.namespace</code>.</p>
+<p><code><strong>apiVersion</strong></code>: Directly corresponds to <code>apiVersion</code>.  <strong>Only define this value for a built-in template if a different version than the default is required.</strong></p>
 </li>
 <li>
-<p><code><strong>labels</strong></code>: Renders a map of labels to <code>metadata.labels</code>.</p>
+<p><code><strong>namespace</strong></code>: Directly corresponds to <code>metadata.namespace</code>.</p>
 </li>
 <li>
-<p><code><strong>annotations</strong></code>: Renders a map of labels to <code>metadata.annotations</code>.</p>
+<p><code><strong>labels</strong></code>: Directly corresponds to <code>metadata.labels</code>.</p>
+</li>
+<li>
+<p><code><strong>annotations</strong></code>: Directly corresponds to <code>metadata.annotations</code>.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Free form templates will use the helper attributes as alternative convenience fields.  They will be ignored if defined directly in the <code>template</code> map.</p>
 </div>
 <div class="sect4">
 <h5 id="_template_filtering">3.3.2.1. Template filtering</h5>
@@ -2425,7 +2431,7 @@ spec:
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">outputValuesYaml</dt>
+<dt class="hdlist1">renderPreprocessedValues</dt>
 <dd>
 <p>If true, output all merged values.yaml files as YAML and exit.  No el-CICD Chart processing takes place.  Templates will <strong>NOT</strong> be rendered to YAML.  Useful for inspecting how Helm merges multiple deployment definition files.</p>
 </dd>
@@ -2436,7 +2442,7 @@ spec:
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">valuesYamlToStdOut</dt>
+<dt class="hdlist1">renderProcessedValues</dt>
 <dd>
 <p>If true, output all values of a processed el-CICD Chart deployment definition as YAML and exit.  Includes all values belonging <code>elCicdTemplates</code> and <code>elCicdDefs</code> maps and the <code>elCicdProfiles</code> list.  Templates will <strong>NOT</strong> be rendered to YAML.  Useful for inspecting the results of a processed deployment definition before the templates are rendered.</p>
 <div class="paragraph">
@@ -2483,11 +2489,11 @@ elCicdDefs-SOME_PROFILE:
   SOME_3RD_PARTY_VALUES_YAML_VAR: b-value
 
 elCicdTemplates:
-- rawYaml: true <i class="conum" data-value="1"></i><b>(1)</b>
+- kubeObject: false <i class="conum" data-value="1"></i><b>(1)</b>
   objName: values-yaml-comp-1 <i class="conum" data-value="2"></i><b>(2)</b>
   template: <i class="conum" data-value="3"></i><b>(3)</b>
     ...
-- rawYaml: true <i class="conum" data-value="1"></i><b>(1)</b>
+- kubeObject: false <i class="conum" data-value="1"></i><b>(1)</b>
   objName: values-yaml-comp-n <i class="conum" data-value="2"></i><b>(2)</b>
   template: <i class="conum" data-value="3"></i><b>(3)</b>
     ...
@@ -2498,7 +2504,7 @@ elCicdTemplates:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Set <code>rawYaml</code> to true so el-CICD only outputs the processed YAML template exactly as written.</td>
+<td>Set <code>kubeObject</code> to false so el-CICD does not try and generate <code>apiVersion</code>, <code>kind</code>, and <code>metadata</code> fields.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -2654,7 +2660,7 @@ kustomize build .
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-15 18:00:05 UTC
+Last updated 2024-08-20 22:36:41 UTC
 </div>
 </div>
 </body>
