@@ -44,7 +44,6 @@
 {{- $ := index . 0 }}
 {{- $quotaValues := index . 1 }}
 {{- $_ := set $quotaValues "kind" "ResourceQuota" }}
-{{- $_ := set $quotaValues "apiVersion" "v1" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "hard"
@@ -82,7 +81,6 @@ spec:
 {{- $ := index . 0 }}
 {{- $limitValues := index . 1 }}
 {{- $_ := set $limitValues "kind" "LimitRange" }}
-{{- $_ := set $limitValues "apiVersion" "v1" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "limits"	}}

@@ -54,7 +54,7 @@
 {{- $cjValues := index . 1 }}
 
 {{- $_ := set $cjValues "kind" "CronJob" }}
-{{- $_ := set $cjValues "apiVersion" "batch/v1" }}
+{{- $_ := set $cjValues "apiVersion" ($cjValues.apiVersion | default "batch/v1") }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "concurrencyPolicy"
@@ -117,7 +117,7 @@ spec:
 {{- $deployValues := index . 1 }}
 
 {{- $_ := set $deployValues "kind" "Deployment" }}
-{{- $_ := set $deployValues "apiVersion" "apps/v1" }}
+{{- $_ := set $deployValues "apiVersion" ($deployValues.apiVersion | default "apps/v1") }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "minReadySeconds"
@@ -206,7 +206,7 @@ spec:
 {{- $hpaValues := index . 1 }}
 
 {{- $_ := set $hpaValues "kind" "HorizontalPodAutoscaler" }}
-{{- $_ := set $hpaValues "apiVersion" "autoscaling/v2" }}
+{{- $_ := set $hpaValues "apiVersion" ($hpaValues.apiVersion | default "autoscaling/v2") }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "behavior"
@@ -256,7 +256,7 @@ spec:
 {{- $ := index . 0 }}
 {{- $jobValues := index . 1 }}
 {{- $_ := set $jobValues "kind" "Job" }}
-{{- $_ := set $jobValues "apiVersion" "batch/v1" }}
+{{- $_ := set $jobValues "apiVersion" ($jobValues.apiVersion | default "batch/v1") }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 {{- include "elcicd-kubernetes.jobSpec" . }}
 {{- end }}
@@ -329,7 +329,7 @@ spec:
 {{- $ := index . 0 }}
 {{- $stsValues := index . 1 }}
 {{- $_ := set $stsValues "kind" "StatefulSet" }}
-{{- $_ := set $stsValues "apiVersion" "apps/v1" }}
+{{- $_ := set $stsValues "apiVersion" ($stsValues.apiVersion | default "apps/v1") }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "minReadySeconds"

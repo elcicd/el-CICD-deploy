@@ -5,7 +5,7 @@ el-CIDC support for templating an a kustomization.  No expectation of known keys
   {{- $ := index . 0 }}
   {{- $kustValues := index . 1 }}
   {{- $_ := set $kustValues "kind" "Kustomization" }}
-  {{- $_ := set $kustValues "apiVersion" "kustomize.config.k8s.io/v1beta1" }}
+  {{- $_ := set $kustValues "apiVersion" ($kustValues.apiVersion | default "kustomize.config.k8s.io/v1beta1") }}
   {{- include "elcicd-common.apiObjectHeader" . }}
 
   {{- range $field, $fieldValue := ($kustValues.fields | default dict) }}

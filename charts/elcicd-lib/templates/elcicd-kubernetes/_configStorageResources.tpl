@@ -48,7 +48,6 @@
 {{- $cmValues := index . 1 }}
 
 {{- $_ := set $cmValues "kind" "ConfigMap" }}
-{{- $_ := set $cmValues "apiVersion" "v1" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 {{- $whiteList := list "binaryData"
                        "data"
@@ -107,7 +106,6 @@
 {{- $ := index . 0 }}
 {{- $secretValues := index . 1 }}
 {{- $_ := set $secretValues "kind" "Secret" }}
-{{- $_ := set $secretValues "apiVersion" "v1" }}
 {{- if eq ($secretValues.type | default "") "dockerconfigjson" }}
   {{- $_ := set  $secretValues "type" "kubernetes.io/dockerconfigjson" }}
   {{- $dockerconfigjson := "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"auth\":\"%s\"}}}" }}
@@ -205,7 +203,6 @@
 {{- $pvValues := index . 1 }}
 
 {{- $_ := set $pvValues "kind" "PersistentVolume" }}
-{{- $_ := set $pvValues "apiVersion" "v1" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "awsElasticBlockStore"
@@ -298,7 +295,6 @@ spec:
 {{- $ := index . 0 }}
 {{- $pvcValues := index . 1 }}
 {{- $_ := set $pvcValues "kind" "PersistentVolumeClaim" }}
-{{- $_ := set $pvcValues "apiVersion" "v1" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "dataSource"
