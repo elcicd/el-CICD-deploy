@@ -66,7 +66,7 @@
 {{- $ingressValues := index . 1 }}
 
 {{- $_ := set $ingressValues "kind" "Ingress" }}
-{{- $_ := set $ingressValues "apiVersion" "networking.k8s.io/v1" }}
+{{- $_ := set $ingressValues "apiVersion" ($ingressValues.apiVersion | default "networking.k8s.io/v1") }}
 {{- $_ := set $ingressValues "annotations" ($ingressValues.annotations | default dict) }}
 {{- if $ingressValues.allowHttp }}
   {{- $_ := set $ingressValues.annotations
@@ -172,7 +172,6 @@ spec:
   {{- $_ := set $svcValues.labels "discovery.3scale.net" true }}
 {{- end }}
 {{- $_ := set $svcValues "kind" "Service" }}
-{{- $_ := set $svcValues "apiVersion" "v1" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   selector:

@@ -145,35 +145,39 @@
 {{- define "elcicd-renderer.render" }}
   {{- $ := . }}
 
-  {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME" (now | date "Mon Jan 2 15:04:05 MST 2006") }}
-  {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME_NUM" (now | date "2006_01_02_15_04_05") }}
-
-  {{- include "elcicd-renderer.initElCicdRenderer" . }}
-
-  {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" (list $ $.Values $.Values.elCicdDefs) }}
-  {{- include "elcicd-renderer.mergeElCicdDefs" (list $ $.Values $.Values.elCicdDefs "" "") }}
-
-  {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAME" $.Release.Name }}
-  {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAMESPACE" $.Release.Namespace }}
-
-  {{- include "elcicd-renderer.gatherElCicdTemplates" $ }}
-
-  {{- include "elcicd-renderer.filterTemplates" (list $ $.Values.elCicdTemplates) }}
-
-  {{- include "elcicd-renderer.generateAllTemplates" (list $ $.Values.renderingTemplates) }}
-
-  {{- include "elcicd-renderer.processTemplates" (list $ $.Values.allTemplates) }}
-
-  {{- if (or $.Values.valuesYamlToStdOut $.Values.global.valuesYamlToStdOut) }}
-    {{ $.Values | toYaml }}
+  {{- if (or $.Values.renderPreprocessedValues $.Values.global.renderPreprocessedValues) }}
+    {{- .Values | toYaml }}
   {{- else }}
-    {{- range $template := $.Values.allTemplates }}
-      {{- include "elcicd-renderer.renderTemplate" (list $ $template) }}
-    {{- end }}
----
-# Profiles: {{ $.Values.elCicdProfiles }}
-    {{- range $skippedTemplate := $.Values.skippedTemplates }}
-# EXCLUDED BY PROFILES: {{ index $skippedTemplate 0 }} -> {{ index $skippedTemplate 1 }}
+    {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME" (now | date "Mon Jan 2 15:04:05 MST 2006") }}
+    {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME_NUM" (now | date "2006_01_02_15_04_05") }}
+
+    {{- include "elcicd-renderer.initElCicdRenderer" . }}
+
+    {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" (list $ $.Values $.Values.elCicdDefs) }}
+    {{- include "elcicd-renderer.mergeElCicdDefs" (list $ $.Values $.Values.elCicdDefs "" "") }}
+
+    {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAME" $.Release.Name }}
+    {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAMESPACE" $.Release.Namespace }}
+
+    {{- include "elcicd-renderer.gatherElCicdTemplates" $ }}
+
+    {{- include "elcicd-renderer.filterTemplates" (list $ $.Values.elCicdTemplates) }}
+
+    {{- include "elcicd-renderer.generateAllTemplates" (list $ $.Values.renderingTemplates) }}
+
+    {{- include "elcicd-renderer.processTemplates" (list $ $.Values.allTemplates) }}
+
+    {{- if (or $.Values.renderProcessedValues $.Values.global.renderProcessedValues) }}
+      {{ $.Values | toYaml }}
+    {{- else }}
+      {{- range $template := $.Values.allTemplates }}
+        {{- include "elcicd-renderer.renderTemplate" (list $ $template) }}
+      {{- end }}
+  ---
+  # Profiles: {{ $.Values.elCicdProfiles }}
+      {{- range $skippedTemplate := $.Values.skippedTemplates }}
+  # EXCLUDED BY PROFILES: {{ index $skippedTemplate 0 }} -> {{ index $skippedTemplate 1 }}
+      {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}
@@ -203,15 +207,26 @@
   {{- $template := index . 1 }}
   
   {{- $_ := required "template or templateName must be defined for an el-CICD Chart template" $template.template }}
-  {{- if not $template.rawYaml }}
+
+  {{- if not (eq (toString $template.kubeObject) "false") }}
+    {{- $_ := set $template.template "apiVersion" ($template.template.apiVersion | default $template.apiVersion | default "v1") }}
+    {{- $_ := set $template.template "kind" ($template.template.kind | default $template.kind) }}
+    {{ required "Kubernetes API objects require a \"kind\"" $template.template.kind }}
+
     {{- $metadata := $template.template.metadata | default dict }}
     {{- $_ := set $template.template "metadata" $metadata }}
-    {{- $_ := set $metadata "labels" ($metadata.labels | default dict) }}
-  
-    {{- include "elcicd-common.labels" (list $ $metadata.labels)  }}
-    {{- $_ := set $metadata.labels "elcicd.io/selector" (include "elcicd-common.elcicdLabels" .) }}
     {{- $_ := set $metadata "name" ($metadata.name | default $template.objName | default $.Values.elCicdDefaults.objName) }}
     {{- $_ := set $metadata "namespace" ($metadata.namespace | default $template.namespace | default $.Release.Namespace) }}
+
+    {{- $_ := set $metadata "annotations" ($metadata.annotations | default dict) }}
+    {{- $_ := set $template "annotations" ($template.annotations | default dict) }}
+    {{- $_ := set $metadata "annotations" (merge $metadata.annotations $template.annotations) }}
+
+    {{- $_ := set $metadata "labels" ($metadata.labels | default dict) }}
+    {{- include "elcicd-common.labels" (list $ $metadata.labels)  }}
+    {{- $_ := set $metadata.labels "elcicd.io/selector" (include "elcicd-common.elcicdLabels" .) }}
+    {{- $_ := set $template "labels" ($template.labels | default dict) }}
+    {{- $_ := set $metadata "labels" (merge $metadata.labels $template.labels) }}
   {{- end }}
   
   {{- toYaml $template.template }}

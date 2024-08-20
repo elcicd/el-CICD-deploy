@@ -187,7 +187,6 @@
 {{- $ := index . 0 }}
 {{- $svcAcctValues := index . 1 }}
 {{- $_ := set $svcAcctValues "kind" "ServiceAccount" }}
-{{- $_ := set $svcAcctValues "apiVersion" "v1" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 {{- $whiteList := list "automountServiceAccountToken"	}}
 {{- include "elcicd-common.outputToYaml" (list $ $svcAcctValues $whiteList) }}

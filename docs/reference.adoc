@@ -193,13 +193,16 @@ Free form templates use the `template` key to define a full YAML template.
 
 ==== Helper attributes
 
-All el-CICD templates, whether YAML or helper, have a number of helper attributes.  Helper attributes are any attributes not under the `template` key.  The list and their function is as follows.
+All el-CICD templates, whether free form or built-in, have a number of helper attributes.  All attributes that are not `template`, 
 
-* `**rawYaml**`: Only applies to free form templates.  If `true`, el-CICD Chart will not attempt to render the required Kubernetes `metadata` map.
-* `**objName**`: Name of the resource to be rendered.  For Kubernetes compatible resources, this corresponds directly to `metadata.name`.
-* `**namespace**`: Kubernetes namespace to deploy the resource.  Directly corresponds to `metadata.namespace`.
-* `**labels**`: Renders a map of labels to `metadata.labels`.
-* `**annotations**`: Renders a map of labels to `metadata.annotations`.
+* `**kubeObject**`: Default value is `true`.  Set to `false` to disable generating the Kubernetes object fields such as `apiVersion` or the `metadata` map.  Only applies to free form templates.
+* `**objName**`: Directly corresponds to `metadata.name`.
+* `**apiVersion**`: Directly corresponds to `apiVersion`.  **Only define this value for a built-in template if a different version than the default is required.**
+* `**namespace**`: Directly corresponds to `metadata.namespace`.
+* `**labels**`: Directly corresponds to `metadata.labels`.
+* `**annotations**`: Directly corresponds to `metadata.annotations`.
+
+Free form templates will use the helper attributes as alternative convenience fields.  They will be ignored if defined directly in the `template` map.
 
 ===== Template filtering
 
@@ -211,7 +214,6 @@ All el-CICD templates, whether YAML or helper, have a number of helper attribute
 * `**mustNotHaveEveryProfile**`: if every profile in this list is active at the same time, do **NOT** render the template.
 
 Each of the above may be used in combination with each other, and their order of precedence is not defined.
-
 
 .Example of template filtering
 [source,YAML,linenums]
@@ -850,13 +852,13 @@ In conjunction with the `objNames` namespace, a single template declaration can 
 
 el-CICD Chart supports two utilities to help with debugging deployment definitions.
 
-outputValuesYaml::
+renderPreprocessedValues::
 
 If true, output all merged values.yaml files as YAML and exit.  No el-CICD Chart processing takes place.  Templates will **NOT** be rendered to YAML.  Useful for inspecting how Helm merges multiple deployment definition files.
 
 `helm template --set outputValuesYaml=true ...`
 
-valuesYamlToStdOut::
+renderProcessedValues::
 
 If true, output all values of a processed el-CICD Chart deployment definition as YAML and exit.  Includes all values belonging `elCicdTemplates` and `elCicdDefs` maps and the `elCicdProfiles` list.  Templates will **NOT** be rendered to YAML.  Useful for inspecting the results of a processed deployment definition before the templates are rendered.
 +
@@ -880,16 +882,16 @@ elCicdDefs-SOME_PROFILE:
   SOME_3RD_PARTY_VALUES_YAML_VAR: b-value
 
 elCicdTemplates:
-- rawYaml: true # <1>
+- kubeObject: false # <1>
   objName: values-yaml-comp-1 # <2>
   template: # <3>
     ... 
-- rawYaml: true # <1>
+- kubeObject: false # <1>
   objName: values-yaml-comp-n # <2>
   template: # <3>
     ... 
 ----
-<1> Set `rawYaml` to true so el-CICD only outputs the processed YAML template exactly as written.
+<1> Set `kubeObject` to false so el-CICD does not try and generate `apiVersion`, `kind`, and `metadata` fields.
 <2> Any number of values files can be defined in a single deployment definition.
 <3> Create a YAML template for the values.yaml files of the third-party chart.
 
