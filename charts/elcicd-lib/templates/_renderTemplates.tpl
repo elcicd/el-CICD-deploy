@@ -219,6 +219,7 @@
     {{- $metadata := $template.template.metadata | default dict }}
     {{- $_ := set $template.template "metadata" $metadata }}
     {{- $_ := set $metadata "name" ($metadata.name | default $template.objName | default $.Values.elCicdDefaults.objName) }}
+    {{- $_ := set $template "objName" ($template.objName | default $metadata.name) }}
     {{- $_ := set $metadata "namespace" ($metadata.namespace | default $template.namespace | default $.Release.Namespace) }}
 
     {{- $_ := set $metadata "annotations" ($metadata.annotations | default dict) }}
