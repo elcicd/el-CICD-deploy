@@ -214,7 +214,7 @@
   {{- if not (eq (toString $template.kubeObject) "false") }}
     {{- $_ := set $template.template "apiVersion" ($template.template.apiVersion | default $template.apiVersion | default "v1") }}
     {{- $_ := set $template.template "kind" ($template.template.kind | default $template.kind) }}
-    {{ required "Kubernetes API objects require a \"kind\"" $template.template.kind }}
+    {{- $_ := required "Kubernetes API objects require a \"kind\"" $template.template.kind }}
 
     {{- $metadata := $template.template.metadata | default dict }}
     {{- $_ := set $template.template "metadata" $metadata }}
