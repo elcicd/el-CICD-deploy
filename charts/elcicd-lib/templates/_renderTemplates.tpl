@@ -209,7 +209,7 @@
   {{- $ := index . 0 }}
   {{- $template := index . 1 }}
 
-  {{- $_ := required "template or templateName must be defined for an el-CICD Chart template" $template.template }}
+  {{- $_ := required (printf "template or templateName must be defined for an el-CICD Chart template: %s" $template.objName) $template.template }}
 
   {{- if not (eq (toString $template.kubeObject) "false") }}
     {{- $_ := set $template.template "apiVersion" ($template.template.apiVersion | default $template.apiVersion | default "v1") }}
