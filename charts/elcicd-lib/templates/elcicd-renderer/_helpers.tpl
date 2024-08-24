@@ -228,4 +228,3 @@
   {{- $_ := set $template "mustNotHaveEveryProfile" (get $.Values.__EC_RESULT_DICT $resultKey) }}
   {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 {{- end }}
-
