@@ -204,9 +204,11 @@ spec:
                           "tolerations"
                           "topologySpreadConstraints"
                           "volumes" }}
+  {{- if or $podValues.containers (not (eq $podValues.templateName "podTemplate")) }}
   containers:
     {{- $containers := prepend ($podValues.containers | default list) $podValues }}
     {{- include "elcicd-kubernetes.containers" (list $ $podValues $containers) | trim | nindent 2 }}
+  {{- end }}
   {{- if $podValues.ephemeralContainers }}
   ephemeralContainers:
     {{- include "elcicd-kubernetes.containers" (list $ $podValues.ephemeralContainers false) | trim | nindent 2 }}

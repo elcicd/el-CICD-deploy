@@ -160,8 +160,19 @@ metadata:
 {{- end }}
 
 {{/*
-This is a catch-all that renders all extraneous key/values pairs that don't have helper keys or structures.
-Checks the template values for each resource's whitelist, and if it exists renders it properly.
+  ======================================
+  elcicd-kubernetes.outputToYaml
+  ======================================
+
+  PARAMETERS LIST:
+    . -> should always be root of chart
+    $template -> elCicd template
+    $whiteList -> list of whitelisted keys output to YAML if defined in the $.Values map
+
+  ======================================
+
+  This is a catch-all that renders all extraneous key/values pairs that don't have helper keys or structures.
+  Checks the template values for each resource's whitelist, and if it exists renders it properly.
 */}}
 {{- define "elcicd-common.outputToYaml" }}
   {{- $ := index . 0 }}
@@ -191,8 +202,19 @@ Checks the template values for each resource's whitelist, and if it exists rende
 {{- end }}
 
 {{/*
-Support function for the outputToYaml function.  Assigns a value for anything in the whitelist
-that is empty and has n elCicdDefault value defined.
+  ======================================
+  elcicd-kubernetes.setTemplateDefaultValue
+  ======================================
+
+  PARAMETERS LIST:
+    . -> should always be root of chart
+    $template -> elCicd template
+    $whiteList -> list of whitelisted keys to set default value, if it exists
+
+  ======================================
+
+  Support function for the outputToYaml function.  Assigns a value for anything in the whitelist
+  that is empty and has n elCicdDefault value defined.
 */}}
 {{- define "elcicd-common.setTemplateDefaultValue" }}
   {{- $ := index . 0 }}
@@ -207,4 +229,42 @@ that is empty and has n elCicdDefault value defined.
       {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}
+
+{{/*
+  ======================================
+  elcicd-kubernetes.kubeObjectMetadata
+  ======================================
+
+  PARAMETERS LIST:
+    . -> should always be root of chart
+    $template -> elCicd free form template
+
+  ======================================
+
+  Supports defining metadata for a free form Kubernetes compatible resource.
+*/}}
+{{- define "elcicd-common.kubeObjectMetadata" }}
+  {{- $ := index . 0 }}
+  {{- $template := index . 1 }}
+
+  {{- $_ := set $template.template "apiVersion" ($template.template.apiVersion | default $template.apiVersion | default "v1") }}
+  {{- $_ := set $template.template "kind" ($template.template.kind | default $template.kind) }}
+  {{- $_ := required "Kubernetes API objects require a \"kind\"" $template.template.kind }}
+
+  {{- $metadata := $template.template.metadata | default dict }}
+  {{- $_ := set $template.template "metadata" $metadata }}
+  {{- $_ := set $metadata "name" ($metadata.name | default $template.objName | default $.Values.elCicdDefaults.objName) }}
+  {{- $_ := set $template "objName" ($template.objName | default $metadata.name) }}
+  {{- $_ := set $metadata "namespace" ($metadata.namespace | default $template.namespace | default $.Release.Namespace) }}
+
+  {{- $_ := set $metadata "annotations" ($metadata.annotations | default dict) }}
+  {{- $_ := set $template "annotations" ($template.annotations | default dict) }}
+  {{- $_ := set $metadata "annotations" (merge $metadata.annotations $template.annotations) }}
+
+  {{- $_ := set $metadata "labels" ($metadata.labels | default dict) }}
+  {{- include "elcicd-common.labels" (list $ $metadata.labels)  }}
+  {{- $_ := set $metadata.labels "elcicd.io/selector" (include "elcicd-common.elcicdLabels" .) }}
+  {{- $_ := set $template "labels" ($template.labels | default dict) }}
+  {{- $_ := set $metadata "labels" (merge $metadata.labels $template.labels) }}
 {{- end }}

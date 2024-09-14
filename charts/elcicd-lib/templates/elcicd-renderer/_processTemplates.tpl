@@ -21,6 +21,7 @@
   {{- $templates := index . 1 }}
 
   {{- $allTemplates := list }}
+  {{- $resultKey := uuidv4 }}
   {{- range $template := $templates }}
     {{- if $template.objName }}
       {{- if eq $template.objName "$<OBJ_NAME>" }}
@@ -28,8 +29,6 @@
         {{- fail (printf $failMsgTpl $template.templateName) }}
       {{- end }}
     {{- end }}
-
-    {{- $resultKey := uuidv4 }}
 
     {{- include "elcicd-renderer.processModularTemplate" (list $ $template $resultKey) }}
     {{- $modularTemplates := get $.Values.__EC_RESULT_DICT $resultKey }}
@@ -44,7 +43,7 @@
     {{- end }}
 
     {{- range $objNameTemplate := $objNameTemplates }}
-      {{- include "elcicd-renderer.processMatrixKey" 
+      {{- include "elcicd-renderer.processMatrixKey"
                   (list $ $objNameTemplate "namespaces" "namespace" $.Release.Namespace $.Values.elCicdDefs $resultKey) }}
       {{- $allTemplates = concat $allTemplates (get $.Values.__EC_RESULT_DICT $resultKey) }}
       {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
@@ -66,8 +65,7 @@
 
   ======================================
 
-  If a templateName is delimited by '|' (pipe character), splits the string by the delimiter into a list
-  and creates a new template for each entry in the copy from a copy of the original template.
+  If a templateName is a list of templates, generates an individual template for member of the list.
   */}}
 {{ define "elcicd-renderer.processModularTemplate" }}
   {{- $ := index . 0 }}
@@ -80,7 +78,7 @@
     {{- $_ := set $newTemplate "templateName" $newTemplateName }}
     {{- $modularTemplates = append $modularTemplates $newTemplate }}
   {{- end }}
-  
+
   {{- if not $modularTemplates }}
     {{- if or (not $template.templateName) (kindIs "string" $template.templateName) }}
       {{- $modularTemplates = append $modularTemplates $template }}
@@ -147,7 +145,7 @@
     {{- end }}
   {{- else }}
     {{- $_ := set $template $templateKey ((get $template $templateKey) | default $defaultValue) }}
-    
+
     {{- $matrixTemplates = list $template }}
   {{- end }}
 
@@ -313,6 +311,8 @@
 
     {{- $_ := set $template "elCicdDefaults" dict }}
     {{- include "elcicd-renderer.deepCopyDict" (list $.Values.elCicdDefaults $template.elCicdDefaults) }}
+
+    {{- include "elcicd-renderer.processMatrixVars" (list $ $tplElCicdDefs) }}
 
     {{- include "elcicd-renderer.replaceVarRefsInMap" (list $ $template $tplElCicdDefs list dict) }}
     {{- if and ($template.objName) (not (regexMatch $.Values.__EC_OBJNAME_REGEX $template.objName)) }}
@@ -642,4 +642,82 @@
   {{- $_ := set $.Values.__EC_RESULT_DICT $processedVarsKey (concat $processedVarsList ($localProcessedVars | uniq)) }}
 
   {{- $_ := set $.Values.__EC_RESULT_DICT $resultKey $value }}
+{{- end }}
+
+
+{{- define "elcicd-renderer.processMatrixVars" }}
+  {{- $ := index . 0 }}
+  {{- $tplElCicdDefs := index . 1 }}
+
+  {{- $resultKey := uuidv4 }}
+  {{- range $var, $matrixValue := $tplElCicdDefs }}
+    {{- if hasPrefix "$" $var }}
+      {{- if or (and (not $matrixValue.matrix) (not $matrixValue.seq)) (not $matrixValue.value) }}
+        {{- fail (printf "%s: matrix variables must define either a 'matrix' or a 'seq', and a 'value'" $var) -}}
+      {{- end }}
+
+      {{- include "elcicd-renderer.generateMatrixForMatrixVar" (list $ $matrixValue $tplElCicdDefs) }}
+
+      {{- if $matrixValue.matrix }}
+        {{- include "elcicd-renderer.generateVarFromMatrixVar" (list $ $var $tplElCicdDefs) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- define "elcicd-renderer.generateMatrixForMatrixVar" }}
+  {{- $ := index . 0 }}
+  {{- $matrixValue := index . 1 }}
+  {{- $tplElCicdDefs := index . 2 }}
+
+  {{- $resultKey := uuidv4 }}
+  {{- include "elcicd-renderer.processValue" (list $ $matrixValue.seq $tplElCicdDefs list $resultKey) }}
+  {{- $_ := set $matrixValue "seq" (get $.Values.__EC_RESULT_DICT $resultKey) }}
+
+  {{- include "elcicd-renderer.processValue" (list $ $matrixValue.matrix $tplElCicdDefs list $resultKey) }}
+  {{- $_ := set $matrixValue "matrix" (get $.Values.__EC_RESULT_DICT $resultKey) }}
+
+  {{- if and (not $matrixValue.matrix) $matrixValue.seq }}
+    {{- $seq := "" }}
+    {{- if eq (len $matrixValue.seq) 1 }}
+      {{ $seq := seq $matrixValue.seq }}
+    {{- else if eq (len $matrixValue.seq) 2 }}
+      {{ $seq := seq (index $matrixValue.seq 0) (index $matrixValue.seq 1) }}
+    {{- else if eq (len $matrixValue.seq) 3 }}
+      {{ $seq := seq (index $matrixValue.seq 0) (index $matrixValue.seq 1) (index $matrixValue.seq 2) }}
+    {{- end }}
+    {{ $_ := set $matrixValue "matrix" (regexSplit "\\s+" $seq -1) }}
+  {{- end }}
+{{- end }}
+
+{{- define "elcicd-renderer.generateVarFromMatrixVar" }}
+  {{- $ := index . 0 }}
+  {{- $matrixVar := index . 1 }}
+  {{- $tplElCicdDefs := index . 2 }}
+
+  {{- $matrixValue := (get $tplElCicdDefs $matrixVar) }}
+
+  {{- $varName := trimPrefix "$" $matrixVar }}
+
+  {{- $resultKey := uuidv4 }}
+  {{- $_ := unset $.Values "__doesnt_exist__" }}
+  {{- $genValue := $.Values.__doesnt_exist__ }}
+  {{- range $matrix := $matrixValue.matrix }}
+    {{- $_ := set $tplElCicdDefs $varName $matrix }}
+    {{- $result := deepCopy $matrixValue }}
+    {{- include "elcicd-renderer.processValue" (list $ $result.value $tplElCicdDefs list $resultKey) }}
+    {{- $result := (get $.Values.__EC_RESULT_DICT $resultKey) }}
+
+    {{- if (kindIs "map" $result) }}
+      {{- $genValue = mergeOverwrite ($genValue | default dict) $result }}
+    {{- else if (kindIs "slice" $result) }}
+      {{- $genValue = concat ($genValue | default list) $result }}
+    {{- else if (kindIs "string" $result) }}
+      {{- $genValue = cat $genValue | $result }}
+    {{- else if not $result }}
+      {{- fail (printf "%s: matrix variables values must be a map, list, or string" $matrixVar) -}}
+    {{- end }}
+  {{- end }}
+
+  {{- $_ := set $tplElCicdDefs $varName $genValue }}
 {{- end }}
