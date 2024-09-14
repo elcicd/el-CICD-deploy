@@ -169,6 +169,8 @@ metadata:
     $template -> elCicd template
     $whiteList -> list of whitelisted keys output to YAML if defined in the $.Values map
 
+  ======================================
+
   This is a catch-all that renders all extraneous key/values pairs that don't have helper keys or structures.
   Checks the template values for each resource's whitelist, and if it exists renders it properly.
 */}}
@@ -237,6 +239,8 @@ metadata:
   PARAMETERS LIST:
     . -> should always be root of chart
     $template -> elCicd free form template
+
+  ======================================
 
   Supports defining metadata for a free form Kubernetes compatible resource.
 */}}

@@ -185,6 +185,17 @@
   {{- end }}
 {{- end }}
 
+{{/*
+  ======================================
+  elcicd-renderer.renderTemplate
+  ======================================
+
+  PARAMETERS LIST:
+    . -> should always be root of chart
+    $template -> elCicdTemplate
+
+  ======================================
+*/}}
 {{- define "elcicd-renderer.renderTemplate" }}
   {{- $ := index . 0 }}
   {{- $template := index . 1 }}
@@ -205,6 +216,19 @@
   {{- end }}
 {{- end }}
 
+{{/*
+  ======================================
+  elcicd-renderer.__render-default
+  ======================================
+
+  PARAMETERS LIST:
+    . -> should always be root of chart
+    $template -> elCicd free form template
+
+  ======================================
+
+  Hidden Helm template for rendering free form templates; i.e. $template.template is defined, and $template.templateName(s) is not.
+*/}}
 {{- define "elcicd-renderer.__render-default" }}
   {{- $ := index . 0 }}
   {{- $template := index . 1 }}
