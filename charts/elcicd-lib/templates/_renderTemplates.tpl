@@ -149,6 +149,9 @@
   {{- $_ := set $.Values "global" ($.Values.global | default dict) }}
 
   {{- if (or $.Values.renderPreprocessedValues $.Values.global.renderPreprocessedValues) }}
+# renderPreprocessedValues: true
+    {{- $_ := unset $.Values "renderPreprocessedValues" }}
+    {{- $_ := unset $.Values.global "renderPreprocessedValues" }}
     {{- $.Values | toYaml }}
   {{- else }}
     {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME" (now | date "Mon Jan 2 15:04:05 MST 2006") }}
@@ -171,6 +174,9 @@
     {{- include "elcicd-renderer.processTemplates" (list $ $.Values.allTemplates) }}
 
     {{- if (or $.Values.renderProcessedValues $.Values.global.renderProcessedValues) }}
+      {{- $_ := unset $.Values "renderProcessedValues" }}
+      {{- $_ := unset $.Values.global "renderProcessedValues" }}
+# renderProcessedValues: true
       {{ $.Values | toYaml }}
     {{- else }}
       {{- range $template := $.Values.allTemplates }}
