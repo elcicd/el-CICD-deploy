@@ -125,7 +125,7 @@ spec:
                          "replicas" }}
   {{- include "elcicd-common.outputToYaml" (list $ $deployValues $whiteList) }}
   revisionHistoryLimit: {{ ($deployValues.revisionHistoryLimit | default $.Values.elCicdDefaults.deploymentRevisionHistoryLimit) | int }}
-  {{- include "elcicd-kubernetes.podSelector" . | indent 2 }}
+  {{- include "elcicd-kubernetes.labelSelector" . | indent 2 }}
   {{- if $deployValues.strategyType }}
   strategy:
     {{- if (eq $deployValues.strategyType "RollingUpdate") }}
@@ -279,7 +279,7 @@ spec:
 
   ======================================
 
-  Defines a el-CICD template for a Kubernetes Job.
+  Defines a el-CICD template for a Kubernetes Pod.
 */}}
 {{- define "elcicd-kubernetes.pod" }}
 {{- $ := index . 0 }}
@@ -304,6 +304,7 @@ spec:
   ---
    [spec]:
       minReadySeconds
+      ordinals
       persistentVolumeClaimRetentionPolicy
       podManagementPolicy
       replicas
@@ -317,13 +318,13 @@ spec:
   ---
     "elcicd-common.apiObjectHeader"
     spec:
-      "elcicd-kubernetes.podSelector"
+      "elcicd-kubernetes.labelSelector"
       template:
         "elcicd-kubernetes.podTemplate"
 
   ======================================
 
-  Defines a el-CICD template for a Kubernetes Deployment.
+  Defines a el-CICD template for a Kubernetes StatefulSet.
 */}}
 {{- define "elcicd-kubernetes.statefulset" }}
 {{- $ := index . 0 }}
@@ -333,6 +334,7 @@ spec:
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "minReadySeconds"
+                         "ordinals"
                          "persistentVolumeClaimRetentionPolicy"
                          "podManagementPolicy"
                          "replicas"
@@ -340,7 +342,56 @@ spec:
                          "updateStrategy"
                          "volumeClaimTemplates" }}
   {{- include "elcicd-common.outputToYaml" (list $ $stsValues $whiteList) }}
-  {{- include "elcicd-kubernetes.podSelector" . | indent 2 }}
+  {{- include "elcicd-kubernetes.labelSelector" . | indent 2 }}
+  template:
+  {{- include "elcicd-kubernetes.podTemplate" (list $ $stsValues) | indent 4 }}
+{{- end }}
+
+
+{{/*
+  ======================================
+  elcicd-kubernetes.daemonset
+  ======================================
+
+  PARAMETERS LIST:
+    . -> should always be root of chart
+    $deployValues -> elCicd template for DaemonSet
+
+  ======================================
+
+  DEFAULT KEYS:
+  ---
+   [spec]:
+      minReadySeconds
+      revisionHistoryLimit
+      updateStrategy
+
+  ======================================
+
+  el-CICD SUPPORTING TEMPLATES
+  ---
+    "elcicd-common.apiObjectHeader"
+    spec:
+      "elcicd-kubernetes.labelSelector"
+      template:
+        "elcicd-kubernetes.podTemplate"
+
+  ======================================
+
+  Defines a el-CICD template for a Kubernetes DaemonSet.
+*/}}
+{{- define "elcicd-kubernetes.daemonset" }}
+{{- $ := index . 0 }}
+{{- $stsValues := index . 1 }}
+{{- $_ := set $stsValues "kind" "DaemonSet" }}
+{{- $_ := set $stsValues "apiVersion" ($stsValues.apiVersion | default "apps/v1") }}
+{{- include "elcicd-common.apiObjectHeader" . }}
+spec:
+  {{- $whiteList := list "minReadySeconds"
+                         "revisionHistoryLimit"
+                         "updateStrategy" }}
+  {{- include "elcicd-common.outputToYaml" (list $ $stsValues $whiteList) }}
+  {{- include "elcicd-kubernetes.labelSelector" . | indent 2 }}
   template:
   {{- include "elcicd-kubernetes.podTemplate" (list $ $stsValues) | indent 4 }}
 {{- end }}
