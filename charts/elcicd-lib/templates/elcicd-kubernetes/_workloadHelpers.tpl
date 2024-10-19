@@ -19,7 +19,7 @@
 {{/*
 General k8s selector definition.
 */}}
-{{- define "elcicd-kubernetes.podSelector" }}
+{{- define "elcicd-kubernetes.labelSelector" }}
 {{- $ := index . 0 }}
 {{- $template := index . 1 }}
 selector:

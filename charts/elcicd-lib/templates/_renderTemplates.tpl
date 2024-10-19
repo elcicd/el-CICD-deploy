@@ -234,6 +234,7 @@
   ======================================
 
   Hidden Helm template for rendering free form templates; i.e. $template.template is defined, and $template.templateName(s) is not.
+  If kubeOjbect is false, do NOT render the Kubernetes metadata section.
 */}}
 {{- define "elcicd-renderer.__render-default" }}
   {{- $ := index . 0 }}
