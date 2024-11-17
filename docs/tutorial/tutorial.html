@@ -627,10 +627,10 @@ pre.rouge .gs {
 </dl>
 </div>
 <div class="paragraph">
-<p>This tutorial was written and tested on <a href="https://github.com/crc-org/crc" target="read-later">CRC</a>, a local OKD/OpenShift cluster provided by Red Hat for developer testing, and thus all URL&#8217;s in the tutorial will use the wildcard domain <code>*.app-crc.testing</code>.  Other desktop options for development testing of Kubernetes clusters like <a href="https://github.com/kubernetes/minikube" target="read-later">minikube</a> or <a href="https://kind.sigs.k8s.io/" target="read-later">kind</a> will work equally well.  Any Kubernetes compatible cluster will suffice for running the tutorial, as long as internet access is available to pull el-CICD Chart and the test image.  You will need to adjust your endpoint URL&#8217;s to your own cluster&#8217;s wildcard if not using CRC.</p>
+<p>This tutorial was written and tested on <a href="https://github.com/crc-org/crc" target="read-later">CRC</a> (aka OpenShift Local), local OKD/OpenShift cluster provided by Red Hat for developer testing, and thus all URL&#8217;s in the tutorial will use the wildcard domain <code>*.app-crc.testing</code>; however any Kubernetes compatible cluster will suffice for running the tutorial, as long as internet access is available to pull el-CICD Chart and the test images.  You will need to adjust your endpoint URL&#8217;s to your own cluster&#8217;s wildcard if not using CRC.</p>
 </div>
 <div class="paragraph">
-<p>The tutorial will mostly focus on deploying the <a href="https://httpd.apache.org/" target="read-later">Apache Web Server</a> using <a href="https://catalog.redhat.com/software/containers/ubi8/httpd-24/6065b844aee24f523c207943" target="read-later">Red Hat&#8217;s official image</a> and will not deploy Secrets, so that whether you are deploying on vanilla Kubernetes or a more security conscious cluster like OpenShift this tutorial will run smoothly with only basic developer permissions required.</p>
+<p>The tutorial will mostly focus on deploying the <a href="https://httpd.apache.org/" target="read-later">Apache Web Server</a> using <a href="https://catalog.redhat.com/software/containers/ubi8/httpd-24/6065b844aee24f523c207943" target="read-later">Red Hat&#8217;s official httpd image</a> and will not deploy Secrets, so that whether you are deploying on vanilla Kubernetes or a more security conscious cluster like OpenShift this tutorial will run smoothly with only basic developer permissions required.</p>
 </div>
 </div>
 </div>
@@ -638,7 +638,25 @@ pre.rouge .gs {
 <h2 id="_overview">1. Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Helm is an excellent package management tool for Kubernetes, but it falls short when it comes to defining Kubernetes manifests.  Creating templates in Helm can be difficult to learn let alone master, and it provides no support for basic Kubernetes resources or configuration management.</p>
+<p>Helm is an excellent package management tool for Kubernetes.  Deploying or removing an application on and off a Kubernetes cluster is handled very well by Helm.</p>
+</div>
+<div class="paragraph">
+<p>Where Helm falls short is when it comes to templating Kubernetes manifests.  Creating Helm templates can be difficult to learn let alone master.</p>
+</div>
+<div class="paragraph">
+<p>This tutorial will demonstrate how the el-CICD Chart can make defining Kubernetes manifests much easier for all involved while still taking advantage of Helm&#8217;s package management functionality.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+el-CICD Chart embeds its templates inside Helm values.yaml file(s), and writing Helm templates are not required when using el-CICD Chart.  In order to avoid confusion with the word "template", el-CICD Chart values.yaml file(s) will be referred to as <em>deployment definitions</em>.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_starter_helm_chart">1.1. Starter Helm chart</h3>
@@ -907,15 +925,22 @@ affinity: {}</code></pre>
 </dd>
 <dt class="hdlist1">Obtuse</dt>
 <dd>
-<p>Go Template syntax (everything between double-brackets) and the supporting Sprig library is not very user friendly, but it&#8217;s required knowledge to understand and change Helm templates.</p>
+<p>Go Template syntax (everything between the double-brackets) and the supporting Sprig library is not very user friendly, but it&#8217;s required knowledge to understand and modify Helm templates.</p>
 </dd>
-<dt class="hdlist1">Brittle</dt>
+</dl>
+</div>
+<div class="paragraph">
+<p>Values used to render the chart are defined in files separate from Helm templates, and structured far differently, which can make understanding what will rendered difficult.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">No configuration management</dt>
 <dd>
-<p>Many common deployment practices aren&#8217;t directly supported; e.g. mounting a ConfigMap or defining environment variables in a container.  Deployments across multiple environments aren&#8217;t supported; e.g. during development or testing. This means structural changes will almost certainly be required.</p>
+<p>Configuration management is not supported by Helm.  Defining charts that can adapts across even a narrowly defined set of different deployments can be challenging.</p>
 </dd>
 <dt class="hdlist1">It&#8217;s code</dt>
 <dd>
-<p>Helm templates are code.  This means Helm charts need to be tested in isolation from the application they are meant to deploy if they are modified in any meaningful way.</p>
+<p>Helm templates are code; it constitutes a separate application.  This means Helm charts need to be tested in isolation from the application they are meant to deploy.  Helm charts acknowledge this by supporting a <a href="https://helm.sh/docs/topics/chart_tests/">built-in testing framework</a>.</p>
 </dd>
 </dl>
 </div>
@@ -923,46 +948,34 @@ affinity: {}</code></pre>
 <div class="sect2">
 <h3 id="_el_cicd_chart">1.2. el-CICD Chart</h3>
 <div class="paragraph">
-<p>el-CICD Chart was created with the intention of leveraging all the package management goodness Helm has to offer with the following quality-of-life productivity enhancements:</p>
+<p>el-CICD Chart was created with the intention of leveraging all the package management goodness Helm has to offer while making defining deployments easier.  In particular, the following design goals were set:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Simpler</dt>
+<dt class="hdlist1">Helm centric</dt>
 <dd>
-<p>Defining and templating deployment definitions should be simple and easy.  Beginners should be able to quickly get to work with little effort.  Experts should be able to define very complex deployments without fighting the tool that will define it.  Users of any level of experience should be able to read deployment definitions and templates easily with minimal training.  Deployment definitions and templates should NOT require testing outside of the context of what is being deployed.  Templates should be easy, modular, and intuitive to define.</p>
+<p>No extra scripts or special commands for standard Helm deployments or templating should be needed.  el-CICD Chart should be able to be used anywhere Helm can be used, and alongside any other Helm chart either as the main chart or a subchart.</p>
 </dd>
-</dl>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<strong>In el-CICD Chart parlance, the collection of values.yaml file(s) are also referred to as <em>deployment definitions</em>.</strong>
-</td>
-</tr>
-</table>
-</div>
-<div class="dlist">
-<dl>
+<dt class="hdlist1">Easier</dt>
+<dd>
+<p>Defining deployments should be done using plain YAML documents, with no extra language skills or libraries.</p>
+</dd>
 <dt class="hdlist1">More concise</dt>
 <dd>
-<p>Follow the <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself" target="read-later">DRY (Don&#8217;t Repeat Yourself) Principle</a> aggressively, and promote reuse of deployment definitions and templates.  As much as possible, define basic Kubernetes resources with reasonable defaults so deployment definitions and templates are confined as much as possible to the problem at hand.</p>
+<p>Support the <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself" target="read-later">DRY (Don&#8217;t Repeat Yourself) Principle</a> aggressively to significantly reduce the amount of copying and pasting of boilerplate YAML.  For application developers, support reasonable defaults so deployment definitions are confined as much as possible to the application&#8217;s needs.</p>
 </dd>
 <dt class="hdlist1">Support configuration management</dt>
 <dd>
-<p>Deployments of applications in different configurations and environments is standard practice whether in development or production; e.g. dev to test to prod, or deploying to different locales with different languages and/or regulatory regimes to support, respectively.  To that end, flexible configuration management within deployment definitions should be easily defined and supported.</p>
+<p>Defining different configurations for the same set of deployment manifests (e.g. per locale, region, and/or development environment) should be easy and directly supported.</p>
 </dd>
 <dt class="hdlist1">Extensible</dt>
 <dd>
-<p>Kubernetes is very extensible, as the abundance of <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/" target="read-later">Custom Resource Definitions</a> illustrates.  Deployment definitions should be able include all of them easily without requiring new Helm template code.</p>
+<p>Kubernetes is very extensible, as the abundance of <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/" target="read-later">Custom Resource Definitions</a> illustrates.  el-CICD Chart should be able to render CRD&#8217;s out-of-the-box without requiring new Helm template code.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>The following tutorial will demonstrate how el-CICD Chart realizes these enhancements.</p>
+<p>The following tutorial will demonstrate how el-CICD Chart met each of these goals.</p>
 </div>
 </div>
 </div>
@@ -971,13 +984,13 @@ affinity: {}</code></pre>
 <h2 id="_tutorial">2. Tutorial</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This tutorial will demonstrate how el-CICD Chart can make defining and templating Kubernetes deployment definitions, easier, more readable, and more concise as well as directly supporting configuration management.</p>
+<p>This tutorial will demonstrate how el-CICD Chart can make defining and defining Kubernetes deployment definitions easier, more readable, and more concise as well as directly supporting configuration management.</p>
 </div>
-<div class="admonitionblock important">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 <strong>All commands used below will refer to <code>kubectl</code>, but if on OpenShift <code>oc</code> will work just as well.</strong>
@@ -1003,7 +1016,7 @@ $ helm repo update</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Deploying Helm charts from OCI repositories is better, but GitHub currently makes is easy to server Helm charts from GiHub pages
+Deploying Helm charts from OCI repositories is better, but GitHub currently makes is easy to serve Helm charts from GitHub pages
 </td>
 </tr>
 </table>
@@ -1049,7 +1062,7 @@ Update Complete. ⎈Happy Helming!⎈</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The el-CICD Chart aims to define basic Kubernetes resources for application deployments out-of-the-box and provide as many reasonable defaults as possible to reduce the amount of boilerplate required by the end user.  The el-CICD Chart also aims to do away with the need to write Helm (Go) templates, and instead adheres to more standard YAML with only minor enhancements.</p>
+<p>The el-CICD Chart aims to define basic Kubernetes resources for application deployments out-of-the-box and provide as many reasonable defaults as possible to reduce the amount of boilerplate required by the end user.  The el-CICD Chart also aims to do away with the need to write Helm (Go) templates, and instead follows the Helm requirement for values.yaml files be <a href="https://helm.sh/docs/chart_template_guide/values_files/">plain YAML</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1058,7 +1071,7 @@ Update Complete. ⎈Happy Helming!⎈</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The example below is purposefully contrived to be more complicated than necessary.  In this case the Ingress will be communicating with the Service over port 8081, and the Service will forward incoming requests to Apache Web Server container over port 8080.  The next part of the tutorial will make it clear why we are making this more complicated than necessary.
+The example below is purposefully contrived to be more complicated than necessary.  In this case the Ingress will be communicating with the Service over port 8081, and the Service will forward incoming requests to Apache Web Server container over the more standard port 8080.  The next part of the tutorial will make it clear why we are making this more complicated than necessary.
 </td>
 </tr>
 </table>
@@ -1103,10 +1116,13 @@ The example below is purposefully contrived to be more complicated than necessar
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<strong>If you want to spread your templates out over multiple values.yaml files, more template lists can be defined as <code>elCicdTemplates-*</code>. The suffix is meaningless and only needs to be unique and valid YAML, so that Helm doesn&#8217;t overwrite the disparate lists.</strong>
+<strong>If you want to spread your el-CICD templates out over multiple values.yaml files, more template lists can be defined as <code>elCicdTemplates-*</code>; e.g. elCicdTemplates-foo.</strong>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The suffix is meaningless and only serves to be keep the lists unique from Helm&#8217;s perspective. el-CICD Chart will automatically merge the lists into a single, unified list.</p>
 </div></td>
 </tr>
 <tr>
@@ -1135,7 +1151,7 @@ The example below is purposefully contrived to be more complicated than necessar
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
-<p><code>templatName</code>: the name of the el-CICD Chart template to render.</p>
+<p><code>templateName</code>: the name of the el-CICD Chart template to render.</p>
 </li>
 <li>
 <p><code>objName</code>: maps directly <code>metadata.name</code>.</p>
@@ -1152,7 +1168,7 @@ The example below is purposefully contrived to be more complicated than necessar
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
-<p>In a Helm template this corresponds to <code>.Release.Namespace</code>; i.e. the namespace the chart is deployed in.</p>
+<p>In a Helm template this corresponds to <a href="https://helm.sh/docs/chart_template_guide/builtin_objects/"><code>.Release.Namespace</code></a>; i.e. the namespace a Helm chart is deployed in.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1160,14 +1176,14 @@ The example below is purposefully contrived to be more complicated than necessar
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The release namespace is not necessarily the same as where the Kubernetes resources are deployed.
+The release namespace is not necessarily the same as the Kubernetes resources being deployed.
 </td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>The <code>$&lt;<em>VARIABLE_NAME</em>&gt;</code> syntax is how variables are referenced in el-CICD Chart templates.</p>
+<p>el-CICD Chart variables are referenced using the syntax <code>$&lt;<em>VARIABLE_NAME</em>&gt;</code>.</p>
 </li>
 <li>
 <p>el-CICD Chart conventions define variables using UPPER_SNAKE_CASE, similar to Shell.</p>
@@ -1184,10 +1200,10 @@ The release namespace is not necessarily the same as where the Kubernetes resour
 <div class="ulist">
 <ul>
 <li>
-<p>A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.</p>
+<p>A <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployment</a>, <a href="https://kubernetes.io/docs/concepts/services-networking/service/">Service</a>, and <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">Ingress</a> will be deployed on the cluster using el-CICD Chart.</p>
 </li>
 <li>
-<p>An httpd Pod will be created and accessible in the browser from outside the cluster.</p>
+<p>An httpd <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pod</a> will be created from the Deployment and accessible in the browser from outside the cluster.</p>
 </li>
 <li>
 <p>The httpd server&#8217;s test page will be reachable and visible in the browser.</p>
@@ -1203,7 +1219,7 @@ The release namespace is not necessarily the same as where the Kubernetes resour
 Install the <code>elcicd-chart-demo</code> release in the <code>elcicd-chart-demo</code> namespace using the el-CICD Chart:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-1.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
+<pre class="rouge highlight"><code>$ helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-1.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -1409,7 +1425,7 @@ Get the value of the host from the Ingress, and verify the Apache Web Server is 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If not using CRC, you&#8217;ll definitely need to run the <code>kubectl get</code> command above to get the correct host.
+If not using CRC, run the <code>kubectl get</code> command above to get the correct host.
 </td>
 </tr>
 </table>
@@ -1455,17 +1471,17 @@ Uninstall the chart.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Creating more concise compound templates by combining el-CICD Chart templates.</p>
+<p>Defining compound templates.</p>
 </li>
 <li>
-<p>Leveraging shared helper attributes within compound el-CICD Chart templates.</p>
+<p>Reducing boilerplate YAML using common el-CICD Chart templates helper attributes.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>In <a href="#_el_cicd_chart_templates">el-CICD Chart Templates</a>, we demonstrated how concise and modular el-CICD Chart templates can be when defining deployments.  We will now show how to combine el-CICD Chart templates into single, <em>compound template</em> for even more concise deployment definitions.</p>
+<p>In <a href="#_el_cicd_chart_templates">el-CICD Chart Templates</a>, we demonstrated the conciseness and modularity el-CICD Chart templates.  We will now show how to combine multiple, related el-CICD Chart templates into a single <em>compound template</em> for even more concise deployment definitions.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1474,7 +1490,7 @@ Uninstall the chart.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<strong>Any el-CICD Chart built-in template can be compounded into a single template definition as long as any overlapping helper attributes refer to the same, basic data.</strong>
+<strong>Any el-CICD Chart built-in template can be compounded into a single template definition as long as any common helper attributes refer to the same, basic data.</strong>
 </td>
 </tr>
 </table>
@@ -1497,21 +1513,41 @@ Uninstall the chart.</p>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>YAML is a superset of JSON; thus YAML will interpret both <code>[deployment, service, ingress]</code> and</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre>templateNames:
+- deployment
+- service
+- ingress
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>as lists.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Compound templates are listed under the <code>templateNames</code> attribute, versus <code>templateName</code> for a single attribute.
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Since YAML is superset of JSON, JSON list notation is acceptable.</p>
-</li>
-<li>
-<p>The <code>templateName</code> attribute is merely a convenience when rendering a single template.</p>
-</li>
-</ol>
-</div></td>
+<td>Compound templates are defined as a list under the <code>templateNames</code> attribute, versus <code>templateName</code> for a single template.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -1542,7 +1578,7 @@ Uninstall the chart.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-In <a href="#_el_cicd_chart_templates">el-CICD Chart Templates</a>, we promised to explain why we contrived a different port and target port as a tutorial contrivance, and it was to demonstrate how overlapping helper attributes would behave in compound templates.
+In the first part of the tutorial, <a href="#_el_cicd_chart_templates">el-CICD Chart Templates</a>, we promised to explain why we contrived a different port and target port, and it was to better demonstrate how shared helper attributes would behave in compound templates.
 </td>
 </tr>
 </table>
@@ -1554,10 +1590,10 @@ In <a href="#_el_cicd_chart_templates">el-CICD Chart Templates</a>, we promised 
 <div class="ulist">
 <ul>
 <li>
-<p>A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.</p>
+<p>A Deployment, Service, Ingress, and ConfigMap will be deployed on the cluster using el-CICD Chart.</p>
 </li>
 <li>
-<p>An httpd Pod will be created and accessible in the browser from outside the cluster.</p>
+<p>An httpd Pod will be created from the Deployment and accessible in the browser from outside the cluster.</p>
 </li>
 <li>
 <p>The httpd server&#8217;s test page will be reachable and visible in the browser.</p>
@@ -1573,7 +1609,7 @@ In <a href="#_el_cicd_chart_templates">el-CICD Chart Templates</a>, we promised 
 Install the <code>elcicd-chart-demo</code> release in the <code>elcicd-chart-demo</code> namespace using the el-CICD Chart:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-2.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
+<pre class="rouge highlight"><code>$ helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-2.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -1779,7 +1815,7 @@ Get the value of the host from the Ingress, and verify the Apache Web Server is 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If not using CRC, you&#8217;ll definitely need to run the <code>kubectl get</code> command above to get the correct host.
+If not using CRC, run the <code>kubectl get</code> command above to get the correct host.
 </td>
 </tr>
 </table>
@@ -1825,7 +1861,7 @@ Uninstall the chart.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Defining arbitrary el-CICD Chart variables in deployment definitions.</p>
+<p>User-defined el-CICD Chart variables in deployment definitions.</p>
 </li>
 <li>
 <p>Using el-CICD Chart variables as YAML templates.</p>
@@ -1841,7 +1877,7 @@ Uninstall the chart.</p>
 <p>Both <a href="#_el_cicd_chart_templates">el-CICD Chart Templates</a> and <a href="#_compound_el_cicd_chart_templates">Compound el-CICD Chart Templates</a> made use of el-CICD Chart&#8217;s built-in variables to help define their host domain.  This part of the tutorial will focus on user-defined variables.</p>
 </div>
 <div class="paragraph">
-<p>A fundamental goal of el-CICD Chart is to eliminate Helm templates and move all template creation, among other things, into the values.yaml file(s).  This part of the tutorial, where arbitrary values are defined within the values.yaml file, is where that functionality begins to be demonstrated.</p>
+<p>A fundamental goal of el-CICD Chart is to eliminate the need for Helm templates and instead let the user define their deployment manifests as plain YAML documents.  Another goal is to remove the need for copying and pasting boilerplate YAML as much as possible when defining manifests.  User-defined el-CICD Chart variables support these goals.</p>
 </div>
 <h4 id="_create_and_save_the_following_file_as_elcicd_demo_3_yaml" class="discrete">Create and save the following file as <code>elcicd-demo-3.yaml</code></h4>
 <div class="listingblock">
@@ -1913,30 +1949,33 @@ elCicdTemplates:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>All el-CICD Chart variables are defined under maps starting with <code>elCicdDefs</code>.
+<td>All el-CICD Chart variables are defined under <code>elCicdDefs</code> maps.
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Keys in the <code>elCicdDefs</code> map are the names of the variables.</p>
+<p>Keys in the <code>elCicdDefs</code> map are el-CICD Chart variables.</p>
 </li>
 <li>
-<p>Variables and their values can be any valid YAML.</p>
+<p><code>elCicdDefs</code> maps can be any valid YAML; i.e. valid keys and values for YAML maps.</p>
 </li>
 <li>
-<p>By convention and similar to shell scripting, variable names use UPPER_SNAKE_CASE.</p>
+<p>By convention, variable names use UPPER_SNAKE_CASE.</p>
 </li>
 <li>
-<p>Variables are referenced using the syntax <code>$&lt;VARIABLE_NAME&gt;</code>.</p>
+<p>Variables are referenced using the syntax <code>$&lt;<em>VARIABLE_NAME</em>&gt;</code>.</p>
 </li>
 <li>
 <p>Variables can references other variables.</p>
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
-<p>The order variables are declared is irrelevant.</p>
+<p>The order variables are defined is irrelevant; i.e. a variable can reference another variable that is defined later.</p>
 </li>
 <li>
-<p>Variable names can be dynamically generated.</p>
+<p>Variable names and references can be defined and used dynamically; e.g.:</p>
+<div class="paragraph">
+<p>given <code>FOO: howdy</code> and <code>howdy_BAR: welcome</code>, <code>$&lt;$&lt;FOO&gt;_BAR&gt;</code> ultimately resolves to <code>welcome</code>.</p>
+</div>
 </li>
 </ol>
 </div>
@@ -1950,17 +1989,17 @@ elCicdTemplates:
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>In this example it will generate a <code>volume</code> entry for ConfigMap in the Deployment.</p>
+<p>This helper attribute obviates the need for a separate volume and volumeMount definition.</p>
 </li>
 <li>
-<p>It will also create a <code>volumeMount</code> of the <code>volume</code> in the container definition.</p>
+<p>In this example it will mount the ConfigMap <code>$&lt;INDEX_HTML_NAME&gt;</code> (<code>index.html</code>) as a projected <code>volume</code> in the Deployment, along with it&#8217;s associated <code>volumeMount</code>.</p>
 </li>
 </ol>
 </div></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><code>$&lt;HELM_RELEASE_NAME&gt;</code> is another built-in el-CICD Chart variable that corresponds to <code>.Release.Name</code> in a Helm template.</td>
+<td><code>$&lt;HELM_RELEASE_NAME&gt;</code> is another built-in el-CICD Chart variable that corresponds to <a href="https://helm.sh/docs/chart_template_guide/builtin_objects/"><code>.Release.Name</code></a> in a Helm template.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -1968,13 +2007,13 @@ elCicdTemplates:
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><code>objName</code> must follow the same naming rules as <code>metadata.name</code>.</p>
+<p><code>objName</code> must follow the same naming rules as <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names"><code>metadata.name</code></a>.</p>
 </li>
 <li>
-<p><code>$&lt;OBJ_NAME&gt;</code> is another built-in el-CICD Chart variable referring to the el-CICD Chart template&#8217;s objName in which it is realized.</p>
+<p><code>$&lt;OBJ_NAME&gt;</code> is another built-in el-CICD Chart variable referring to the el-CICD Chart template&#8217;s <code>objName</code>.</p>
 </li>
 <li>
-<p><code>objName</code> and <code>OBJ_NAME</code> will default to the chart&#8217;s release name, <code>$&lt;HELM_RELEASE_NAME&gt;</code>, if left undefined by the user.</p>
+<p><code>objName</code> and <code>OBJ_NAME</code> will default to the chart&#8217;s release name, <code>$&lt;HELM_RELEASE_NAME&gt;</code> if left undefined by the user.</p>
 </li>
 </ol>
 </div></td>
@@ -1988,16 +2027,16 @@ elCicdTemplates:
 <div class="ulist">
 <ul>
 <li>
-<p>An httpd Pod will be created and accessible in the browser from outside the cluster.</p>
+<p>A Deployment, Service, Ingress, and ConfigMap will be deployed on the cluster using el-CICD Chart.</p>
 </li>
 <li>
-<p>A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.</p>
+<p>An httpd Pod will be created from the Deployment and accessible in the browser from outside the cluster.</p>
 </li>
 <li>
-<p>An index.html web page will be generated from multiple el-CICD Chart variables.</p>
+<p>The ConfigMap will contain an index.html web page that was generated from multiple el-CICD Chart variables.</p>
 </li>
 <li>
-<p>A ConfigMap containing the generated index.html file will be deployed to the cluster, mounted inside the httpd Pod, and be visible within the browser.</p>
+<p>The ConfigMap will be mounted inside the httpd Pod, and and the index.html page will become the server&#8217;s home page.</p>
 </li>
 </ul>
 </div>
@@ -2010,7 +2049,7 @@ elCicdTemplates:
 Install the <code>elcicd-chart-demo</code> release in the <code>elcicd-chart-demo</code> namespace using the el-CICD Chart:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-3.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
+<pre class="rouge highlight"><code>$ helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-3.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -2249,7 +2288,7 @@ Get the value of the host from the Ingress, and verify the Apache Web Server is 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If not using CRC, you&#8217;ll definitely need to run the <code>kubectl get</code> command above to get the correct host.
+If not using CRC, run the <code>kubectl get</code> command above to get the correct host.
 </td>
 </tr>
 </table>
@@ -2301,14 +2340,14 @@ Uninstall the chart.</p>
 <p><code>elCicdDefs-*</code> variable map definitions.</p>
 </li>
 <li>
-<p>Using el-CICD Chart matrices to deploy copies of the same el-CICD Chart template.</p>
+<p>Using el-CICD Chart matrices to further reduce copying and pasting boilerplate Kubernetes resource definitions.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>In <a href="#_user_defined_variables">User-defined Variables</a>, we demonstrated how to define and reference your own variables in your deployment definitions. In this part of the tutorial you&#8217;ll learn about deployment profiles.  While the previous parts of the tutorial have focused on el-CICD Chart&#8217;s strengths with regards to templating, readability, and conciseness, it&#8217;s the deployment profiles that give el-CICD Chart its power.  This feature makes it much, much easier for users to manage a deployment definition across numerous environments with minimal configuration, because whole swaths of variable definitions and templates can be configured with under a single profile.</p>
+<p>In <a href="#_user_defined_variables">User-defined Variables</a>, we demonstrated how to define and reference your own variables. In this part of the tutorial you&#8217;ll learn about deployment profiles.  While the previous parts of the tutorial have focused on el-CICD Chart&#8217;s strengths with regards to templating, readability, and conciseness, it&#8217;s the deployment profiles that give el-CICD Chart its true power.  This feature makes it much, much easier for users to manage the same, basic deployment definitions across numerous environments with minimal configuration changes.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -2317,21 +2356,21 @@ Uninstall the chart.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://en.wikipedia.org/wiki/Software_development_process" target="read-later">SDLC</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Software_development_process" target="read-later">The software development lifecycle</a> (SDLC).</p>
 <div class="paragraph">
-<p>Development, test, and production environments almost always vary in how they&#8217;re configured for deployment.</p>
+<p>Development, test, and production are rarely configured the same way.</p>
 </div>
 </li>
 <li>
-<p>Different locales</p>
+<p>Different geographical jurisdictions</p>
 <div class="paragraph">
-<p>Different nations, as well the provinces or states within them, tend to have different regulatory and/or language requirements between them.</p>
+<p>Regulatory and/or language requirements almost always differ between geographical jurisdictions.</p>
 </div>
 </li>
 <li>
 <p>High availability and persistence options</p>
 <div class="paragraph">
-<p>One or more services of an an application need to be deployed as highly available and/or with data persistence options, either in production or for testing purposes.</p>
+<p>One or more services of an an application need to be deployed as highly available and/or data persistence options, either in production or for testing purposes.</p>
 </div>
 </li>
 </ul>
@@ -2340,7 +2379,7 @@ Uninstall the chart.</p>
 </dl>
 </div>
 <div class="paragraph">
-<p>Deployment profiles are most useful in any case where the same service or application needs to be deployed differently in more than one situation or environment, which is almost always.</p>
+<p>Deployment profiles are most useful whenever a resource needs to be deployed differently depending on the situation or environment.</p>
 </div>
 <h4 id="_create_and_save_the_following_file_as_elcicd_demo_4_yaml" class="discrete">Create and save the following file as <code>elcicd-demo-4.yaml</code></h4>
 <div class="listingblock">
@@ -2408,7 +2447,7 @@ elCicdTemplates:
     configMaps:
       $&lt;INDEX_HTML_NAME&gt;: {}
       $&lt;ENGLISH&gt;: {} <i class="conum" data-value="2"></i><b>(2)</b>
-      $&lt;ESPANOL&gt;: {} <i class="conum" data-value="3"></i><b>(3)</b>
+      $&lt;ESPANOL&gt;: {}
 
 - templateName: configMap
   objName: $&lt;INDEX_HTML_NAME&gt;
@@ -2416,14 +2455,14 @@ elCicdTemplates:
     $&lt;OBJ_NAME&gt;: $&lt;HTML_PAGE&gt;
 
 - templateName: configMap
-  objNames: <i class="conum" data-value="4"></i><b>(4)</b>
+  objNames: <i class="conum" data-value="3"></i><b>(3)</b>
   - $&lt;ENGLISH&gt;
   - $&lt;ESPANOL&gt;
   mustHaveAnyProfile:
-  - $&lt;MULTI_LINGUAL_PROFILE&gt; <i class="conum" data-value="5"></i><b>(5)</b>
-  elCicdDefs-$&lt;ENGLISH&gt;: <i class="conum" data-value="6"></i><b>(6)</b>
+  - $&lt;MULTI_LINGUAL_PROFILE&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+  elCicdDefs-$&lt;ENGLISH&gt;: <i class="conum" data-value="5"></i><b>(5)</b>
     PAGE_CONTENT:  $&lt;DEFAULT_PAGE_CONTENT&gt;
-  elCicdDefs-$&lt;ESPANOL&gt;: <i class="conum" data-value="7"></i><b>(7)</b>
+  elCicdDefs-$&lt;ESPANOL&gt;:
     PAGE_CONTENT: &lt;h1&gt;¡Hola desde $&lt;OBJ_NAME&gt; en el lanzamiento $&lt;HELM_RELEASE_NAME&gt;!&lt;h1&gt;
   data:
     $&lt;OBJ_NAME&gt;: $&lt;HTML_PAGE&gt;
@@ -2434,50 +2473,30 @@ elCicdTemplates:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Deployment profiles are declared whenever an el-CICD Chart template and/or <code>elCicdDefs</code> variable map is marked for them.
+<td>Deployment profiles are defined whenever an el-CICD Chart template and/or <code>elCicdDefs</code> variable map is marked for them.
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Deployment profiles must consist of upper case alphanumeric characters, '_' or '.', and must start and end with an alphanumeric character.</p>
+<p>Deployment profiles must consist of upper case alphanumeric characters, '_', or '.', and must start and end with an alphanumeric characters; <code><span class="A-Z0-9">([_.][A-Z0-9]</span>)*</code></p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This naming standard was chosen so that resource names, which must follow Kubernetes naming standards, and deployment profiles could never be confused.
+</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
 <p><code>elCicdDefs-$&lt;MULTI_LINGUAL_PROFILE&gt;</code> declares the <code>$&lt;MULTI_LINGUAL_PROFILE&gt;</code> (<code>MULTI_LINGUAL</code>) profile.</p>
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
-<p>Variables and values defined under this map will only be realized when the <code>MULTI_LINGUAL</code> profile is active.</p>
-</li>
-<li>
-<p><code>elCicdDefs</code> maps may only reference one profile at a time.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p><code>mustHaveAnyProfile</code> similarly declares the <code>$&lt;MULTI_LINGUAL_PROFILE&gt;</code> (<code>MULTI_LINGUAL</code>) profile.</p>
-<div class="olist lowerroman">
-<ol class="lowerroman" type="i">
-<li>
-<p>The <code>[$&lt;ENGLISH&gt;, $&lt;ESPANOL&gt;]</code> configMap template will only be processed when the <code>MULTI_LINGUAL</code> profile is active.</p>
-</li>
-<li>
-<p>The full list of template discriminators is</p>
-<div class="olist upperalpha">
-<ol class="upperalpha" type="A">
-<li>
-<p><code>mustHaveAnyProfile</code></p>
-</li>
-<li>
-<p><code>mustHaveEveryProfile</code></p>
-</li>
-<li>
-<p><code>mustNotHaveAnyProfile</code></p>
-</li>
-<li>
-<p><code>mustNotHaveEveryProfile</code></p>
-</li>
-</ol>
-</div>
+<p>el-CICD Chart template <em>discriminators</em> define whether or not a template should be rendered based on the active profile(s).</p>
 </li>
 </ol>
 </div>
@@ -2491,17 +2510,14 @@ elCicdTemplates:
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><code>$&lt;ENGLISH&gt;</code> and <code>$&lt;ESPANOL&gt;</code> will only be realized if the <code>MULTI_LINGUAL</code> deployment profile is active.</p>
-</li>
-<li>
-<p>If the <code>MULTI_LINGUAL</code> deployment profile is inactive, the keys evaluate to null, and each member of the <code>configMaps</code> list is removed.</p>
+<p>If the <code>MULTI_LINGUAL</code> deployment profile is inactive, the keys evaluate to null, and each member of the <code>configMaps</code> list will not be rendered after processing.</p>
 </li>
 </ol>
 </div></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><code>objNames</code> is one of two el-CICD Chart matrices that can be defined on an el-CICD Chart template.
+<td><code>objNames</code> is one of two el-CICD Chart matrices (<code>namespaces</code> being the other).
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -2511,17 +2527,28 @@ elCicdTemplates:
 <p><code>objName</code> will be assigned for each copy corresponding to an element in the <code>objNames</code> list used to generate it.</p>
 </li>
 <li>
-<p>All elements of the <code>objNames</code> matrix must follow the same naming rules as <code>metadata.name</code>.</p>
-</li>
-<li>
-<p>This deployment definition will result in two configMap templates, <code>$&lt;ENGLISH&gt;</code> (<code>english.html) and `$&lt;ESPANOL&gt;</code> (<code>espanol.html</code>).</p>
+<p>The matrix definition defines two ConfigMaps, <code>$&lt;ENGLISH&gt;</code> (<code>english.html) and `$&lt;ESPANOL&gt;</code> (<code>espanol.html</code>).</p>
 </li>
 </ol>
 </div></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>el-Cicd Chart variables are overridden based on more specific <code>elCicdDefs</code> variable maps.
+<td><code>mustHaveAnyProfile</code> is a template <em>discriminator</em>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Discriminators can also define profiles.</p>
+</li>
+<li>
+<p>The el-CICD Chart template defines multiple ConfigMaps via the <code>objNames</code> matrix, but they will only be rendered if the <code>MULTI_LINGUAL</code> profiles is active.</p>
+</li>
+</ol>
+</div></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>el-Cicd Chart variables maps can be defined for a specific template.
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -2529,63 +2556,23 @@ elCicdTemplates:
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
-<p><code>objName</code> and/or profiles are appended <code>elCicdDefs</code> using a <code>-</code> as a delimiter; e.g.</p>
-</li>
-<li>
-<p><code>elCicdDefs-foo</code> for <code>objName</code> <code>foo</code>.</p>
-</li>
-<li>
-<p><code>elCicdDefs-BAR</code> for defployment profile <code>BAR</code>.</p>
-</li>
-<li>
-<p><code>elCicdDefs-foo-BAR</code> or <code>elCicdDefs-BAR-foo</code> for <code>objName</code> <code>foo</code> and profile <code>BAR</code>.</p>
-</li>
-<li>
-<p>Variable references in lieu of static declarations, e.g. elCicdDefs-$&lt;MULTI_LINGUAL_PROFILE&gt;.</p>
-<div class="paragraph">
-<p>If a variable map name ends with <code>-</code> (e.g. <code>elCicdDefs-`or `elCicdDefs-foo-</code>) because a variable in the name was undefined, the map will be ignored.</p>
-</div>
-</li>
-<li>
-<p>Top level <code>elCicdDefs</code> maps are processed first, and the process is repeated for each el-CICD Chart template maps as they are processed.</p>
+<p><code>objName</code> and/or profiles can be appended to <code>elCicdDefs</code> using a <code>-</code> as a delimiter; e.g.</p>
 <div class="olist upperalpha">
 <ol class="upperalpha" type="A">
 <li>
-<p>This means that every el-CICD Chart template specific variable map has precedence over all top level maps.</p>
+<p><code>elCicdDefs-foo</code> for <code>objName</code> <code>foo</code>, which declares variables only for objects named "foo".</p>
 </li>
 <li>
-<p>Order of precedence of maps, from least to greatest:</p>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-This is <strong>not</strong> a comprehensive list.
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>elCicdDefs</code></p>
+<p><code>elCicdDefs-BAR</code> for deployment profile <code>BAR</code>, which declares variables only when the <code>BAR</code> profile is active.</p>
 </li>
 <li>
-<p><code>elCicdDefs-&lt;<em>profile-name</em>&gt;</code>: variables defined for an active profile.</p>
+<p><code>elCicdDefs-foo-BAR</code> or <code>elCicdDefs-BAR-foo</code>, which declares variables only for objects named "foo" when the <code>BAR</code> profile is active.</p>
 </li>
 <li>
-<p><code>elCicdDefs-&lt;<em>objName</em>&gt;</code>: variables defined for a specific <code>objName</code> match.</p>
+<p>Discriminators in <code>elCicdDefs</code> declarations can be dynamic; e.g. <code>elCicdDefs-$&lt;FOO&gt;</code></p>
 </li>
 <li>
-<p><code>elCicdDefs-&lt;<em>profile-name</em>&gt;-&lt;<em>objName</em>&gt;</code>: variables defined for an active profile and specific <code>objName</code> match.</p>
-</li>
-<li>
-<p><code>elCicdDefs-&lt;<em>objName</em>&gt;-&lt;<em>profile-name</em>&gt;</code>: variables defined for a specific <code>objName</code> match and active profile.</p>
-</li>
-</ul>
-</div>
+<p>If an <code>elCicdDefs-*</code> map ends in just a dash, or has two dashes within it because a variable used to define it is empty, it will be ignored.</p>
 </li>
 </ol>
 </div>
@@ -2610,16 +2597,16 @@ This is <strong>not</strong> a comprehensive list.
 <div class="ulist">
 <ul>
 <li>
-<p>An httpd Pod will be created and accessible in the browser from outside the cluster.</p>
+<p>A Deployment, Service, Ingress, and ConfigMap will be deployed on the cluster using el-CICD Chart.</p>
 </li>
 <li>
-<p>A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.</p>
+<p>An httpd Pod will be created from the Deployment and accessible in the browser from outside the cluster.</p>
 </li>
 <li>
-<p>An index.html web page will be generated from multiple el-CICD Chart variables.</p>
+<p>The ConfigMap will contain an index.html web page that was generated from multiple el-CICD Chart variables.</p>
 </li>
 <li>
-<p>A ConfigMap containing the generated index.html file will be deployed to the cluster, mounted inside the httpd Pod, and be visible within the browser.</p>
+<p>The ConfigMap will be mounted inside the httpd Pod, and and the index.html page will become the server&#8217;s home page.</p>
 </li>
 </ul>
 </div>
@@ -2632,7 +2619,7 @@ This is <strong>not</strong> a comprehensive list.
 Install the <code>elcicd-chart-demo</code> release in the <code>elcicd-chart-demo</code> namespace using the el-CICD Chart:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
+<pre class="rouge highlight"><code>$ helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -2866,7 +2853,7 @@ Get the value of the host from the Ingress, and verify the Apache Web Server is 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If not using CRC, you&#8217;ll definitely need to run the <code>kubectl get</code> command above to get the correct host.
+If not using CRC, run the <code>kubectl get</code> command above to get the correct host.
 </td>
 </tr>
 </table>
@@ -2907,10 +2894,10 @@ Uninstall the chart.</p>
 <div class="sect3">
 <h4 id="_install_the_httpd_server_with_the_multi_lingual_deployment_profile">2.5.2. Install the httpd server with the <code>MULTI_LINGUAL</code> deployment profile</h4>
 <div class="paragraph">
-<p>el-CICD Chart deployment profiles are defined in <code>elCicdProfiles</code> as a list.  It only makes sense to define the active profile list outside of the deployment definition and at deployment time, or that would defeat their purpose.  The <code>helm update --install</code> command is modified to apply deployment profile <code>--set elCicdProfiles='{MULTI_LINGUAL}'</code> clause.  If more than one deployment profile is specified, the order of precedence is from least to greatest in determining the values of variables; e.g. if <code>elCicdProfiles={FOO,BAR}</code>, all values defined in the <code>BAR</code> profile would take precedence over <code>FOO</code>.</p>
+<p>el-CICD Chart deployment profiles are defined in <code>elCicdProfiles</code> as a list.  The <code>helm update --install</code> command is modified to apply deployment profile <code>--set elCicdProfiles='{MULTI_LINGUAL}'</code> clause.  If more than one deployment profile is specified, the order of precedence is from least to greatest in determining the values of variables; e.g. given <code>elCicdProfiles={FOO,BAR}</code>, all conflicting variable definitions defined in the <code>BAR</code> profile would take precedence over <code>FOO</code>.</p>
 </div>
 <div class="paragraph">
-<p>This part of the demonstration will change the opening page to a pair of links that will take you to either English or Spanish versions of the "Howdy!" message.</p>
+<p>This part of the demonstration will change the server&#8217;s home page to display a pair of links that will take you to either English or Spanish versions of the "Howdy!" message.</p>
 </div>
 <h4 id="_tutorial_steps_5" class="discrete">Tutorial steps</h4>
 <div class="sidebarblock">
@@ -2919,19 +2906,19 @@ Uninstall the chart.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>An httpd Pod will be created and accessible in the browser from outside the cluster.</p>
+<p>A Deployment, Service, Ingress, and ConfigMap will be deployed on the cluster using el-CICD Chart.</p>
 </li>
 <li>
-<p>A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.</p>
+<p>An httpd Pod will be created from the Deployment and accessible in the browser from outside the cluster.</p>
 </li>
 <li>
 <p>An index.html, english.html, and spanish.html web page will be generated from multiple el-CICD Chart variables.</p>
 </li>
 <li>
-<p>The index.html page will contain links to the english.html and spanish.html pages.</p>
+<p>Three ConfigMaps, each containing the generated web pages, will be deployed to the cluster, and mounted inside the httpd Pod.</p>
 </li>
 <li>
-<p>Three ConfigMaps, each containing the generated index.html, english.html, or spanish.html files, will be deployed to the cluster, mounted inside the httpd Pod, and be visible within the browser.</p>
+<p>The index.html page will contain links to the english.html and spanish.html pages.</p>
 </li>
 </ul>
 </div>
@@ -2944,7 +2931,7 @@ Uninstall the chart.</p>
 Install the <code>elcicd-chart-demo</code> release in the <code>elcicd-chart-demo</code> namespace using the el-CICD Chart:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace --set elCicdProfiles='{MULTI_LINGUAL}' -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
+<pre class="rouge highlight"><code>$ helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace --set elCicdProfiles='{MULTI_LINGUAL}' -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -3215,7 +3202,7 @@ Get the value of the host from the Ingress, and verify the Apache Web Server is 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If not using CRC, you&#8217;ll definitely need to run the <code>kubectl get</code> command above to get the correct host.
+If not using CRC, run the <code>kubectl get</code> command above to get the correct host.
 </td>
 </tr>
 </table>
@@ -3262,7 +3249,7 @@ Uninstall the chart.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Using free form templates.</p>
+<p>Defining free form templates.</p>
 </li>
 <li>
 <p>Using el-CICD Chart matrices to deploy copies of the same el-CICD template across namespaces.</p>
@@ -3275,7 +3262,7 @@ Uninstall the chart.</p>
 <p>So far this tutorial has focused on the easy deployments of services using built-in helper el-CICD Chart templates.  Unfortunately, because Kubernetes has many dozens of resources, and it is infinitely extensible with <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/" target="read-later">Custom Resource Definitions</a> (CRD), creating helper templates for every resource deployable to a Kubernetes cluster is not feasible.</p>
 </div>
 <div class="paragraph">
-<p>To address this, el-CICD Chart supports templating arbitrary YAML as an el-CICD Chart templates, and in particular Kubernetes resources.  Rather than using a named helper template with <code>templateName(s)</code>, the full YAML of the resource is written under the <code>template</code> key.  While more verbose than their helper template counterparts, they still allow for the use of el-CICD Chart variables, deployment profiles, and matrices; thus, they will still be able to take advantage of the most powerful features of the el-CICD Chart.</p>
+<p>To address this, el-CICD Chart supports templating any arbitrary YAML as an el-CICD Chart template, including Kubernetes resources.  Rather than using a named helper template with <code>templateName(s)</code>, the full YAML of the resource is written under the <code>template</code> key.  While more verbose than their helper template counterparts, they still allow for the use of el-CICD Chart variables, deployment profiles, and matrices; thus, they will still be able to take advantage of the most powerful features of the el-CICD Chart.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -3284,31 +3271,31 @@ Uninstall the chart.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Any resource without a corresponding el-CICD Chart helper template</p>
+<p>Any default Kubernetes resource without a corresponding el-CICD Chart helper template</p>
 </li>
 <li>
 <p>Custom Resource Definitions</p>
 <div class="paragraph">
-<p>Many Kubernetes add-ons (e.g. Tekton, Istio, Jaeger, etc.) have CRD&#8217;s and will therefore not have corresponding el-CICD Chart helper templates.</p>
+<p>Many Kubernetes add-ons have CRD&#8217;s and will therefore not have corresponding el-CICD Chart helper templates.</p>
 </div>
 </li>
 <li>
 <p>General YAML templating</p>
 <div class="paragraph">
-<p>Some use cases involve YAML that does not represent a Kubernetes object directly.  Setting the <code>rawYaml</code> key on an el-CICD Chart template will prevent el-CICD from trying to generate or look for any <code>kind</code>, <code>apiVersion</code>, or <code>metatdata</code> information.</p>
+<p>Some use cases involve YAML that does not represent a Kubernetes object directly.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>Third party chart integration</p>
 <div class="paragraph">
-<p>Converting an already working Helm chart may not be feasible and/or is probably not worth the time.  el-CICD Chart can be used as a general YAML templating tool to generate values.yaml files for other Helm charts via Helm <a href="https://helm.sh/docs/topics/advanced/#post-rendering">post-renderering</a>.</p>
+<p>Converting an already working Helm chart into a el-CICD Chart compatible chart may not be feasible and/or is probably not worth the time.  el-CICD Chart can be used as a general YAML templating tool to generate values.yaml files for other Helm charts via Helm <a href="https://helm.sh/docs/topics/advanced/#post-rendering">post-renderering</a>.</p>
 </div>
 </li>
 <li>
 <p>Dynamic Kustomizations</p>
 <div class="paragraph">
-<p>kustomization.yaml files are very statically declared.  If you need to dynamically generate one, they can also be templated with el-CICD Chart and <code>kustomize</code> applied during Helm post-rendering.</p>
+<p>kustomization.yaml files only support statically declared data.  If you need a more dynamic solution, kustomization.yaml files can be templated using el-CICD Chart, and <code>kustomize</code> applied during Helm post-rendering.</p>
 </div>
 </li>
 </ul>
@@ -3400,7 +3387,7 @@ Uninstall the chart.</p>
 elCicdDefs-$&lt;ENGLISH_JOB&gt;:
   WELCOME_MSG: 'Howdy from $&lt;OBJ_NAME&gt; in release $&lt;HELM_RELEASE_NAME&gt;!'
 
-elCicdDef-$&lt;ESPANOL_JOB&gt;:
+elCicdDefs-$&lt;ESPANOL_JOB&gt;:
   WELCOME_MSG: '¡Hola desde $&lt;OBJ_NAME&gt; en el lanzamiento $&lt;HELM_RELEASE_NAME&gt;!'
 
 elCicdTemplates:
@@ -3409,17 +3396,17 @@ elCicdTemplates:
 
 - templateName: job
   objNames: $&lt;OBJ_NAMES&gt;
-  namespaces: $&lt;NAMESPACES&gt; <i class="conum" data-value="2"></i><b>(2)</b>
-  objName: $&lt;&gt;-helper <i class="conum" data-value="3"></i><b>(3)</b>
+  namespaces: $&lt;NAMESPACES&gt;
+  objName: $&lt;&gt;-helper <i class="conum" data-value="2"></i><b>(2)</b>
   image: quay.io/centos/centos:stream9-minimal
   command: $&lt;COMMAND&gt;
   args: $&lt;JOB_SCRIPT&gt;
-  env: $&lt;ENV&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+  env: $&lt;ENV&gt;
 
 - objNames: $&lt;OBJ_NAMES&gt;
-  namespaces: $&lt;NAMESPACES&gt; <i class="conum" data-value="5"></i><b>(5)</b>
-  objName: $&lt;&gt;-raw <i class="conum" data-value="6"></i><b>(6)</b>
-  template: <i class="conum" data-value="7"></i><b>(7)</b>
+  namespaces: $&lt;NAMESPACES&gt;
+  objName: $&lt;&gt;-raw
+  template: <i class="conum" data-value="3"></i><b>(3)</b>
     apiVersion: batch/v1
     kind: Job
     spec:
@@ -3430,7 +3417,7 @@ elCicdTemplates:
             image: quay.io/centos/centos:stream9-minimal
             command: $&lt;COMMAND&gt;
             args: $&lt;JOB_SCRIPT&gt;
-            env: $&lt;ENV&gt; <i class="conum" data-value="8"></i><b>(8)</b>
+            env: $&lt;ENV&gt; <i class="conum" data-value="4"></i><b>(4)</b>
           restartPolicy: Never
 </pre></td></tr></tbody></table></code></pre>
 </div>
@@ -3446,41 +3433,44 @@ elCicdTemplates:
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Both <code>objNames</code> and <code>namespaces</code> can use patterns to further decorate the final matrix values.
+<td>Both <code>objNames</code> and <code>namespaces</code> can use patterns to further decorate each final matrix value.
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>$&lt;&gt; refers the element in the matrix; e.g. job-en`.</p>
+<p>$&lt;&gt; refers each element in the matrix; e.g. <code>job-en</code> or <code>job-es</code>.</p>
 </li>
 <li>
 <p>$&lt;#&gt; refers to the index of the element in the matrix; e.g. the pattern <code>$&lt;&gt;-$&lt;#&gt;</code> would generate <code>job-en-1</code> and <code>job-en-2</code>.</p>
 </li>
 <li>
-<p>In the deployment definition above, the <em>base name</em> is decorated with either <code>-helper</code> or <code>-raw</code> so the pods generated from either the helper template or the raw YAML templates can be identified on site.</p>
+<p>In the deployment definition above, the <em>base name</em> is decorated with either <code>-helper</code> or <code>-raw</code> so the pods generated from either the helper template or the raw YAML templates are clearly identified.</p>
 </li>
 <li>
-<p>In templates generated from matrices with patterns, use <code>$&lt;BASE_OBJ_NAME&gt;</code> to refer to the undecorated element from the list that generated <code>$&lt;OBJ_NAME&gt;</code>.</p>
+<p>In templates generated from matrices with patterns, use <code>$&lt;BASE_OBJ_NAME&gt;</code> to refer to the undecorated element from the matrix&#8217;s list that generated <code>$&lt;OBJ_NAME&gt;</code>.</p>
 </li>
 </ol>
 </div></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The <code>template</code> helper attribute marks the start of the YAML defining any arbitrary YAML to be deployed to Kubernetes.
+<td>The <code>template</code> helper attribute contains the free form YAML definition.
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
 <p>Matrices, variables, and deployment profiles can be used as usual with free form el-CICD Chart template.</p>
 </li>
 <li>
-<p>The <code>metadata</code> section is optional in a free form template.</p>
+<p>The <code>metadata</code> section can optionally defined directly in.</p>
 <div class="olist lowerroman">
 <ol class="lowerroman" type="i">
 <li>
 <p>el-CICD Chart will attempt generate a <code>metadata</code> automatically if it is missing.</p>
 </li>
 <li>
-<p>If <code>rawYaml: true</code> is set on the el-CICD Chart template, the metadata section will not be generated if missing.</p>
+<p>Any fields defined in <code>metadata</code> sections will always take precedence over values defined in helper attributes.</p>
+</li>
+<li>
+<p>If <code>kubeObject: false</code> is set on the el-CICD Chart template, the metadata section will not be generated if missing.</p>
 </li>
 </ol>
 </div>
@@ -3501,7 +3491,7 @@ elCicdTemplates:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-There is never a reason to use a raw template when deploying any Kubernetes resource workload (e.g. Deployment, Pod, Job, etc.) to a cluster.  All of them have helper templates.  This example is for demonstration purposes only.
+There is rarely if ever a reason to use a raw template when cl-CICD Chart helper templates exist.  This example is for demonstration purposes only.
 </td>
 </tr>
 </table>
@@ -3541,7 +3531,7 @@ There is never a reason to use a raw template when deploying any Kubernetes reso
 Install the <code>elcicd-chart-demo</code> release in the <code>elcicd-chart-demo</code> namespace using the el-CICD Chart:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-5.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
+<pre class="rouge highlight"><code>$ helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-5.yaml elcicd-chart-demo elcicd-charts/elcicd-chart</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -3926,11 +3916,10 @@ spec:
 </details>
 </li>
 <li>
-<p>
-View the running <code>elcicd-chart-demo</code> resources in the cluster:</p>
+<p>View the running <code>elcicd-chart-demo</code> resources in the cluster:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ kubectl get -n elcicd-chart-demo -l elcicd.io/selector deploy,rs,pod,cm,service,ingress</code></pre>
+<pre class="rouge highlight"><code>$ kubectl get -n elcicd-chart-demo jobs,pods</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -3939,11 +3928,17 @@ View the running <code>elcicd-chart-demo</code> resources in the cluster:</p>
 <dd>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>NAME                      READY   STATUS      RESTARTS   AGE
-pod/job-en-helper-kzlwx   0/1     Completed   0          23s
-pod/job-en-raw-zhx7c      0/1     Completed   0          23s
-pod/job-es-helper-tlp6b   0/1     Completed   0          23s
-pod/job-es-raw-bbpjg      0/1     Completed   0          23s</code></pre>
+<pre class="rouge highlight"><code>NAME                      STATUS     COMPLETIONS   DURATION   AGE
+job.batch/job-en-helper   Complete   1/1           11s        23s
+job.batch/job-en-raw      Complete   1/1           12s        23s
+job.batch/job-es-helper   Complete   1/1           11s        23s
+job.batch/job-es-raw      Complete   1/1           12s        23s
+
+NAME                      READY   STATUS      RESTARTS   AGE
+pod/job-en-helper-vx985   0/1     Completed   0          23s
+pod/job-en-raw-zx24g      0/1     Completed   0          23s
+pod/job-es-helper-t9b5v   0/1     Completed   0          23s
+pod/job-es-raw-lbr42      0/1     Completed   0          23s</code></pre>
 </div>
 </div>
 </dd>
@@ -3954,7 +3949,7 @@ pod/job-es-raw-bbpjg      0/1     Completed   0          23s</code></pre>
 <p>View the running <code>elcicd-chart-demo-2</code> resources in the cluster:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ kubectl get -n elcicd-chart-demo-2 deploy,rs,pod,cm,service,ingress</code></pre>
+<pre class="rouge highlight"><code>$ kubectl get -n elcicd-chart-demo-2 jobs,pods</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -3963,11 +3958,17 @@ pod/job-es-raw-bbpjg      0/1     Completed   0          23s</code></pre>
 <dd>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>NAME                      READY   STATUS      RESTARTS   AGE
-pod/job-en-helper-5c4bb   0/1     Completed   0          44s
-pod/job-en-raw-mvwgp      0/1     Completed   0          44s
-pod/job-es-helper-9jzdw   0/1     Completed   0          44s
-pod/job-es-raw-qd5nj      0/1     Completed   0          44s</code></pre>
+<pre class="rouge highlight"><code>NAME                      STATUS     COMPLETIONS   DURATION   AGE
+job.batch/job-en-helper   Complete   1/1           12s        44s
+job.batch/job-en-raw      Complete   1/1           13s        44s
+job.batch/job-es-helper   Complete   1/1           12s        44s
+job.batch/job-es-raw      Complete   1/1           12s        44s
+
+NAME                      READY   STATUS      RESTARTS   AGE
+pod/job-en-helper-8r6pg   0/1     Completed   0          44s
+pod/job-en-raw-ww6z9      0/1     Completed   0          44s
+pod/job-es-helper-vtlqj   0/1     Completed   0          44s
+pod/job-es-raw-r8ftk      0/1     Completed   0          44s</code></pre>
 </div>
 </div>
 </dd>
@@ -3990,7 +3991,7 @@ Only two of the eight jobs are displayed for brevity.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ $ oc logs -f -n elcicd-chart-demo job-en-helper-5c4bb</code></pre>
+<pre class="rouge highlight"><code>$ oc logs -f -n elcicd-chart-demo job-es-helper-t9b5v</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -4011,7 +4012,7 @@ Howdy from job-en-helper in release elcicd-chart-demo!</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>$ oc logs -f -n elcicd-chart-demo-2 job-es-raw-bbpjg</code></pre>
+<pre class="rouge highlight"><code>$ oc logs -f -n elcicd-chart-demo-2 job-en-helper-8r6pg</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -4081,7 +4082,7 @@ Uninstall the chart.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-20 22:36:41 UTC
+Last updated 2024-11-17 00:45:49 UTC
 </div>
 </div>
 </body>
