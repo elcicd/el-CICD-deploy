@@ -1,6 +1,11 @@
+NAME                      STATUS     COMPLETIONS   DURATION   AGE
+job.batch/job-en-helper   Complete   1/1           11s        23s
+job.batch/job-en-raw      Complete   1/1           12s        23s
+job.batch/job-es-helper   Complete   1/1           11s        23s
+job.batch/job-es-raw      Complete   1/1           12s        23s
 
 NAME                      READY   STATUS      RESTARTS   AGE
-pod/job-en-helper-kzlwx   0/1     Completed   0          23s
-pod/job-en-raw-zhx7c      0/1     Completed   0          23s
-pod/job-es-helper-tlp6b   0/1     Completed   0          23s
-pod/job-es-raw-bbpjg      0/1     Completed   0          23s
+pod/job-en-helper-vx985   0/1     Completed   0          23s
+pod/job-en-raw-zx24g      0/1     Completed   0          23s
+pod/job-es-helper-t9b5v   0/1     Completed   0          23s
+pod/job-es-raw-lbr42      0/1     Completed   0          23s

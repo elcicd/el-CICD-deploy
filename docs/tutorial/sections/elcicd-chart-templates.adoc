@@ -1,5 +1,5 @@
 === el-CICD Chart Templates
-:helm-update-command: helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-1.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-1.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :result-image: rhel-test-page-screenshot.png
 :helm-manifest-file: elcicd-chart-template-manifest
 :kubectl-get-file: elcicd-chart-template-kubectl-get
@@ -12,9 +12,9 @@
 * el-CICD Chart built-in variables.
 ****
 
-The el-CICD Chart aims to define basic Kubernetes resources for application deployments out-of-the-box and provide as many reasonable defaults as possible to reduce the amount of boilerplate required by the end user.  The el-CICD Chart also aims to do away with the need to write Helm (Go) templates, and instead adheres to more standard YAML with only minor enhancements.
+The el-CICD Chart aims to define basic Kubernetes resources for application deployments out-of-the-box and provide as many reasonable defaults as possible to reduce the amount of boilerplate required by the end user.  The el-CICD Chart also aims to do away with the need to write Helm (Go) templates, and instead follows the Helm requirement for values.yaml files be https://helm.sh/docs/chart_template_guide/values_files/[plain YAML].
 
-NOTE: The example below is purposefully contrived to be more complicated than necessary.  In this case the Ingress will be communicating with the Service over port 8081, and the Service will forward incoming requests to Apache Web Server container over port 8080.  The next part of the tutorial will make it clear why we are making this more complicated than necessary.
+NOTE: The example below is purposefully contrived to be more complicated than necessary.  In this case the Ingress will be communicating with the Service over port 8081, and the Service will forward incoming requests to Apache Web Server container over the more standard port 8080.  The next part of the tutorial will make it clear why we are making this more complicated than necessary.
 
 [discrete]
 ==== Create and save the following file as `elcicd-demo-1.yaml`
@@ -35,21 +35,25 @@ elCicdTemplates: # <.>
 ----
 <.> All el-CICD Chart templates are defined in a list called `elCicdTemplates`.
 +
-TIP: **If you want to spread your templates out over multiple values.yaml files, more template lists can be defined as `elCicdTemplates-*`. The suffix is meaningless and only needs to be unique and valid YAML, so that Helm doesn't overwrite the disparate lists.**
+TIP: **If you want to spread your el-CICD templates out over multiple values.yaml files, more template lists can be defined as `elCicdTemplates-*`; e.g. elCicdTemplates-foo.**
++
+The suffix is meaningless and only serves to be keep the lists unique from Helm's perspective. el-CICD Chart will automatically merge the lists into a single, unified list.
 <.> By convention, there is a one-to-one relation between el-CICD Chart templates and the Kubernetes resources they render.
 ... `deployment` for a Kubernetes Deployment
 ... `service` for a Kubernetes Service
 ... `ingress` for a Kubernetes Ingress
 ... el-CICD Chart templates are all named by convention with lowerCamelCase.
+
 <.> _Helper attributes_ are el-CICD Chart template top level keys; e.g. some standard el-CICD attributes every template has:
-... `templatName`: the name of the el-CICD Chart template to render.
+... `templateName`: the name of the el-CICD Chart template to render.
 ... `objName`: maps directly `metadata.name`.
 ... `template`: custom el-CICD template definitions when built-in templates aren't used.
+
 <.> `$<HELM_RELEASE_NAMESPACE>` references a built-in el-CICD Chart variable.
-... In a Helm template this corresponds to `.Release.Namespace`; i.e. the namespace the chart is deployed in.
+... In a Helm template this corresponds to https://helm.sh/docs/chart_template_guide/builtin_objects/[`.Release.Namespace`]; i.e. the namespace a Helm chart is deployed in.
 +
-NOTE: The release namespace is not necessarily the same as where the Kubernetes resources are deployed.
-... The `$<__VARIABLE_NAME__>` syntax is how variables are referenced in el-CICD Chart templates.
+NOTE: The release namespace is not necessarily the same as the Kubernetes resources being deployed.
+... el-CICD Chart variables are referenced using the syntax `$<__VARIABLE_NAME__>`.
 ... el-CICD Chart conventions define variables using UPPER_SNAKE_CASE, similar to Shell.
 
 [discrete]
@@ -57,8 +61,8 @@ NOTE: The release namespace is not necessarily the same as where the Kubernetes 
 
 .What to expect
 ****
-* A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.
-* An httpd Pod will be created and accessible in the browser from outside the cluster.
+* A https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Deployment], https://kubernetes.io/docs/concepts/services-networking/service/[Service], and https://kubernetes.io/docs/concepts/services-networking/ingress/[Ingress] will be deployed on the cluster using el-CICD Chart.
+* An httpd https://kubernetes.io/docs/concepts/workloads/pods/[Pod] will be created from the Deployment and accessible in the browser from outside the cluster.
 * The httpd server's test page will be reachable and visible in the browser.
 ****
 
