@@ -1,19 +1,19 @@
 === User-defined Variables
-:helm-update-command: helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-3.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-3.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :result-image: user-defined-variables-screenshot.png
 :helm-manifest-file: user-defined-variables-manifest
 :kubectl-get-file: user-defined-variables-kubectl-get
 
 .Features demonstrated
 ****
-* Defining arbitrary el-CICD Chart variables in deployment definitions.
+* User-defined el-CICD Chart variables in deployment definitions.
 * Using el-CICD Chart variables as YAML templates.
 * Easily mounting ConfigMaps in Pods with the `projectedVolumes` helper attribute.
 ****
 
 Both <<el-CICD Chart Templates>> and <<Compound el-CICD Chart Templates>> made use of el-CICD Chart's built-in variables to help define their host domain.  This part of the tutorial will focus on user-defined variables.
 
-A fundamental goal of el-CICD Chart is to eliminate Helm templates and move all template creation, among other things, into the values.yaml file(s).  This part of the tutorial, where arbitrary values are defined within the values.yaml file, is where that functionality begins to be demonstrated.
+A fundamental goal of el-CICD Chart is to eliminate the need for Helm templates and instead let the user define their deployment manifests as plain YAML documents.  Another goal is to remove the need for copying and pasting boilerplate YAML as much as possible when defining manifests.  User-defined el-CICD Chart variables support these goals.
 
 [discrete]
 ==== Create and save the following file as `elcicd-demo-3.yaml`
@@ -52,32 +52,37 @@ elCicdTemplates:
     $<OBJ_NAME>: $<HTML_PAGE> # <.>
 ----
 
-<.> All el-CICD Chart variables are defined under maps starting with `elCicdDefs`.
-.. Keys in the `elCicdDefs` map are the names of the variables.
-.. Variables and their values can be any valid YAML.
-.. By convention and similar to shell scripting, variable names use UPPER_SNAKE_CASE.
-.. Variables are referenced using the syntax `$<VARIABLE_NAME>`.
+<.> All el-CICD Chart variables are defined under `elCicdDefs` maps.
+.. Keys in the `elCicdDefs` map are el-CICD Chart variables.
+.. `elCicdDefs` maps can be any valid YAML; i.e. valid keys and values for YAML maps.
+.. By convention, variable names use UPPER_SNAKE_CASE.
+.. Variables are referenced using the syntax `$<__VARIABLE_NAME__>`.
 .. Variables can references other variables.
-... The order variables are declared is irrelevant.
-... Variable names can be dynamically generated.
+... The order variables are defined is irrelevant; i.e. a variable can reference another variable that is defined later.
+... Variable names and references can be defined and used dynamically; e.g.:
++
+given `FOO: howdy` and `howdy_BAR: welcome`, `$<$<FOO>_BAR>` ultimately resolves to `welcome`.
+
 <.> `projectedVolumes` is a helper attribute for generating https://kubernetes.io/docs/concepts/storage/projected-volumes/[projectedVolumes,window=read-later].
-.. In this example it will generate a `volume` entry for ConfigMap in the Deployment.
-.. It will also create a `volumeMount` of the `volume` in the container definition.
-<.> `$<HELM_RELEASE_NAME>` is another built-in el-CICD Chart variable that corresponds to `.Release.Name` in a Helm template.
+.. This helper attribute obviates the need for a separate volume and volumeMount definition.
+.. In this example it will mount the ConfigMap `$<INDEX_HTML_NAME>` (`index.html`) as a projected `volume` in the Deployment, along with it's associated `volumeMount`.
+
+<.> `$<HELM_RELEASE_NAME>` is another built-in el-CICD Chart variable that corresponds to https://helm.sh/docs/chart_template_guide/builtin_objects/[`.Release.Name`] in a Helm template.
+
 <.> `objName` is a helper attribute that will render as the name of a resource or resources; i.e.`metadata.name`.
-.. `objName` must follow the same naming rules as `metadata.name`.
-.. `$<OBJ_NAME>` is another built-in el-CICD Chart variable referring to the el-CICD Chart template's objName in which it is realized.
-.. `objName` and `OBJ_NAME` will default to the chart's release name, `$<HELM_RELEASE_NAME>`, if left undefined by the user.
+.. `objName` must follow the same naming rules as https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names[`metadata.name`].
+.. `$<OBJ_NAME>` is another built-in el-CICD Chart variable referring to the el-CICD Chart template's `objName`.
+.. `objName` and `OBJ_NAME` will default to the chart's release name, `$<HELM_RELEASE_NAME>` if left undefined by the user.
 
 [discrete]
 ==== Tutorial steps
 
 .What to expect
 ****
-* An httpd Pod will be created and accessible in the browser from outside the cluster.
-* A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.
-* An index.html web page will be generated from multiple el-CICD Chart variables. 
-* A ConfigMap containing the generated index.html file will be deployed to the cluster, mounted inside the httpd Pod, and be visible within the browser.
+* A Deployment, Service, Ingress, and ConfigMap will be deployed on the cluster using el-CICD Chart.
+* An httpd Pod will be created from the Deployment and accessible in the browser from outside the cluster.
+* The ConfigMap will contain an index.html web page that was generated from multiple el-CICD Chart variables.
+* The ConfigMap will be mounted inside the httpd Pod, and and the index.html page will become the server's home page.
 ****
 
 . {empty}

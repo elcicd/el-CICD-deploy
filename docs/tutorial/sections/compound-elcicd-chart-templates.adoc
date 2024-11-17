@@ -1,18 +1,18 @@
 === Compound el-CICD Chart Templates
-:helm-update-command: helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-2.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-2.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :result-image: rhel-test-page-screenshot.png
 :helm-manifest-file: compound-template-manifest
 :kubectl-get-file: compound-template-kubectl-get
 
 .Features demonstrated
 ****
-* Creating more concise compound templates by combining el-CICD Chart templates.
-* Leveraging shared helper attributes within compound el-CICD Chart templates.
+* Defining compound templates.
+* Reducing boilerplate YAML using common el-CICD Chart templates helper attributes.
 ****
 
-In <<el-CICD Chart Templates>>, we demonstrated how concise and modular el-CICD Chart templates can be when defining deployments.  We will now show how to combine el-CICD Chart templates into single, __compound template__ for even more concise deployment definitions.
+In <<el-CICD Chart Templates>>, we demonstrated the conciseness and modularity el-CICD Chart templates.  We will now show how to combine multiple, related el-CICD Chart templates into a single __compound template__ for even more concise deployment definitions.
 
-TIP: **Any el-CICD Chart built-in template can be compounded into a single template definition as long as any overlapping helper attributes refer to the same, basic data.**
+TIP: **Any el-CICD Chart built-in template can be compounded into a single template definition as long as any common helper attributes refer to the same, basic data.**
 
 [discrete]
 ==== Create and save the following file as `elcicd-demo-2.yaml`
@@ -26,25 +26,36 @@ elCicdTemplates:
   port: 8081 # <.>
   targetPort: 8080 # <.>
 ----
+[TIP]
+====
+YAML is a superset of JSON; thus YAML will interpret both `[deployment, service, ingress]` and
+[source,YAML,linenums]
+----
+templateNames:
+- deployment
+- service
+- ingress
+----
+as lists.
+====
 
-<.> Compound templates are listed under the `templateNames` attribute, versus `templateName` for a single attribute.
-.. Since YAML is superset of JSON, JSON list notation is acceptable.
-.. The `templateName` attribute is merely a convenience when rendering a single template.
+<.> Compound templates are defined as a list under the `templateNames` attribute, versus `templateName` for a single template.
+
 <.> In compound templates, all helper attributes are shared among the el-CICD templates.
 .. `image` is unique to the `deployment` template.
 .. `host` is unique to the `ingress` el-CICD Chart template.
 .. `port` is shared and used by all three listed el-CICD Chart templates.
 .. `targetPort` is shared by the `service` and `deployment` templates, and take precedence over the `port` attribute when defined.
 
-NOTE: In <<el-CICD Chart Templates>>, we promised to explain why we contrived a different port and target port as a tutorial contrivance, and it was to demonstrate how overlapping helper attributes would behave in compound templates.
+NOTE: In the first part of the tutorial, <<el-CICD Chart Templates>>, we promised to explain why we contrived a different port and target port, and it was to better demonstrate how shared helper attributes would behave in compound templates.
 
 [discrete]
 ==== Tutorial steps
 
 .What to expect
 ****
-* A Deployment, Service, and Ingress will be deployed on the cluster using el-CICD Chart.
-* An httpd Pod will be created and accessible in the browser from outside the cluster.
+* A Deployment, Service, Ingress, and ConfigMap will be deployed on the cluster using el-CICD Chart.
+* An httpd Pod will be created from the Deployment and accessible in the browser from outside the cluster.
 * The httpd server's test page will be reachable and visible in the browser.
 ****
 

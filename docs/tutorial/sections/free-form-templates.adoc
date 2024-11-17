@@ -2,29 +2,29 @@
 
 .Features demonstrated
 ****
-* Using free form templates.
+* Defining free form templates.
 * Using el-CICD Chart matrices to deploy copies of the same el-CICD template across namespaces.
 ****
 
 So far this tutorial has focused on the easy deployments of services using built-in helper el-CICD Chart templates.  Unfortunately, because Kubernetes has many dozens of resources, and it is infinitely extensible with https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resource Definitions,window=read-later] (CRD), creating helper templates for every resource deployable to a Kubernetes cluster is not feasible.
 
-To address this, el-CICD Chart supports templating arbitrary YAML as an el-CICD Chart templates, and in particular Kubernetes resources.  Rather than using a named helper template with `templateName(s)`, the full YAML of the resource is written under the `template` key.  While more verbose than their helper template counterparts, they still allow for the use of el-CICD Chart variables, deployment profiles, and matrices; thus, they will still be able to take advantage of the most powerful features of the el-CICD Chart.
+To address this, el-CICD Chart supports templating any arbitrary YAML as an el-CICD Chart template, including Kubernetes resources.  Rather than using a named helper template with `templateName(s)`, the full YAML of the resource is written under the `template` key.  While more verbose than their helper template counterparts, they still allow for the use of el-CICD Chart variables, deployment profiles, and matrices; thus, they will still be able to take advantage of the most powerful features of the el-CICD Chart.
 
 Example use cases for free form templates::
-* Any resource without a corresponding el-CICD Chart helper template
+* Any default Kubernetes resource without a corresponding el-CICD Chart helper template
 * Custom Resource Definitions
 +
-Many Kubernetes add-ons (e.g. Tekton, Istio, Jaeger, etc.) have CRD's and will therefore not have corresponding el-CICD Chart helper templates.
+Many Kubernetes add-ons have CRD's and will therefore not have corresponding el-CICD Chart helper templates.
 * General YAML templating
 +
-Some use cases involve YAML that does not represent a Kubernetes object directly.  Setting the `rawYaml` key on an el-CICD Chart template will prevent el-CICD from trying to generate or look for any `kind`, `apiVersion`, or `metatdata` information.
+Some use cases involve YAML that does not represent a Kubernetes object directly.
 
 ** Third party chart integration
 +
-Converting an already working Helm chart may not be feasible and/or is probably not worth the time.  el-CICD Chart can be used as a general YAML templating tool to generate values.yaml files for other Helm charts via Helm https://helm.sh/docs/topics/advanced/#post-rendering[post-renderering].
+Converting an already working Helm chart into a el-CICD Chart compatible chart may not be feasible and/or is probably not worth the time.  el-CICD Chart can be used as a general YAML templating tool to generate values.yaml files for other Helm charts via Helm https://helm.sh/docs/topics/advanced/#post-rendering[post-renderering].
 ** Dynamic Kustomizations
 +
-kustomization.yaml files are very statically declared.  If you need to dynamically generate one, they can also be templated with el-CICD Chart and `kustomize` applied during Helm post-rendering.
+kustomization.yaml files only support statically declared data.  If you need a more dynamic solution, kustomization.yaml files can be templated using el-CICD Chart, and `kustomize` applied during Helm post-rendering.
 
 [discrete]
 ==== Create and save the following file as `elcicd-demo-5.yaml`
@@ -54,7 +54,7 @@ elCicdDefs:
 elCicdDefs-$<ENGLISH_JOB>:
   WELCOME_MSG: 'Howdy from $<OBJ_NAME> in release $<HELM_RELEASE_NAME>!'
 
-elCicdDef-$<ESPANOL_JOB>:
+elCicdDefs-$<ESPANOL_JOB>:
   WELCOME_MSG: '¡Hola desde $<OBJ_NAME> en el lanzamiento $<HELM_RELEASE_NAME>!'
 
 elCicdTemplates:
@@ -63,16 +63,16 @@ elCicdTemplates:
 
 - templateName: job
   objNames: $<OBJ_NAMES>
-  namespaces: $<NAMESPACES> # <.>
+  namespaces: $<NAMESPACES>
   objName: $<>-helper # <.>
   image: quay.io/centos/centos:stream9-minimal
   command: $<COMMAND>
   args: $<JOB_SCRIPT>
-  env: $<ENV> # <.>
+  env: $<ENV>
 
 - objNames: $<OBJ_NAMES>
-  namespaces: $<NAMESPACES> # <.>
-  objName: $<>-raw # <.>
+  namespaces: $<NAMESPACES>
+  objName: $<>-raw
   template: # <.>
     apiVersion: batch/v1
     kind: Job
@@ -91,23 +91,27 @@ elCicdTemplates:
 <.> Like `objNames`, `namespaces` is an el-CICD Chart matrix.
 +
 Each element in the `namespaces` list will generate a copy of the el-CICD Chart template, and assign the value to `.metadata.namespace`.
-<.> Both `objNames` and `namespaces` can use patterns to further decorate the final matrix values.
-.. $<> refers the element in the matrix; e.g. job-en`.
+
+<.> Both `objNames` and `namespaces` can use patterns to further decorate each final matrix value.
+.. $<> refers each element in the matrix; e.g. `job-en` or `job-es`.
 .. $<#> refers to the index of the element in the matrix; e.g. the pattern `$<>-$<#>` would generate `job-en-1` and `job-en-2`.
-.. In the deployment definition above, the __base name__ is decorated with either `-helper` or `-raw` so the pods generated from either the helper template or the raw YAML templates can be identified on site.
-.. In templates generated from matrices with patterns, use `$<BASE_OBJ_NAME>` to refer to the undecorated element from the list that generated `$<OBJ_NAME>`.
-<.> The `template` helper attribute marks the start of the YAML defining any arbitrary YAML to be deployed to Kubernetes.
+.. In the deployment definition above, the __base name__ is decorated with either `-helper` or `-raw` so the pods generated from either the helper template or the raw YAML templates are clearly identified.
+.. In templates generated from matrices with patterns, use `$<BASE_OBJ_NAME>` to refer to the undecorated element from the matrix's list that generated `$<OBJ_NAME>`.
+
+<.> The `template` helper attribute contains the free form YAML definition.
 .. Matrices, variables, and deployment profiles can be used as usual with free form el-CICD Chart template.
-.. The `metadata` section is optional in a free form template.
+.. The `metadata` section can optionally defined directly in.
 ... el-CICD Chart will attempt generate a `metadata` automatically if it is missing.
-... If `rawYaml: true` is set on the el-CICD Chart template, the metadata section will not be generated if missing.
+... Any fields defined in `metadata` sections will always take precedence over values defined in helper attributes.
+... If `kubeObject: false` is set on the el-CICD Chart template, the metadata section will not be generated if missing.
+
 <.> Defining environment variables in a container is the same whether using helper or raw templates.
 
-NOTE: There is never a reason to use a raw template when deploying any Kubernetes resource workload (e.g. Deployment, Pod, Job, etc.) to a cluster.  All of them have helper templates.  This example is for demonstration purposes only.
+NOTE: There is rarely if ever a reason to use a raw template when cl-CICD Chart helper templates exist.  This example is for demonstration purposes only.
 
 [discrete]
 ==== Tutorial steps
-:helm-update-command: helm upgrade --install --atomic --history-max=0 -n elcicd-chart-demo --create-namespace -f elcicd-demo-5.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-5.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :helm-manifest-file: free-form-templates-manifest
 :kubectl-get-file: free-form-templates-kubectl-get
 
@@ -127,8 +131,19 @@ include::general-steps/upgrade-install-chart.adoc[]
 . {empty}
 include::general-steps/view-chart-manifests.adoc[]
 
-. {empty}
-include::general-steps/view-running-resources.adoc[]
++
+:kubectl-get-file: free-form-templates-kubectl-get
++
+. View the running `elcicd-chart-demo` resources in the cluster:
++
+```
+$ kubectl get -n elcicd-chart-demo jobs,pods
+```
+Output::
++
+```
+include::general-steps/kubectl-gets/{kubectl-get-file}.adoc[]
+```
 
 +
 :kubectl-get-file: free-form-templates-kubectl-get-2
@@ -136,7 +151,7 @@ include::general-steps/view-running-resources.adoc[]
 . View the running `elcicd-chart-demo-2` resources in the cluster:
 +
 ```
-$ kubectl get -n elcicd-chart-demo-2 deploy,rs,pod,cm,service,ingress
+$ kubectl get -n elcicd-chart-demo-2 jobs,pods
 ```
 
 Output::
@@ -150,7 +165,7 @@ include::general-steps/kubectl-gets/{kubectl-get-file}.adoc[]
 NOTE: Only two of the eight jobs are displayed for brevity.
 +
 ```
-$ $ oc logs -f -n elcicd-chart-demo job-en-helper-5c4bb 
+$ oc logs -f -n elcicd-chart-demo job-es-helper-t9b5v
 ```
 
 Output::
@@ -165,7 +180,7 @@ Howdy from job-en-helper in release elcicd-chart-demo!
 
 +
 ```
-$ oc logs -f -n elcicd-chart-demo-2 job-es-raw-bbpjg 
+$ oc logs -f -n elcicd-chart-demo-2 job-en-helper-8r6pg
 ```
 
 Output::
