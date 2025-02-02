@@ -145,7 +145,7 @@
 {{- define "elcicd-renderer.render" }}
   {{- $ := . }}
 
-  {{/* HACK (v3.15): global values map not automatically initialized in library charts.  Works if globals defined in chart, though. */}}
+  {{/* HACK (Helm v3.15): global values map not automatically initialized in library charts.  Works if globals defined in chart, though. */}}
   {{- $_ := set $.Values "global" ($.Values.global | default dict) }}
 
   {{- if (or $.Values.renderPreprocessedValues $.Values.global.renderPreprocessedValues) }}

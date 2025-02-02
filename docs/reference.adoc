@@ -931,6 +931,8 @@ helm upgrade --install -f deployment-def.yaml --post-renderer kustomize.sh my-ap
 
 More information on using a Helm `--post-renderer` can be https://helm.sh/docs/topics/advanced/[found here].
 
+== Extending el-CICD Chart
+
 == el-CICD Chart Reference
 
 === Glossary
@@ -1054,17 +1056,122 @@ Prometheus specific annotation defaults::
 
 * 3ScaleScheme:  "https"
 
-=== Built-in Helper Attributes
+=== Standard Helper Attributes
 
 Default helper attributes all el-CICD templates, built-in or free-form, share.
 
+annotations::
+Kubernetes object annotations.  Maps directly to `metadata.annotations`.
+
+elCicdDefs-*::
+el-CICD variable maps.  Defines maps specific to an el-CICD template, and optional to a profile or `objName`.
+
+kubeObject::
+Unless otherwise defined for a particular el-CICD template, default value is true.  If false, the Kubernetes apiVersion and kind attributes, and the Kubernetes metadata section, el-CICD Chart will not attempt to render the metadata section.  In a free-form template, any of the above is defined, el-CICD will render it as-is without modification.  In practice, this also means the `annotations` and `labels` helper attributes are ignored. 
+
+labels::
+Kubernetes object labels.  Maps directly to `metadata.labels`.
+
+objName::
+Fundamental identifier for an el-CICD template. Can be used in the following way:
+
+* If the template represents a Kubernetes object, will map directly to `metadata.name`, otherwise, it is just a unique identifier.
+* If `objNames` is defined, it represents a pattern that each matrix value should be evaluated to for each copied template `objName`.
+
++
+`objName` is mapped to the el-CICD variable `OBJ_NAME` during rendering for each template.  It is also mapped to the el-CICD variable `BASE_OBJ_NAME` if `objNames` is not defined.
+
+objNames::
+List of string that represents a matrix value for el-CICD template `objName` identifier. Each member of the list will result in a to a copy of the template, and that member is assigned to the `objName` helper attribute.
+
+namespace::
+Namespace a rendered el-CICD template should be deployed to. Can be used in the following way:
+
+* If the template represents a Kubernetes object, will map directly to `metadata.namespace`, otherwise, it means nothing.
+* If `namespaces` is defined, it represents a pattern that each matrix value should be evaluated to for each copied template `namespace`.
+
++
+`namespace` is mapped to the el-CICD variable `NAMESPACE` during rendering for each template.  It is also mapped to the el-CICD variable `BASE_NAMESPACE` if `namespaces` is not defined.
+
+namespaces::
+List of string that represents a matrix value for el-CICD template `namespace`. Each member of the list will result in a to a copy of the template, and that member is assigned to the `namespace` helper attribute.
+
+template::
+Arbitrary YAML to render defining the template. Ignored if `templateName` is defined.
+
+templateName::
+Name of el-CICD template to apply values to.
+
+templateNames::
+List of name of el-CICD templates to apply values to.  Each member of the list will result in a separate rendering based on the template values.
+
+==== must*
+Every helper attribute below must evaluate to true for the template to render; i.e. they all have equal precedence when determining whether a template should be rendered or not.
+
+mustHaveAnyProfile::
+An array of strings representing profiles.  If any profile in this list is active, the template will be rendered.
+
+mustHaveEveryProfile::
+An array of strings representing profiles.  Every profile in this list must be active for the template to render.
+
+mustNotHaveAnyProfile::
+An array of strings representing profiles.  If any profile in this list is active, the template will not be rendered.
+
+mustNotHaveEveryProfile::
+An array of strings representing profiles.  Every profile in this list must not be active for the template to render.
+
+
 === Built-in Templates
 
-List and attributes of all el-CICD Chart built-in templates.
+The following is a comprehensive list of all el-CICD Chart built-in templates and their helper attributes. While the full name of the template is given (e.g. `elcicd-kubernetes.cronJob`), only the latter part of the name is needed for rendering built-in templates (i.e. `cronjob`).
 
-==== el-CICD Chart
+Helper attributes specific to the built-in template will be listed under each heading, along with the JSON path of where the value will be rendered; i.e. how the value is used in a rendered Kubernetes resource, if applicable. If a default value is defined internally for the helper attribute, it will noted.  A link to each rendered resource's official documentation for more details will also be provided.
 
-==== Kubernetes
+==== elcicd-kubernetes.chart-yaml
 
-==== OpenShift
+==== elcicd-kubernetes.clusterRole
+
+==== elcicd-kubernetes.clusterRoleBinding
+
+==== elcicd-kubernetes.configMap
+
+==== elcicd-kubernetes.cronJob
+
+==== elcicd-kubernetes.daemonSet
+
+==== elcicd-kubernetes.deployment
+
+==== elcicd-kubernetes.horizontalPodAutoscaler
+
+==== elcicd-kubernetes.ingress
+
+==== elcicd-kubernetes.job
+
+==== elcicd-kubernetes.kustomization
+
+==== elcicd-kubernetes.limitRange
+
+==== elcicd-kubernetes.namespace
+
+==== elcicd-kubernetes.persistentVolume
+
+==== elcicd-kubernetes.persistentVolumeClaim
+
+==== elcicd-kubernetes.pod
+
+==== elcicd-kubernetes.resourceQuota
+
+==== elcicd-kubernetes.role
+
+==== elcicd-kubernetes.roleBinding
+
+==== elcicd-kubernetes.secret
+
+==== elcicd-kubernetes.service
+
+==== elcicd-kubernetes.statefulSet
+
+==== elcicd-kubernetes.serviceAccount
+
+==== elcicd-renderer.copyResource
 
