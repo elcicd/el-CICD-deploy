@@ -1125,53 +1125,558 @@ An array of strings representing profiles.  Every profile in this list must not 
 
 The following is a comprehensive list of all el-CICD Chart built-in templates and their helper attributes. While the full name of the template is given (e.g. `elcicd-kubernetes.cronJob`), only the latter part of the name is needed for rendering built-in templates (i.e. `cronjob`).
 
-Helper attributes specific to the built-in template will be listed under each heading, along with the JSON path of where the value will be rendered; i.e. how the value is used in a rendered Kubernetes resource, if applicable. If a default value is defined internally for the helper attribute, it will noted.  A link to each rendered resource's official documentation for more details will also be provided.
+Helper attributes specific to the built-in template will be listed under each heading, along with a JSON path-like dot notation of where the value will be rendered; i.e. how the value is used in a rendered Kubernetes resource, if applicable. If a default value is defined internally for the helper attribute, it will noted.
 
-==== elcicd-kubernetes.chart-yaml
+Unless otherwise described here, the content under each helper attribute mirrors the rendered resource definition as described in their reference documentation.  Follow the link under each template to its reference documentation for more information.
 
-==== elcicd-kubernetes.clusterRole
+==== https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/[Kubernetes Authentication Resources]
 
-==== elcicd-kubernetes.clusterRoleBinding
+===== elcicd-kubernetes.serviceAccount
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/service-account-v1/#ServiceAccount[ServiceAccount]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
 
-==== elcicd-kubernetes.configMap
+|automountServiceAccountToken
+|automountServiceAccountToken
+|
 
-==== elcicd-kubernetes.cronJob
+|imagePullSecrets
+|imagePullSecrets
+|
 
-==== elcicd-kubernetes.daemonSet
+|secrets
+|secrets
+|
+|=== 
 
-==== elcicd-kubernetes.deployment
+==== https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/[Kubernetes Authorization Resources]
 
-==== elcicd-kubernetes.horizontalPodAutoscaler
+===== elcicd-kubernetes.clusterRole
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/cluster-role-v1/[ClusterRole]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
 
-==== elcicd-kubernetes.ingress
+|aggregationRule
+|aggregationRule
+|
 
-==== elcicd-kubernetes.job
+|rules
+|rules
+|
+|=== 
 
-==== elcicd-kubernetes.kustomization
+===== elcicd-kubernetes.clusterRoleBinding
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/cluster-role-binding-v1/[ClusterRoleBinding]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
 
-==== elcicd-kubernetes.limitRange
+|roleRef
+|roleRef
+|
 
-==== elcicd-kubernetes.namespace
+|subjects
+|subjects
+|
+|=== 
 
-==== elcicd-kubernetes.persistentVolume
+===== elcicd-kubernetes.role
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/role-v1/[Role]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
 
-==== elcicd-kubernetes.persistentVolumeClaim
+|aggregationRule
+|aggregationRule
+|
 
-==== elcicd-kubernetes.pod
+|rules
+|rules
+|
+|=== 
 
-==== elcicd-kubernetes.resourceQuota
+===== elcicd-kubernetes.roleBinding
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/role-binding-v1/[RoleBinding]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
 
-==== elcicd-kubernetes.role
+|roleRef
+|roleRef
+|
 
-==== elcicd-kubernetes.roleBinding
+|subjects
+|subjects
+|
+|=== 
 
-==== elcicd-kubernetes.secret
+==== https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/[Kubernetes Cluster Resources]
 
-==== elcicd-kubernetes.service
+===== elcicd-kubernetes.namespace
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/namespace-v1/[Namespace]
 
-==== elcicd-kubernetes.statefulSet
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
 
-==== elcicd-kubernetes.serviceAccount
+|N/A
+|
+| __No attributes to render__
+|=== 
 
-==== elcicd-renderer.copyResource
+==== https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/[Kubernetes Config and Storage Resources]
+
+===== elcicd-kubernetes.configMap
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/config-map-v1/[ConfigMap]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|binaryData
+|binaryData
+|
+
+|data
+|data
+|
+
+|immutable
+|immutable
+|
+|=== 
+
+===== elcicd-kubernetes.persistentVolume
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/[PersistentVolume]
+
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|accessModes
+|spec.accessModes
+|
+
+|awsElasticBlockStore
+|spec.awsElasticBlockStore
+|
+
+|azureDisk
+|spec.azureDisk
+|
+
+|azureFile
+|spec.azureFile
+|
+
+|cephfs
+|spec.cephfs
+|
+
+|cinder
+|spec.cinder
+|
+
+|claimRef
+|spec.claimRef
+|
+
+|csi
+|spec.csi
+|
+
+|fc
+|spec.fc
+|
+
+|flexVolume
+|spec.flexVolume
+|
+
+|csi
+|spec.csi
+|
+
+|flocker
+|spec.flocker
+|
+
+|gcePersistentDisk
+|spec.gcePersistentDisk
+|
+
+|glusterfs
+|spec.glusterfs
+|
+
+|hostPath
+|spec.hostPath
+|
+
+|iscsi
+|spec.iscsi
+|
+
+|local
+|spec.local
+|
+
+|mountOptions
+|spec.mountOptions
+|
+
+|nfs
+|spec.nfs
+|
+
+|nodeAffinity
+|spec.nodeAffinity
+|
+
+|persistentVolumeReclaimPolicy
+|spec.persistentVolumeReclaimPolicy
+|
+
+|portworxVolume
+|spec.portworxVolume
+|
+
+|quobyte
+|spec.quobyte
+|
+
+|rbd
+|spec.rbd
+|
+
+|scaleIO
+|spec.scaleIO
+|
+
+|**storageCapacity***
+|spec.capacity.storage
+|
+
+|storageClassName
+|spec.storageClassName
+|
+
+|storageos
+|spec.storageos
+|
+
+|csi
+|spec.csi
+|
+
+|vsphereVolume
+|spec.vsphereVolume
+|
+
+|volumeMode
+|spec.volumeMode
+|
+|=== 
+
+===== elcicd-kubernetes.persistentVolumeClaim
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/[PersistentVolumeClaim]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|accessModes
+|spec.accessModes
+|
+
+|dataSource
+|spec.dataSource
+|
+
+|dataSourceRef
+|spec.dataSourceRef
+|
+
+|resources
+|spec.resources
+|Will override ```storageRequest``` and ```storageLimit```
+
+|selector
+|spec.selector
+|
+
+|storageClassName
+|spec.storageClassName
+|
+
+|storageRequest
+|spec.resources.requests.storage
+|Ignored if ```resources``` is defined
+
+|storageLimit
+|spec.resources.limits.storage
+|Ignored if ```resources``` is defined
+
+|volumeMode
+|spec.volumeMode
+|
+
+|volumeName
+|spec.volumeName
+|
+|=== 
+
+===== elcicd-kubernetes.secret
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/secret-v1/[Secret]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|data
+|data
+|
+
+|immutable
+|immutable
+
+|stringData
+|stringData
+|
+
+|type
+|type
+|
+|=== 
+
+==== el-CICD Chart Resources
+
+===== elcicd-renderer.copyResource
+copyResource is a special el-CICD Chart helper template for copying resources already deployed to a Kubernetes cluster from one namespace to another. The objName should reflect the name of the resource to be copied in the `fromNamespace`.
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|apiVersion
+|apiVersion
+|```apiVersion``` of source object; DEFAULT: "v1"
+
+|fromNamespace
+|fromNamespace
+|Namespace of source object
+
+|ignoreAnnotations
+|ignoreAnnotations
+|Do not copy annotations from source if "true"
+
+|ignoreLabels
+|ignoreLabels
+|Do not copy labels from source if "true"
+
+|kind
+|kind
+|```kind``` of source object
+
+|optional
+|optional
+|If "true", only output WARNING if not found; otherwise,fail
+
+|srcMetadataName
+|srcMetadataName
+|DEFAULT: ```objName```
+
+|toNamespace
+|toNamespace
+|Namespace to copy object to
+|=== 
+
+==== https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/[Kubernetes Policy Resources]
+
+===== elcicd-kubernetes.limitRange
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/limit-range-v1/[LimitRange]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|limits
+|spec.limits
+|
+|=== 
+
+===== elcicd-kubernetes.resourceQuota
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/resource-quota-v1/[ResourceQuota]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|hard
+|spec.hard
+|
+
+|scopes
+|spec.scopes
+|
+
+|scopeSelector
+|spec.scopeSelector
+|
+|=== 
+
+==== https://kubernetes.io/docs/reference/kubernetes-api/service-resources/[Kubernetes Service Resources]
+
+===== elcicd-kubernetes.ingress
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/service-resources/ingress-v1/[Ingress]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|defaultBackend
+|spec.defaultBackend
+|
+
+|host
+|spec.rules[0].host
+|Ignored if ```rules``` is defined +
+DEFAULT: N/A +
+```elCicdDefaults.ingressHostDomain```
+
+|ingressClassName
+|spec.rules.ingressClassName
+|
+
+|path
+|spec.rules[0].http.paths[0].path
+|Ignored if ```rules``` is defined
+
+|pathType
+|spec.rules[0].http.paths[0].pathType
+|Ignored if ```rules``` is defined +
+DEFAULT: ```Prefix``` +
+```elCicdDefaults.ingressRulePathType```
+
+|port
+|spec.rules[0].http.paths[0].backend.service.port.number
+|Ignored if ```rules``` is defined +
+DEFAULT: ```8080``` +
+```elCicdDefaults.port```
+
+|rules
+|spec.rules
+|Will override ```host```, ```path```, ```pathType```, and ```port```
+
+|secretName
+|spec.tls.secretName
+|Ignored if ```tls``` is defined
+
+|tls
+|spec.tls
+|Will override ```secretName```
+|=== 
+
+===== elcicd-kubernetes.service
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/[Service]
+[cols="1,3,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|containerPort
+|spec.containerPort
+|Helper atribute to define targetPort if used as part of compound template with a container definition +
+Ignored if ```targetPort``` is defined
+
+|port
+|spec.ports[0].name: ${objName}-port +
+spec.ports[0].port
+|Rendering will fail if ```ports``` is also defined +
+DEFAULT: ```8080``` +
+```elCicdDefaults.port```
+
+|ports
+|spec.ports
+|Rendering will fail if ```port``` is also defined +
+Overrides ```containerPort```, ```port```, ```prometheus```, ```protocol```, ```targetPort```, and ```usePrometheus```
+
+|prometheus.port
+|spec.ports[1].name: ${objName}-port +
+spec.ports[1].port +
+|```name``` is hard-coded +
+DEFAULT: ```9090``` +
+```elCicdDefaults.prometheusPort```
+
+|prometheus.protocol
+|spec.ports[1].name: ${objName}-port +
+spec.ports[1].protocol +
+|```name``` is hard-coded +
+DEFAULT: ```TCP``` +
+```elCicdDefaults.prometheusProtocol```
+
+|protocol
+|spec.ports[0].protocol
+|Ignored if ```ports``` is also defined +
+DEFAULT: ```TCP``` +
+```elCicdDefaults.protocol```
+
+|selector
+|spec.selector
+|```elcicd.io/selector``` will be defined in addition to any optional values here
+
+|targetPort
+|spec.targetPort
+|CAUTION: Overrides ```containerPort```
+
+|usePrometheus
+|spec.ports[1].name: prometheus-port +
+spec.ports[1].port +
+spec.ports[1].protocol +
+|Will generate a Prometheus integration port definition from defaults if "true" +
+DEFAULT port: ```9090``` +
+```elCicdDefaults.prometheusPort``` +
+DEFAULT protocol: ```TCP``` +
+```elCicdDefaults.prometheusProtocol```
+|=== 
+
+==== General Tool Resources
+
+===== elcicd-kubernetes.chart-yaml
+**RENDERS:** https://helm.sh/docs/topics/charts/#the-chartyaml-file[Helm Chart.yaml]
+
+===== elcicd-kubernetes.kustomization
+**RENDERS:** http://kubectl.docs.kubernetes.io/references/kustomize/kustomization/[Kustomize kustomization.yaml]
+
+==== https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/[Kubernetes Workload Resources]
+
+===== elcicd-kubernetes.cronJob
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/cron-job-v1/[CronJob]
+
+===== elcicd-kubernetes.daemonSet
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/[DaemonSet]
+
+===== elcicd-kubernetes.deployment
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/[Deployment]
+
+===== elcicd-kubernetes.horizontalPodAutoscaler
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/horizontal-pod-autoscaler-v1/[HorizontalPodAutoscaler]
+
+===== elcicd-kubernetes.job
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/job-v1/[Job]
+
+===== elcicd-kubernetes.pod
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/[Pod]
+
+===== elcicd-kubernetes.statefulSet
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/[StatefulSet]
 

@@ -180,11 +180,11 @@ spec:
     {{ $key }}: {{ $value }}
     {{- end }}
   ports:
-  {{- if and (or ($svcValues.service).ports $svcValues.ports) $svcValues.port }}
+  {{- if and $svcValues.ports $svcValues.port }}
     {{- fail "A Service cannot define both port and ports values!" }}
   {{- end }}
-  {{- if or $svcValues.ports ($svcValues.service).ports }}
-    {{- (($svcValues.service).ports | default $svcValues.ports) | toYaml | nindent 2 }}
+  {{- if $svcValues.ports }}
+    {{- $svcValues.ports | toYaml | nindent 2 }}
   {{- else }}
   - name: {{ $svcValues.objName }}-port
     port: {{ $svcValues.port | default $.Values.elCicdDefaults.port }}
