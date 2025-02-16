@@ -139,7 +139,7 @@ Profile naming standards were defined to disambiguate them from `objNames`.
 
 A profile is said to be an **__active profile__** during the rendering of a deployment definition if included in the `elCicdProfiles` list.
 
-Within a deployment definition, profiles are defined as either a discriminator for a map of <<Variables,variables>> or as condition for <<Template filtering, filtering templates>>.  Which deployment profiles are active at rendering will determine which values are ultimately assigned to variables and whether a template is rendered or not.  This is how a single deployment definition can easily hold multiple different configurations.
+Within a deployment definition, profiles are defined as either a discriminator for a map of <<_variables, variables>> or as condition for <<_discriminator_lists, filtering templates>>.  Which deployment profiles are active at rendering will determine which values are ultimately assigned to variables and whether a template is rendered or not.  This is how a single deployment definition can easily hold multiple different configurations.
 
 The default deployment profile is an empty list; i.e. no active profiles.  If more than one profile is active at a time, precedence is defined as least to greatest in the order of the list per Helm convention.
 
@@ -185,7 +185,7 @@ el-CICD Chart supports two types of templates:
 
 * **Built-in templates**: Predefined templates within el-CICD Chart.
 ** Includes many predefined defaults and helper attributes to make rendering resources simpler and less verbose.
-** Defined using the <<Built-in templates,`templateName`>> key to use a single built-in or <<Compound Built-in templates,`templateNames`>> for compound definitions.
+** Defined using the <<_built_in_templates, `templateName`>> key to use a single built-in or <<_compound_built_in_templates, `templateNames`>> for compound definitions.
 * **free-form templates**: Templates of plain YAML that define all or most of resource to be rendered.
 ** Defined using the `template` key.
 
@@ -328,7 +328,7 @@ data:  # <3>
 <2> `metadata.name` generated from `objName`.
 <3> `data` map generated from `data` helper attribute.
 
-Some built-in templates only include helper attributes that reflect their normal attributes, such as the ConfigMap example above, and are small conveniences for reducing unnecessary boilerplate.  Some built-ins have a few extra helper attributes that significantly reduce the amount a boilerplate needed to define a complete object.  See the <<Built-in Templates>> section for a complete list of all built-ins and their helper attributes.
+Some built-in templates only include helper attributes that reflect their normal attributes, such as the ConfigMap example above, and are small conveniences for reducing unnecessary boilerplate.  Some built-ins have a few extra helper attributes that significantly reduce the amount a boilerplate needed to define a complete object.  See the <<_built_in_templates>> section for a complete list of all built-ins and their helper attributes.
 
 NOTE: The current set of built-in templates focus almost exclusively on application deployments and supporting Kubernetes resources.  It is hoped that el-CICD Chart will be able to fully support all Kubernetes resources in the future, as well as some of the more widely used Custom Resource Definitions.
 
@@ -418,7 +418,7 @@ elCicdTemplates:
         namespace: my-app-namespace
 ----
 
-Built-in templates are a convenience, and not a necessity.  The advantage of free-form templates are that they can still use all other features of el-CICD Chart (e.g. <<Matrices, matrices>>), which means easier templating and configuration management.  Anywhere a built-in template is used a free-form template can be substituted, and vice versa if a built-in template exists for the object being rendered; however, if a `templateName` or `templateNames` helper attribute are defined, `template` will be ignored.
+Built-in templates are a convenience, and not a necessity.  The advantage of free-form templates are that they can still use all other features of el-CICD Chart (e.g. <<_matrices, matrices>>), which means easier templating and configuration management.  Anywhere a built-in template is used a free-form template can be substituted, and vice versa if a built-in template exists for the object being rendered; however, if a `templateName` or `templateNames` helper attribute are defined, `template` will be ignored.
 
 === Variables
 
@@ -427,7 +427,7 @@ Helm/Go templates and processed to produce resource definitions for deployment t
 
 ==== Defining
 
-Variables are defined in YAML maps named starting with `elCicdDefs` either at the root of a document or within an el-CICD Chart <<Templates,template>> definition.  Variables may contain any any valid YAML syntax and type.
+Variables are defined in YAML maps named starting with `elCicdDefs` either at the root of a document or within an el-CICD Chart <<_templates, template>> definition.  Variables may contain any any valid YAML syntax and type.
 
 .Example el-CICD variable definitions by type
 [source,YAML,linenums]
@@ -551,7 +551,7 @@ elCicdDefs:
   MY_BASE_NAME_SPACE: $<BASE_NAME_SPACE> # <4>
 ----
 <1> `**OBJ_NAME**`: value of the `objName` helper attribute.
-<2> `**BASE_OBJ_NAME**`: value of an element from the `objNames` <<Matrices,matrix>> that `objName` was derived from.  Will default to the value of `OBJ_NAME` if `objNames` is undefined.
+<2> `**BASE_OBJ_NAME**`: value of an element from the `objNames` <<_matrices, matrix>> that `objName` was derived from.  Will default to the value of `OBJ_NAME` if `objNames` is undefined.
 <3> `**NAME_SPACE**`: namespace the resource will be deployed to.  Defaults to `HELM_RELEASE_NAMESPACE`.
 <4> `**BASE_NAME_SPACE**`: value of an element from the `namespaces` matrix.  Will default to the value of `NAME_SPACE` if `namespaces` is undefined.
 
@@ -694,11 +694,11 @@ Collect final values `elCicdDefs` based on deployment profiles only; i.e. consid
 
 . **Collect and Filter All Templates**
 +
-`elCicdTemplate-*` lists are collected and concatenated to create an intermediate `elCicdTemplates` list.  Templates are then removed if their <<Discriminator lists, discriminators>> fail.
+`elCicdTemplate-*` lists are collected and concatenated to create an intermediate `elCicdTemplates` list.  Templates are then removed if their <<_discriminator_lists, discriminators>> fail.
 
 . **Expand Matrixes:**
 +
-<<Matrices,Matrix>> values and lists can be parameterized with variables; e.g. `namespaces: $<NAMESPACE_LIST>` or `objNames: [$<FOO>,$<BAR>]`.  Using the profiles-based `elCicdDefs` map, process the matrix variable references, and then generate copies for any templates with matrices defined to create a final `elCicdTemplates` list.  The original template with the matrix defined is discarded.
+<<_matrices, Matrix>> values and lists can be parameterized with variables; e.g. `namespaces: $<NAMESPACE_LIST>` or `objNames: [$<FOO>,$<BAR>]`.  Using the profiles-based `elCicdDefs` map, process the matrix variable references, and then generate copies for any templates with matrices defined to create a final `elCicdTemplates` list.  The original template with the matrix defined is discarded.
 +
 IMPORTANT: **Only values derived from profile-based deployment `elCicdDefs` map can be used as variables in matrices.**
 
@@ -943,17 +943,17 @@ Active profile::
 Any values defined in the `elCicdProfiles` list during rendering of an el-CICD Chart.
 
 Built-in template::
-Pre-defined el-CICD Chart Templates to help make creating deployment definitions.  Referenced using the `templateName` helper attribute on an el-CICD Template definition.
+Pre-defined el-CICD Chart Templates to help make creating deployment definitions.  Referenced using the `templateName` helper attribute on an el-CICD template definition.
 
 Compound built-in template::
-An el-CICD Chart template that uses multiple built in el-CICD Chart built-in templates.  Referenced using the `templateNames` helper attribute on an el-CICD Template definition.  All values in the el-CICD Chart template are shared among the listed built-templates when rendering.
+An el-CICD Chart template that uses multiple built in el-CICD Chart built-in templates.  Referenced using the `templateNames` helper attribute on an el-CICD template definition.  All values in the el-CICD Chart template are shared among the listed built-templates when rendering.
 
 
 Deployment definition::
 A collection of Helm values.yaml files for use specifically with an el-CICD Chart.
 
 Deployment profiles::
-List of strings values matching `[A-Z]+(?:_[A-Z]+)*` assigned to `elCicdProfiles` the for use in a deployment definition. Profiles can be used as a rendering discriminator for el-CICD Templates, or as an alternative set of variable definitions in an elCicdDefs-* map.
+List of strings values matching `[A-Z]+(?:_[A-Z]+)*` assigned to `elCicdProfiles` the for use in a deployment definition. Profiles can be used as a rendering discriminator for el-CICD templates, or as an alternative set of variable definitions in an elCicdDefs-* map.
 
 Deployment scope::
 Where an el-CICD Chart variable defined.  Can be either deployment scope, in which the variable is accessible to all templates, or template, in which the variable is accessible only to the specific el-CICD Chart template where it was defined.  Template scope variables always take precedence over deployment scope variables.
@@ -970,7 +970,7 @@ Any deployment profile listed in under one of the following elCICD Chart Templat
 Matches of active profiles with the above lists determine whether or not an el-CICD Chart Template is rendered or not.
 
 el-CICD Chart Variables::
-Keys defined under elCicdDefs maps in a deployment definition holding arbitrary YAML values.  Can be used to defined and/or reuse values in el-CICD Templates.
+Keys defined under elCicdDefs maps in a deployment definition holding arbitrary YAML values.  Can be used to defined and/or reuse values in el-CICD templates.
 
 el-CICD Chart Templates::
 Member of a list under `elCicdTemplates` in a deployment definition.  Must contain either a `templateName` referencing a built-in template or a `template` attribute defining arbitrary YAML.
@@ -989,7 +989,7 @@ Optional list of valid Kubernetes namespace (`namespaces`) or object resource (`
 Helm Chart `Values` settings defined for use in el-CICD Chart to help define deployment definitions.
 
 elCicdDefaults::
-Used for overriding el-CICD Chart <<Built-in Defaults, pre-defined defaults>>.
+Used for overriding el-CICD Chart <<_built_in_defaults, pre-defined defaults>>.
 
 elCicdDefs::
 Identifier of map for defining el-CICD Chart variables.
@@ -1133,7 +1133,8 @@ Unless otherwise described here, the content under each helper attribute mirrors
 
 ===== elcicd-kubernetes.serviceAccount
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/service-account-v1/#ServiceAccount[ServiceAccount]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1149,13 +1150,14 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |secrets
 |secrets
 |
-|=== 
+|===
 
 ==== https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/[Kubernetes Authorization Resources]
 
 ===== elcicd-kubernetes.clusterRole
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/cluster-role-v1/[ClusterRole]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1167,11 +1169,12 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |rules
 |rules
 |
-|=== 
+|===
 
 ===== elcicd-kubernetes.clusterRoleBinding
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/cluster-role-binding-v1/[ClusterRoleBinding]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1183,11 +1186,12 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |subjects
 |subjects
 |
-|=== 
+|===
 
 ===== elcicd-kubernetes.role
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/role-v1/[Role]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1199,11 +1203,12 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |rules
 |rules
 |
-|=== 
+|===
 
 ===== elcicd-kubernetes.roleBinding
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/role-binding-v1/[RoleBinding]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1215,14 +1220,14 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |subjects
 |subjects
 |
-|=== 
+|===
 
 ==== https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/[Kubernetes Cluster Resources]
 
 ===== elcicd-kubernetes.namespace
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/namespace-v1/[Namespace]
 
-[cols="1,3,4"]
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1230,13 +1235,14 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |N/A
 |
 | __No attributes to render__
-|=== 
+|===
 
 ==== https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/[Kubernetes Config and Storage Resources]
 
 ===== elcicd-kubernetes.configMap
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/config-map-v1/[ConfigMap]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1252,12 +1258,12 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |immutable
 |immutable
 |
-|=== 
+|===
 
 ===== elcicd-kubernetes.persistentVolume
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/[PersistentVolume]
 
-[cols="1,3,4"]
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1385,11 +1391,12 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |volumeMode
 |spec.volumeMode
 |
-|=== 
+|===
 
 ===== elcicd-kubernetes.persistentVolumeClaim
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/[PersistentVolumeClaim]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1408,7 +1415,7 @@ Unless otherwise described here, the content under each helper attribute mirrors
 
 |resources
 |spec.resources
-|Will override ```storageRequest``` and ```storageLimit```
+|Will override `storageRequest` and `storageLimit`
 
 |selector
 |spec.selector
@@ -1420,11 +1427,11 @@ Unless otherwise described here, the content under each helper attribute mirrors
 
 |storageRequest
 |spec.resources.requests.storage
-|Ignored if ```resources``` is defined
+|Ignored if `resources` is defined
 
 |storageLimit
 |spec.resources.limits.storage
-|Ignored if ```resources``` is defined
+|Ignored if `resources` is defined
 
 |volumeMode
 |spec.volumeMode
@@ -1433,11 +1440,12 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |volumeName
 |spec.volumeName
 |
-|=== 
+|===
 
 ===== elcicd-kubernetes.secret
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/secret-v1/[Secret]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1456,20 +1464,21 @@ Unless otherwise described here, the content under each helper attribute mirrors
 |type
 |type
 |
-|=== 
+|===
 
 ==== el-CICD Chart Resources
 
 ===== elcicd-renderer.copyResource
 copyResource is a special el-CICD Chart helper template for copying resources already deployed to a Kubernetes cluster from one namespace to another. The objName should reflect the name of the resource to be copied in the `fromNamespace`.
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
 
 |apiVersion
 |apiVersion
-|```apiVersion``` of source object; DEFAULT: "v1"
+|`apiVersion` of source object; DEFAULT: "v1"
 
 |fromNamespace
 |fromNamespace
@@ -1485,7 +1494,7 @@ copyResource is a special el-CICD Chart helper template for copying resources al
 
 |kind
 |kind
-|```kind``` of source object
+|`kind` of source object
 
 |optional
 |optional
@@ -1493,18 +1502,19 @@ copyResource is a special el-CICD Chart helper template for copying resources al
 
 |srcMetadataName
 |srcMetadataName
-|DEFAULT: ```objName```
+|DEFAULT: `objName`
 
 |toNamespace
 |toNamespace
 |Namespace to copy object to
-|=== 
+|===
 
 ==== https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/[Kubernetes Policy Resources]
 
 ===== elcicd-kubernetes.limitRange
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/limit-range-v1/[LimitRange]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1512,11 +1522,12 @@ copyResource is a special el-CICD Chart helper template for copying resources al
 |limits
 |spec.limits
 |
-|=== 
+|===
 
 ===== elcicd-kubernetes.resourceQuota
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/resource-quota-v1/[ResourceQuota]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1532,13 +1543,14 @@ copyResource is a special el-CICD Chart helper template for copying resources al
 |scopeSelector
 |spec.scopeSelector
 |
-|=== 
+|===
 
 ==== https://kubernetes.io/docs/reference/kubernetes-api/service-resources/[Kubernetes Service Resources]
 
 ===== elcicd-kubernetes.ingress
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/service-resources/ingress-v1/[Ingress]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1549,9 +1561,9 @@ copyResource is a special el-CICD Chart helper template for copying resources al
 
 |host
 |spec.rules[0].host
-|Ignored if ```rules``` is defined +
+|Ignored if `rules` is defined +
 DEFAULT: N/A +
-```elCicdDefaults.ingressHostDomain```
+`elCicdDefaults.ingressHostDomain`
 
 |ingressClassName
 |spec.rules.ingressClassName
@@ -1559,36 +1571,37 @@ DEFAULT: N/A +
 
 |path
 |spec.rules[0].http.paths[0].path
-|Ignored if ```rules``` is defined
+|Ignored if `rules` is defined
 
 |pathType
 |spec.rules[0].http.paths[0].pathType
-|Ignored if ```rules``` is defined +
-DEFAULT: ```Prefix``` +
-```elCicdDefaults.ingressRulePathType```
+|Ignored if `rules` is defined +
+DEFAULT: `Prefix` +
+`elCicdDefaults.ingressRulePathType`
 
 |port
 |spec.rules[0].http.paths[0].backend.service.port.number
-|Ignored if ```rules``` is defined +
-DEFAULT: ```8080``` +
-```elCicdDefaults.port```
+|Ignored if `rules` is defined +
+DEFAULT: `8080` +
+`elCicdDefaults.port`
 
 |rules
 |spec.rules
-|Will override ```host```, ```path```, ```pathType```, and ```port```
+|Will override `host`, `path`, `pathType`, and `port`
 
 |secretName
 |spec.tls.secretName
-|Ignored if ```tls``` is defined
+|Ignored if `tls` is defined
 
 |tls
 |spec.tls
-|Will override ```secretName```
-|=== 
+|Will override `secretName`
+|===
 
 ===== elcicd-kubernetes.service
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/[Service]
-[cols="1,3,4"]
+
+[cols="1,2,4"]
 [width=90%]
 |===
 |Helper |Rendered to |NOTES
@@ -1596,87 +1609,749 @@ DEFAULT: ```8080``` +
 |containerPort
 |spec.containerPort
 |Helper atribute to define targetPort if used as part of compound template with a container definition +
-Ignored if ```targetPort``` is defined
+Ignored if `targetPort` is defined
 
 |port
 |spec.ports[0].name: ${objName}-port +
 spec.ports[0].port
-|Rendering will fail if ```ports``` is also defined +
-DEFAULT: ```8080``` +
-```elCicdDefaults.port```
+|Rendering will fail if `ports` is also defined +
+DEFAULT: `8080` +
+`elCicdDefaults.port`
 
 |ports
 |spec.ports
-|Rendering will fail if ```port``` is also defined +
-Overrides ```containerPort```, ```port```, ```prometheus```, ```protocol```, ```targetPort```, and ```usePrometheus```
+|Rendering will fail if `port` is also defined +
+Overrides `containerPort`, `port`, `prometheus`, `protocol`, `targetPort`, and `usePrometheus`
 
 |prometheus.port
 |spec.ports[1].name: ${objName}-port +
 spec.ports[1].port +
-|```name``` is hard-coded +
-DEFAULT: ```9090``` +
-```elCicdDefaults.prometheusPort```
+|`name` is hard-coded +
+DEFAULT: `9090` +
+`elCicdDefaults.prometheusPort`
 
 |prometheus.protocol
 |spec.ports[1].name: ${objName}-port +
 spec.ports[1].protocol +
-|```name``` is hard-coded +
-DEFAULT: ```TCP``` +
-```elCicdDefaults.prometheusProtocol```
+|`name` is hard-coded +
+DEFAULT: `TCP` +
+`elCicdDefaults.prometheusProtocol`
 
 |protocol
 |spec.ports[0].protocol
-|Ignored if ```ports``` is also defined +
-DEFAULT: ```TCP``` +
-```elCicdDefaults.protocol```
+|Ignored if `ports` is also defined +
+DEFAULT: `TCP` +
+`elCicdDefaults.protocol`
 
 |selector
 |spec.selector
-|```elcicd.io/selector``` will be defined in addition to any optional values here
+|`elcicd.io/selector` will be defined in addition to any optional values here
 
 |targetPort
 |spec.targetPort
-|CAUTION: Overrides ```containerPort```
+|CAUTION: Overrides `containerPort`
 
 |usePrometheus
 |spec.ports[1].name: prometheus-port +
 spec.ports[1].port +
 spec.ports[1].protocol +
 |Will generate a Prometheus integration port definition from defaults if "true" +
-DEFAULT port: ```9090``` +
-```elCicdDefaults.prometheusPort``` +
-DEFAULT protocol: ```TCP``` +
-```elCicdDefaults.prometheusProtocol```
-|=== 
+DEFAULT port: `9090` +
+`elCicdDefaults.prometheusPort` +
+DEFAULT protocol: `TCP` +
+`elCicdDefaults.prometheusProtocol`
+|===
 
 ==== General Tool Resources
+These resources YAML documents for common Kubernetes associated tools, Kustomize and Helm, are not used for rendering to Kubernetes directly.
 
 ===== elcicd-kubernetes.chart-yaml
 **RENDERS:** https://helm.sh/docs/topics/charts/#the-chartyaml-file[Helm Chart.yaml]
 
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|appVersion
+|appVersion
+|
+
+|deprecated
+|deprecated
+|
+
+|description
+|description
+|
+
+|dependencies
+|dependencies
+|
+
+|home
+|home
+|
+
+|icon
+|icon
+|
+
+|keywords
+|keywords
+|
+
+|kubeVersion
+|kubeVersion
+|
+
+|maintainers
+|maintainers
+|
+
+|sources
+|sources
+|
+
+|type
+|type
+|
+
+|version
+|version
+|
+|===
+
 ===== elcicd-kubernetes.kustomization
 **RENDERS:** http://kubectl.docs.kubernetes.io/references/kustomize/kustomization/[Kustomize kustomization.yaml]
 
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|generators
+|generators
+|
+
+|resources
+|resources
+|
+
+|transformers
+|transformers
+|
+
+|validators
+|validators
+|
+|===
+
+==== Kubernetes Workload Helper Resources
+The following templates are documented for brevity in the <<_kubernetes_workload_resources, Kubernetes Workload Resources>> reference documentation, and shouldn't be used directly in deployment definitions; i.e. never referenced either in `templateName` or `templateNames`.
+
+IMPORTANT: If a Kubernetes resource contains a PodTemplate, the associated el-CICD template may use all podTemplate and container helper attributes in the root of the template definition.
+
+===== elcicd-kubernetes.container
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container[Container] +
+**RENDERED TO:** `[<<_elcicd_kubernetes_podtemplate, PodTemplate>>].containers[0]`
+
+Containers are rendered in various lists contained in a PodTemplate. If a <<_kubernetes_workload_resources,workload resource>> contains a PodTemplate, then these helper attributes may be expressed under the root el-CICD template for the first, main container. Other containers in either the main Pod list or other container lists must can otherwise use these helper attributes to define themselves, but should **not** use the default values.
+
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to `[PodTemplate].containers[0]` |NOTES
+
+|args
+|args
+|
+
+|command
+|command
+|
+
+|containerPort
+|ports[0].containerPort
+|DEFAULT: `8080` +
+`elCicdDefaults.port` +
+Primary value for `containers[0].containerPort`
+
+|env
+|env
+|
+
+|envFrom
+|envFrom
+|
+
+|envFrom
+|envFrom
+|
+
+|image
+|image
+|DEFAULT: `elCicdDefaults.image`
+
+|imagePullPolicy
+|imagePullPolicy
+|DEFAULT: `Always` +
+`elCicdDefaults.imagePullPolicy`
+
+|lifecycle
+|lifecycle
+|
+
+|limitsCpu
+|resources.limits.cpu
+|
+
+|limitsMemory
+|resources.limits.memory
+|
+
+|livenessProbe
+|livenessProbe
+|
+
+|name
+|name
+|DEFAULT: `objName` +
+Default is defined for first Container in list only.
+
+|port
+|ports[0].containerPort
+|Only used if `containerPort` and `targetPort` are undefined.
+
+|ports
+|ports
+|Overrides `containerPort`, `port`, `prometheus`, `protocol`, `targetPort`, and `usePrometheus`
+
+|projectedVolumes
+|
+|SEE: <<_projectedvolumes_by_labels, projectedVolumes By Labels>>
+
+|resources.limits
+|resources.limits
+|Overrides `limitsCpu` and `limitsMemory`
+
+|resources.requests
+|resources.requests
+|Overrides `requestsCpu` and `requestsMemory`
+
+|readinessProbe
+|readinessProbe
+|
+
+|requestsCpu
+|resources.requests.cpu
+|
+
+|requestsMemory
+|resources.requests.memory
+|
+
+|startupProbe
+|startupProbe
+|
+
+|securityContext
+|securityContext
+a|DEFAULT:
+----
+allowPrivilegeEscalation: false
+capabilities:
+  drop:
+  - ALL
+----
+
+|stdin
+|stdin
+|
+
+|stdinOnce
+|stdinOnce
+|
+
+|targetPort
+|ports[0].containerPort
+|Only used if `containerPort` is undefined.
+
+|terminationMessagePolicy
+|terminationMessagePolicy
+|
+
+|tty
+|tty
+|
+
+|usePrometheus
+|usePrometheus
+a|If `true`, will generate the following under `ports`: +
+----
+- name: prometheus-port
+  containerPort: <prometheus.port>
+  protocol: <prometheus.protocol>
+----
+DEFAULTS:
+----
+containerPort: 9090
+protocol: TCP
+----
+`elCicdDefaults.prometheusPort`
+`elCicdDefaults.prometheusProtocol`
+
+|volumeDevices
+|volumeDevices
+|
+
+|volumeMounts
+|volumeMounts
+|
+
+|workingDir
+|workingDir
+|
+|===
+
+===== elcicd-kubernetes.podTemplate
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-template-v1/[PodTemplate]
+
+<<_kubernetes_workload_resources,Kubernetes workload resources>> that generate Pods all include a PodTemplate. The following helper attributes may all be defined under any of those el-CICD templates.
+
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to `*.template.spec` |NOTES
+
+|activeDeadlineSeconds
+|activeDeadlineSeconds
+|
+
+|affinity
+|affinity
+|
+
+|automountServiceAccountToken
+|automountServiceAccountToken
+|
+
+|containers
+|containers
+|`containers[0]` may be defined at the root of template; otherwise, see <<_elcicd_kubernetes_container, elcicd-kubernetes.container>> for helper attributes for each container in the list.
+
+|dnsConfig
+|dnsConfig
+|
+
+|dnsPolicy
+|dnsPolicy
+|
+
+|enableServiceLinks
+|enableServiceLinks
+|
+
+|ephemeralContainers
+|ephemeralContainers
+|See <<_elcicd_kubernetes_container, elcicd-kubernetes.container>> for helper attributes for each container in the list
+
+|hostAliases
+|hostAliases
+|
+
+|hostIPC
+|hostIPC
+|
+
+|hostNetwork
+|hostNetwork
+|
+
+|hostPID
+|hostPID
+|
+
+|hostname
+|hostname
+|
+
+|imagePullSecret
+|imagePullSecrets
+|DEFAULT: `elCicdDefaults.imagePullSecrets` +
+Overridden by `imagePullSecrets` + 
+Helper for easily defining a single secret
+
+|imagePullSecrets
+|imagePullSecrets
+|DEFAULT: `elCicdDefaults.imagePullSecrets`
+
+|initContainers
+|initContainers
+|See <<_elcicd_kubernetes_container, elcicd-kubernetes.container>> for helper attributes for each container in the list
+
+|nodeName
+|nodeName
+|
+
+|nodeSelector
+|nodeSelector
+|
+
+|os
+|os
+|
+
+|overhead
+|overhead
+|
+
+|preemptionPolicy
+|preemptionPolicy
+|
+|priorityClassName
+|priorityClassName
+|
+
+|priority
+|priority
+|DEFAULT: `TCP`
+`elCicdDefaults.imagePullSecrets`
+
+|readinessGates
+|readinessGates
+|
+
+|restartPolicy
+|restartPolicy
+|
+
+|runtimeClassName
+|runtimeClassName
+|
+
+|schedulerName
+|schedulerName
+|
+
+|securityContext
+|securityContext
+a|DEFAULT:
+----
+runAsNonRoot: true
+seccompProfile:
+  type: RuntimeDefault
+----
+
+|serviceAccount
+|serviceAccount
+|
+
+|serviceAccountName
+|serviceAccountName
+|
+
+|setHostnameAsFQDN
+|setHostnameAsFQDN
+|
+
+|shareProcessNamespace
+|shareProcessNamespace
+|
+
+|subdomain
+|subdomain
+|
+
+|terminationGracePeriodSeconds
+|terminationGracePeriodSeconds
+|
+
+|tolerations
+|tolerations
+|
+
+|topologySpreadConstraints
+|topologySpreadConstraints
+|
+
+|volumes
+|volumes
+|
+|===
+
+===== elcicd-kubernetes.jobSpec
+**RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/job-v1/#JobSpec[JobSpec]
+
+Job related workload resources, <<_elcicd_kubernetes_cronjob, elcicd-kubernetes.cronJob>> and <<_elcicd_kubernetes_job, elcicd-kubernetes.job>>, contain JobSpecs. JobSpecs wrap PodTemplates, and the following helper attributes may be used on the root of the el-CICD templates.
+
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to `*.spec` |NOTES
+
+|activeDeadlineSeconds
+|activeDeadlineSeconds
+|
+
+|backoffLimit
+|backoffLimit
+|
+
+|completionMode
+|completionMode
+|
+
+|completions
+|completions
+|
+
+|manualSelector
+|manualSelector
+|
+
+|parallelism
+|parallelism
+|
+
+|podFailurePolicy
+|podFailurePolicy
+|
+
+|podTemplate
+|template.spec
+|See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
+
+|restartPolicy
+|restartPolicy
+|DEFAULT: `Never`
+
+|suspend
+|suspend
+|
+
+|ttlSecondsAfterFinished
+|ttlSecondsAfterFinished
+|
+|===
+
 ==== https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/[Kubernetes Workload Resources]
+Except for the horizontalPodAutoscaler, the following el-CICD templates all contains a PodTemplate, and therefore may make use of the helper attributes defined up in both <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> and <<_elcicd_kubernetes_container, elcicd-kubernetes.container>>.
+
+NOTE: Templates with PodTemplates were designed to integrate easily with both the <<_elcicd_kubernetes_service, elcicd-kubernetes.service>> and <<_elcicd_kubernetes_ingress, elcicd-kubernetes.ingress>> el-CICD templates to create <<_compound_built_in_templates, compound templates>>.
 
 ===== elcicd-kubernetes.cronJob
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/cron-job-v1/[CronJob]
 
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|concurrencyPolicy
+|concurrencyPolicy
+|
+
+|failedJobsHistoryLimit
+|failedJobsHistoryLimit
+|
+
+|jobSpec
+|template.spec
+|See <<_elcicd_kubernetes_jobspec, elcicd-kubernetes.jobSpec>> for further helper attributes
+
+|parallelism
+|parallelism
+|
+
+|schedule
+|schedule
+|
+
+|startingDeadlineSeconds
+|startingDeadlineSeconds
+|
+
+|successfulJobsHistoryLimit
+|successfulJobsHistoryLimit
+|
+
+|ttlSecondsAfterFinished
+|ttlSecondsAfterFinished
+|
+|===
+
 ===== elcicd-kubernetes.daemonSet
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/[DaemonSet]
+
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|minReadySeconds
+|spec.minReadySeconds
+|
+
+|podTemplate
+|spec.template.spec
+|See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
+
+|revisionHistoryLimit
+|spec.revisionHistoryLimit
+|
+
+|updateStrategy
+|spec.updateStrategy
+|
+|===
+
 
 ===== elcicd-kubernetes.deployment
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/[Deployment]
 
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|minReadySeconds
+|spec.minReadySeconds
+|
+
+|podTemplate
+|spec.template.spec
+|See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
+
+|progressDeadlineSeconds
+|spec.progressDeadlineSeconds
+|
+
+|revisionHistoryLimit
+|spec.revisionHistoryLimit
+|DEFAULT: `0` +
+`elCicdDefaults.deploymentRevisionHistoryLimit`
+
+|rollingUpdateMaxSurge
+|spec.strategy.rollupdate.maxSurge
+|NOTE: strategyType must be `RollingUpdate` +
+DEFAULT: `elCicdDefaults.rollingUpdateMaxSurge`
+
+|rollingUpdateMaxUnavailable
+|spec.strategy.rollupdate.maxUnavailable
+|NOTE: strategyType must be `RollingUpdate` +
+DEFAULT: `elCicdDefaults.rollingUpdateMaxUnavailable`
+
+|strategyType
+|spec.strategy.type
+|
+|===
+
 ===== elcicd-kubernetes.horizontalPodAutoscaler
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/horizontal-pod-autoscaler-v1/[HorizontalPodAutoscaler]
+
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|behavior
+|spec.behavior
+|
+
+|maxReplicas
+|spec.maxReplicas
+|
+
+|metrics
+|spec.metrics
+|
+
+|minReplicas
+|spec.minReplicas
+|
+
+|scaleTargetRef
+|spec.scaleTargetRef
+a|
+DEFAULTS: +
+----
+apiVersion: apps/v1
+kind: Deployment
+apiVersion: $<OBJ_NAME>
+----
+Defaults are rendered for any missing key of the scaleTargetRef
+|===
 
 ===== elcicd-kubernetes.job
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/job-v1/[Job]
 
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|jobSpec
+|spec.template.spec
+|See <<_elcicd_kubernetes_jobspec, elcicd-kubernetes.jobSpec>> for further helper attributes
+|===
+
+
 ===== elcicd-kubernetes.pod
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/[Pod]
 
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|podTemplate
+|spec.template.spec
+|See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
+|===
+
 ===== elcicd-kubernetes.statefulSet
 **RENDERS:** https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/[StatefulSet]
+
+[cols="1,2,4"]
+[width=90%]
+|===
+|Helper |Rendered to |NOTES
+
+|minReadySeconds
+|spec.minReadySeconds
+|
+
+|ordinals
+|spec.ordinals
+|
+
+|persistentVolumeClaimRetentionPolicy
+|spec.persistentVolumeClaimRetentionPolicy
+|
+
+|podManagementPolicy
+|spec.podManagementPolicy
+|
+
+|podTemplate
+|spec.template.spec
+|See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
+
+|replicas
+|spec.replicas
+|
+
+|revisionHistoryLimit
+|spec.revisionHistoryLimit
+|
+
+|updateStrategy
+|spec.updateStrategy
+|
+
+|volumeClaimTemplates
+|spec.volumeClaimTemplates
+|
+|===
 

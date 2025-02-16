@@ -315,8 +315,10 @@ spec:
                        "volumeDevices"
                        "volumeMounts"
                        "workingDir" }}
-{{- range $containerVals := $containers }}
-- name: {{ $containerVals.name | default $containerVals.objName }}
+{{- range $index, $containerVals := $containers }}
+- {{- if or (eq $index 0) $containerVals.name }}
+  name: {{ $containerVals.name | default $containerVals.objName }}
+  {{- end }}
   image: {{ $containerVals.image | default $.Values.elCicdDefaults.image }}
   imagePullPolicy: {{ $containerVals.imagePullPolicy | default $.Values.elCicdDefaults.imagePullPolicy }}
   {{- if or $containerVals.ports $containerVals.port $.Values.elCicdDefaults.port $containerVals.usePrometheus }}

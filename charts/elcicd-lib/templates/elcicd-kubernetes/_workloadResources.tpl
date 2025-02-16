@@ -211,21 +211,9 @@ spec:
 spec:
   {{- $whiteList := list "behavior"
                          "maxReplicas"
+                         "metrics"
                          "minReplicas" }}
   {{- include "elcicd-common.outputToYaml" (list $ $hpaValues $whiteList) }}
-  {{- if $hpaValues.metrics }}
-  metrics:
-    {{- $whiteList := list "container"
-                           "describedObject"
-                           "name"
-                           "metric"
-                           "target" }}
-    {{- range $metric := $hpaValues.metrics }}
-    {{- $metricType := $metric.type }}
-  - type: {{ title $metricType }}
-    {{ $metricType }}: {{ include "elcicd-common.outputToYaml" (list $ $metric $whiteList) | indent 4 }}
-    {{- end }}
-  {{- end }}
   scaleTargetRef:
     apiVersion: {{ ($hpaValues.scaleTargetRef).apiVersion | default "apps/v1"  }}
     kind: {{ ($hpaValues.scaleTargetRef).kind | default "Deployment" }}
@@ -275,7 +263,7 @@ spec:
   el-CICD SUPPORTING TEMPLATES
   ---
     "elcicd-common.apiObjectHeader"
-    "elcicd-kubernetes.jobSpec"
+    "elcicd-kubernetes.podTemplate"
 
   ======================================
 
