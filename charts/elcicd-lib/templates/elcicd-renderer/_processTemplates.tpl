@@ -17,8 +17,9 @@
   The final list of templates to be rendered is set to $.Values.allTemplates
 */}}
 {{- define "elcicd-renderer.generateAllTemplates" }}
-  {{- $ := index . 0 }}
-  {{- $templates := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $templates := get $args "templates" }}
 
   {{- $allTemplates := list }}
   {{- $resultKey := uuidv4 }}
@@ -283,31 +284,30 @@
  10. For debugging/documentation purposes, $tplElCicdDefs is added to the template.
 */}}
 {{- define "elcicd-renderer.processTemplates" }}
-  {{- $ := index . 0 }}
-  {{- $templates := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $templates := get $args "templates" }}
 
   {{- range $template := $templates }}
     {{- $tplElCicdDefs := dict }}
     {{- include "elcicd-renderer.deepCopyDict" (list $.Values.elCicdDefs $tplElCicdDefs) }}
     {{- include "elcicd-renderer.deepCopyDict" (list $template.elCicdDefs $tplElCicdDefs) }}
 
-    {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" (list $ $template $tplElCicdDefs) }}
+    {{- $args := dict "$" $ "parentMap" $template "elCicdDefs" $tplElCicdDefs }}
+    {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" $args }}
 
-    {{- include "elcicd-renderer.mergeElCicdDefs" (list $ $.Values $tplElCicdDefs $template.baseObjName $template.objName) }}
-    {{- include "elcicd-renderer.mergeElCicdDefs" (list $ $template $tplElCicdDefs $template.baseObjName $template.objName) }}
+    {{- $args := dict "$" $ 
+                      "elCicdDefsMap" $.Values
+                      "destElCicdDefs" $tplElCicdDefs
+                      "baseObjName" $template.baseObjName
+                      "objName" $template.objName }}
+    {{- include "elcicd-renderer.mergeElCicdDefs" $args }}
+    {{- $_ := set $args "elCicdDefsMap" $template }}
+    {{- include "elcicd-renderer.mergeElCicdDefs" $args }}
     {{- include "elcicd-renderer.preProcessFilesAndConfig" (list $ $tplElCicdDefs) }}
 
-    {{- $_ := set $tplElCicdDefs "EL_CICD_DEPLOYMENT_TIME_NUM" $.Values.__EC_DEPLOYMENT_TIME_NUM }}
-    {{- $_ := set $tplElCicdDefs "EL_CICD_DEPLOYMENT_TIME" $.Values.__EC_DEPLOYMENT_TIME }}
-
-    {{- $_ := set $tplElCicdDefs "BASE_OBJ_NAME" ($template.baseObjName | default $template.objName) }}
-    {{- $_ := set $tplElCicdDefs "OBJ_NAME" $template.objName }}
-
-    {{- $_ := set $tplElCicdDefs "NAME_SPACE" ($template.namespace| default $.Release.Namespace) }}
-    {{- $_ := set $tplElCicdDefs "BASE_NAME_SPACE" ($template.baseNamespace | default $tplElCicdDefs.NAME_SPACE) }}
-
-    {{- $_ := set $tplElCicdDefs "HELM_RELEASE_NAME" $.Release.Name }}
-    {{- $_ := set $tplElCicdDefs "HELM_RELEASE_NAMESPACE" $.Release.Namespace }}
+    {{- $args := dict "$" $ "template" $template "tplElCicdDefs" $tplElCicdDefs }}
+    {{- include "elcicd-renderer.setBuiltInTplElCicdDefsValues" $args }}
 
     {{- $_ := set $template "elCicdDefaults" dict }}
     {{- include "elcicd-renderer.deepCopyDict" (list $.Values.elCicdDefaults $template.elCicdDefaults) }}
@@ -319,6 +319,25 @@
 
     {{- $_ := set $template "tplElCicdDefs" $tplElCicdDefs }}
   {{- end }}
+{{- end }}
+
+{{- define "elcicd-renderer.setBuiltInTplElCicdDefsValues" }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $template := get $args "template" }}
+  {{- $tplElCicdDefs := get $args "tplElCicdDefs" }}
+
+  {{- $_ := set $tplElCicdDefs "EL_CICD_DEPLOYMENT_TIME_NUM" $.Values.__EC_DEPLOYMENT_TIME_NUM }}
+  {{- $_ := set $tplElCicdDefs "EL_CICD_DEPLOYMENT_TIME" $.Values.__EC_DEPLOYMENT_TIME }}
+
+  {{- $_ := set $tplElCicdDefs "BASE_OBJ_NAME" ($template.baseObjName | default $template.objName) }}
+  {{- $_ := set $tplElCicdDefs "OBJ_NAME" $template.objName }}
+
+  {{- $_ := set $tplElCicdDefs "NAME_SPACE" ($template.namespace| default $.Release.Namespace) }}
+  {{- $_ := set $tplElCicdDefs "BASE_NAME_SPACE" ($template.baseNamespace | default $tplElCicdDefs.NAME_SPACE) }}
+
+  {{- $_ := set $tplElCicdDefs "HELM_RELEASE_NAME" $.Release.Name }}
+  {{- $_ := set $tplElCicdDefs "HELM_RELEASE_NAMESPACE" $.Release.Namespace }}
 {{- end }}
 
 {{/*
@@ -351,9 +370,10 @@
   variable definitions NOT of the form elCicdDefs-* ATTACHED DIRECTLY TO THE TEMPLATE.
   */}}
 {{- define "elcicd-renderer.preProcessElCicdDefsMapNames" }}
-  {{- $ := index . 0 }}
-  {{- $parentMap := index . 1 }}
-  {{- $elCicdDefs := index . 2 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $parentMap := get $args "parentMap" }}
+  {{- $elCicdDefs := get $args "elCicdDefs" }}
 
   {{- $resultKey := uuidv4 }}
   {{- range $key, $value := $parentMap }}

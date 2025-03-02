@@ -45,8 +45,10 @@
   Defines a el-CICD template for a Kubernetes ClusterRole.
 */}}
 {{- define "elcicd-kubernetes.clusterRole" }}
-{{- $ := index . 0 }}
-{{- $roleValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $roleValues := get $args "elCicdTemplate" }}
+
 {{- $_ := set $roleValues "kind" "ClusterRole" }}
 {{- include "elcicd-kubernetes.genericRoleDefinition" . }}
 {{- end }}
@@ -78,9 +80,11 @@
   Defines a el-CICD template for a Kubernetes ClusterRoleBinding.
 */}}
 {{- define "elcicd-kubernetes.clusterRoleBinding" }}
-{{- $ := index . 0 }}
-{{- $roleBindingValues := index . 1 }}
-{{- $_ := set $roleBindingValues "kind" "ClusterRoleBinding" }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $clusterRoleBindingValues := get $args "elCicdTemplate" }}
+
+{{- $_ := set $clusterRoleBindingValues "kind" "ClusterRoleBinding" }}
 {{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}
 {{- end }}
 
@@ -111,8 +115,10 @@
   Defines a el-CICD template for a Kubernetes Role.
 */}}
 {{- define "elcicd-kubernetes.role" }}
-{{- $ := index . 0 }}
-{{- $roleValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $roleValues := get $args "elCicdTemplate" }}
+
 {{- $_ := set $roleValues "kind" "Role" }}
 {{- include "elcicd-kubernetes.genericRoleDefinition" . }}
 {{- end }}
@@ -144,8 +150,10 @@
   Defines a el-CICD template for a Kubernetes RoleBinding.
 */}}
 {{- define "elcicd-kubernetes.roleBinding" }}
-{{- $ := index . 0 }}
-{{- $roleBindingValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $roleBindingValues := get $args "elCicdTemplate" }}
+
 {{- $_ := set $roleBindingValues "kind" "RoleBinding" }}
 {{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}
 {{- end }}

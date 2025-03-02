@@ -44,8 +44,9 @@
   Defines a el-CICD template for a Kubernetes ConfigMap.
 */}}
 {{- define "elcicd-kubernetes.configMap" }}
-{{- $ := index . 0 }}
-{{- $cmValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $cmValues := get $args "elCicdTemplate" }}
 
 {{- $_ := set $cmValues "kind" "ConfigMap" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
@@ -103,8 +104,10 @@
   Defines a el-CICD template for a Kubernetes Secret.
 */}}
 {{- define "elcicd-kubernetes.secret" }}
-{{- $ := index . 0 }}
-{{- $secretValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $secretValues := get $args "elCicdTemplate" }}
+
 {{- $_ := set $secretValues "kind" "Secret" }}
 {{- if eq ($secretValues.type | default "") "dockerconfigjson" }}
   {{- $_ := set  $secretValues "type" "kubernetes.io/dockerconfigjson" }}
@@ -199,8 +202,9 @@
   Defines a el-CICD template for a Kubernetes PersistentVolume.
 */}}
 {{- define "elcicd-kubernetes.persistentVolume" }}
-{{- $ := index . 0 }}
-{{- $pvValues := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $pvValues := get $args "elCicdTemplate" }}
 
 {{- $_ := set $pvValues "kind" "PersistentVolume" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
@@ -292,8 +296,10 @@ spec:
   Defines a el-CICD template for a Kubernetes PersistentVolumeClaim.
 */}}
 {{- define "elcicd-kubernetes.persistentVolumeClaim" }}
-{{- $ := index . 0 }}
-{{- $pvcValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $pvcValues := get $args "elCicdTemplate" }}
+
 {{- $_ := set $pvcValues "kind" "PersistentVolumeClaim" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:

@@ -62,8 +62,10 @@
   Defines a el-CICD template for a Kubernetes Ingress.
 */}}
 {{- define "elcicd-kubernetes.ingress" }}
-{{- $ := index . 0 }}
-{{- $ingressValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $ingressValues := get $args "elCicdTemplate" }}
+
 
 {{- $_ := set $ingressValues "kind" "Ingress" }}
 {{- $_ := set $ingressValues "apiVersion" ($ingressValues.apiVersion | default "networking.k8s.io/v1") }}
@@ -160,8 +162,9 @@ spec:
   Defines a el-CICD template for a Kubernetes Service.
 */}}
 {{- define "elcicd-kubernetes.service" }}
-{{- $ := index . 0 }}
-{{- $svcValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $svcValues := get $args "elCicdTemplate" }}
 
 {{- if or ($svcValues.prometheus).port $.Values.usePrometheus }}
   {{- include "elcicd-kubernetes.prometheusAnnotations" . }}

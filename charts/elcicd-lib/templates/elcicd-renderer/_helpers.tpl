@@ -158,8 +158,9 @@
   Skipped templates will be listed when the Chart has completed rendering.
 */}}
 {{- define "elcicd-renderer.filterTemplates" }}
-  {{- $ := index . 0 }}
-  {{- $templates := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $templates := get $args "templates" }}
 
   {{- $_ := set $.Values "elCicdProfiles" ($.Values.elCicdProfiles | default list) }}
 

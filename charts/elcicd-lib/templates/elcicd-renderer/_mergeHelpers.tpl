@@ -41,11 +41,12 @@
     Merged results are contained in destElCicdDefs.
 */}}
 {{- define "elcicd-renderer.mergeElCicdDefs" }}
-  {{- $ := index . 0 }}
-  {{- $elCicdDefsMap := index . 1 }}
-  {{- $destElCicdDefs := index . 2 }}
-  {{- $baseObjName := index . 3 }}
-  {{- $objName := index . 4 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $elCicdDefsMap := get $args "elCicdDefsMap" }}
+  {{- $destElCicdDefs := get $args "destElCicdDefs" }}
+  {{- $baseObjName := get $args "baseObjName" }}
+  {{- $objName := get $args "objName" }}
 
   {{- range $profile := $.Values.elCicdProfiles }}
     {{- if not (regexMatch $.Values.__EC_PROFILE_REGEX $profile) }}

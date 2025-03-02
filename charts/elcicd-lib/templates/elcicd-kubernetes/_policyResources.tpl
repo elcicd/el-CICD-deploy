@@ -41,8 +41,10 @@
   Defines a el-CICD template for a Kubernetes ResourceQuota.
 */}}
 {{- define "elcicd-kubernetes.resourceQuota" }}
-{{- $ := index . 0 }}
-{{- $quotaValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $quotaValues := get $args "elCicdTemplate" }}
+
 {{- $_ := set $quotaValues "kind" "ResourceQuota" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
@@ -78,8 +80,10 @@ spec:
   Defines a el-CICD template for a Kubernetes LimitRange.
 */}}
 {{- define "elcicd-kubernetes.limitRange" }}
-{{- $ := index . 0 }}
-{{- $limitValues := index . 1 }}
+{{- $args := . }}
+{{- $ := get $args "$" }}
+{{- $limitValues := get $args "elCicdTemplate" }}
+
 {{- $_ := set $limitValues "kind" "LimitRange" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 spec:

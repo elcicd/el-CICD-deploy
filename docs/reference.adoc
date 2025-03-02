@@ -2118,7 +2118,7 @@ Job related workload resources, <<_elcicd_kubernetes_cronjob, elcicd-kubernetes.
 |podFailurePolicy
 |
 
-|podTemplate
+|<podTemplate>
 |template.spec
 |See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
 
@@ -2136,7 +2136,7 @@ Job related workload resources, <<_elcicd_kubernetes_cronjob, elcicd-kubernetes.
 |===
 
 ==== https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/[Kubernetes Workload Resources]
-Except for the horizontalPodAutoscaler, the following el-CICD templates all contains a PodTemplate, and therefore may make use of the helper attributes defined up in both <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> and <<_elcicd_kubernetes_container, elcicd-kubernetes.container>>.
+Except for the horizontalPodAutoscaler, the following el-CICD templates all contains a PodTemplate, and therefore[cols="1,2,4"] may make use of the helper attributes defined up in both <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> and <<_elcicd_kubernetes_container, elcicd-kubernetes.container>>.
 
 NOTE: Templates with PodTemplates were designed to integrate easily with both the <<_elcicd_kubernetes_service, elcicd-kubernetes.service>> and <<_elcicd_kubernetes_ingress, elcicd-kubernetes.ingress>> el-CICD templates to create <<_compound_built_in_templates, compound templates>>.
 
@@ -2156,7 +2156,7 @@ NOTE: Templates with PodTemplates were designed to integrate easily with both th
 |failedJobsHistoryLimit
 |
 
-|jobSpec
+|<jobSpec>
 |template.spec
 |See <<_elcicd_kubernetes_jobspec, elcicd-kubernetes.jobSpec>> for further helper attributes
 
@@ -2193,7 +2193,7 @@ NOTE: Templates with PodTemplates were designed to integrate easily with both th
 |spec.minReadySeconds
 |
 
-|podTemplate
+|<podTemplate>
 |spec.template.spec
 |See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
 
@@ -2219,7 +2219,7 @@ NOTE: Templates with PodTemplates were designed to integrate easily with both th
 |spec.minReadySeconds
 |
 
-|podTemplate
+|<podTemplate>
 |spec.template.spec
 |See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
 
@@ -2291,7 +2291,7 @@ Defaults are rendered for any missing key of the scaleTargetRef
 |===
 |Helper |Rendered to |NOTES
 
-|jobSpec
+|<jobSpec>
 |spec.template.spec
 |See <<_elcicd_kubernetes_jobspec, elcicd-kubernetes.jobSpec>> for further helper attributes
 |===
@@ -2305,7 +2305,7 @@ Defaults are rendered for any missing key of the scaleTargetRef
 |===
 |Helper |Rendered to |NOTES
 
-|podTemplate
+|<podTemplate>
 |spec.template.spec
 |See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
 |===
@@ -2334,7 +2334,7 @@ Defaults are rendered for any missing key of the scaleTargetRef
 |spec.podManagementPolicy
 |
 
-|podTemplate
+|<podTemplate>
 |spec.template.spec
 |See <<_elcicd_kubernetes_podtemplate, elcicd-kubernetes.podTemplate>> for further helper attributes
 

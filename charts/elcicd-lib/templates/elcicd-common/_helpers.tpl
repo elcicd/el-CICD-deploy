@@ -23,16 +23,18 @@
   General header for a Kubernetes compliant resource.
 */}}
 {{- define "elcicd-common.apiObjectHeader" }}
-{{- $ := index . 0 }}
-{{- $template := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $template := get $args "elCicdTemplate" }}
+
 apiVersion: {{ $template.apiVersion | default "v1" }}
 kind: {{ required "Kubernetes API objects require a \"kind\"" $template.kind }}
-{{- if $template.metadata }}
+  {{- if $template.metadata }}
 metadata:
-{{ toYaml $template.metadata | nindent 2 }}
-{{- else }}
-  {{- include "elcicd-common.metadata" . }}
-{{- end }}
+    {{ toYaml $template.metadata | nindent 2 }}
+  {{- else }}
+    {{- include "elcicd-common.metadata" . }}
+  {{- end }}
 {{- end }}
 
 {{/*
@@ -63,8 +65,9 @@ metadata:
   General header for a Kubernetes compliant resource metadata.
 */}}
 {{- define "elcicd-common.metadata" }}
-{{- $ := index . 0 }}
-{{- $metadataValues := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $metadataValues := get $args "elCicdTemplate" }}
 metadata:
   {{- $_ := set $metadataValues "annotations" (mergeOverwrite ($metadataValues.annotations | default dict) ($.Values.elCicdDefaults.annotations | default dict)) }}
   {{- if $metadataValues.annotations }}
@@ -144,8 +147,9 @@ metadata:
   Generates a selector label, elcicd.io/selector.
 */}}
 {{- define "elcicd-common.elcicdLabels" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $template := get $args "elCicdTemplate" }}
 
   {{- $selector := $template.elcicdSelector | default (regexReplaceAll "[^\\w-.]" $template.objName "-") }}
   {{- if (gt (len $selector) 63 ) }}
@@ -245,8 +249,9 @@ metadata:
   Supports defining metadata for a free form Kubernetes compatible resource.
 */}}
 {{- define "elcicd-common.kubeObjectMetadata" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $template := get $args "elCicdTemplate" }}
 
   {{- $_ := set $template.template "apiVersion" ($template.template.apiVersion | default $template.apiVersion | default "v1") }}
   {{- $_ := set $template.template "kind" ($template.template.kind | default $template.kind) }}

@@ -159,19 +159,22 @@
 
     {{- include "elcicd-renderer.initElCicdRenderer" . }}
 
-    {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" (list $ $.Values $.Values.elCicdDefs) }}
-    {{- include "elcicd-renderer.mergeElCicdDefs" (list $ $.Values $.Values.elCicdDefs "" "") }}
+    {{- $args := dict "$" $ "parentMap" $.Values "elCicdDefs" $.Values.elCicdDefs }}
+    {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" $args }}
+
+    {{- $args := dict "$" $ "elCicdDefsMap" $.Values "destElCicdDefs" $.Values.elCicdDefs "baseObjName" "" "objName" "" }}
+    {{- include "elcicd-renderer.mergeElCicdDefs" $args }}
 
     {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAME" $.Release.Name }}
     {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAMESPACE" $.Release.Namespace }}
 
     {{- include "elcicd-renderer.gatherElCicdTemplates" $ }}
 
-    {{- include "elcicd-renderer.filterTemplates" (list $ $.Values.elCicdTemplates) }}
+    {{- include "elcicd-renderer.filterTemplates" (dict "$" $ "templates" $.Values.elCicdTemplates) }}
 
-    {{- include "elcicd-renderer.generateAllTemplates" (list $ $.Values.renderingTemplates) }}
+    {{- include "elcicd-renderer.generateAllTemplates" (dict "$" $ "templates" $.Values.renderingTemplates) }}
 
-    {{- include "elcicd-renderer.processTemplates" (list $ $.Values.allTemplates) }}
+    {{- include "elcicd-renderer.processTemplates" (dict "$" $ "templates" $.Values.allTemplates) }}
 
     {{- if (or $.Values.renderProcessedValues $.Values.global.renderProcessedValues) }}
       {{- $_ := unset $.Values "renderProcessedValues" }}
@@ -180,7 +183,7 @@
       {{ $.Values | toYaml }}
     {{- else }}
       {{- range $template := $.Values.allTemplates }}
-        {{- include "elcicd-renderer.renderTemplate" (list $ $template) }}
+        {{- include "elcicd-renderer.renderTemplate" (dict "$" $ "elCicdTemplate" $template) }}
       {{- end }}
 ---
 # Profiles: {{ $.Values.elCicdProfiles }}
@@ -203,8 +206,9 @@
   ======================================
 */}}
 {{- define "elcicd-renderer.renderTemplate" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $template := get $args "elCicdTemplate" }}
 
   {{- $templateName := $template.templateName | default "elcicd-renderer.__render-default" }}
   {{- if not (contains "." $templateName) }}
@@ -237,8 +241,9 @@
   If kubeOjbect is false, do NOT render the Kubernetes metadata section.
 */}}
 {{- define "elcicd-renderer.__render-default" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $template := get $args "elCicdTemplate" }}
 
   {{- $_ := required (printf "template or templateName must be defined for an el-CICD Chart template: %s" $template.objName) $template.template }}
 

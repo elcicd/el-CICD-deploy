@@ -20,8 +20,9 @@
 General k8s selector definition.
 */}}
 {{- define "elcicd-kubernetes.labelSelector" }}
-{{- $ := index . 0 }}
-{{- $template := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $template := get $args "elCicdTemplate" }}
 selector:
   matchExpressions:
   - key: elcicd.io/selector
@@ -47,11 +48,12 @@ Defines the basic structure of a jobTemplate and the keys under it.
     [template]:
 */}}
 {{- define "elcicd-kubernetes.jobTemplate" }}
-{{- $ := index . 0 }}
-{{- $jobValues := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $jobValues := get $args "elCicdTemplate" }}
 
-{{- include "elcicd-common.metadata" . }}
-{{- include "elcicd-kubernetes.jobSpec" . }}
+  {{- include "elcicd-common.metadata" . }}
+  {{- include "elcicd-kubernetes.jobSpec" . }}
 {{- end }}
 
 {{/*
@@ -89,8 +91,9 @@ Defines the spec.template portion of a Job or JobTemplate (CronJob).
   
 */}}
 {{- define "elcicd-kubernetes.jobSpec" }}
-{{- $ := index . 0 }}
-{{- $jobValues := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $jobValues := get $args "elCicdTemplate" }}
 spec:
   {{- $whiteList := list "activeDeadlineSeconds"
                          "backoffLimit"
@@ -103,8 +106,9 @@ spec:
                          "ttlSecondsAfterFinished" }}
   {{- include "elcicd-common.outputToYaml" (list $ $jobValues $whiteList) }}
   template:
-    {{- $_ := set $jobValues "restartPolicy" ($jobValues.restartPolicy | default "Never") }}
-    {{- include "elcicd-kubernetes.podTemplate" (list $ $jobValues false) | indent 4 }}
+  {{- $_ := set $jobValues "restartPolicy" ($jobValues.restartPolicy | default "Never") }}
+  {{- $args := dict "$" $ "elCicdTemplate" $jobValues }}
+  {{- include "elcicd-kubernetes.podTemplate" $args | indent 4 }}
 {{- end }}
 
 {{/*
@@ -168,10 +172,11 @@ spec:
   Generates a PodTemplate.  Used by CronJobs, Deployments, StatefulSets, Pods, and Jobs.
 */}}
 {{- define "elcicd-kubernetes.podTemplate" }}
-{{- $ := index . 0 }}
-{{- $podValues := index . 1 }}
+  {{- $args := . }}
+  {{- $ := get $args "$" }}
+  {{- $podValues := get $args "elCicdTemplate" }}
 
-{{- include "elcicd-common.metadata" . }}
+  {{- include "elcicd-common.metadata" . }}
 spec:
   {{- $whiteList := list  "activeDeadlineSeconds"
                           "affinity"
