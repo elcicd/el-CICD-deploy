@@ -62,25 +62,24 @@
   Defines a el-CICD template for a Kubernetes Ingress.
 */}}
 {{- define "elcicd-kubernetes.ingress" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $ingressValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $ingressValues := get . "elCicdTemplate" }}
 
 
-{{- $_ := set $ingressValues "kind" "Ingress" }}
-{{- $_ := set $ingressValues "apiVersion" ($ingressValues.apiVersion | default "networking.k8s.io/v1") }}
-{{- $_ := set $ingressValues "annotations" ($ingressValues.annotations | default dict) }}
-{{- if $ingressValues.allowHttp }}
-  {{- $_ := set $ingressValues.annotations
-                  "kubernetes.io/ingress.allow-http"
-                  (eq (toString $ingressValues.allowHttp) "true" | quote)
-  }}
-{{- end }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $_ := set $ingressValues "kind" "Ingress" }}
+  {{- $_ := set $ingressValues "apiVersion" ($ingressValues.apiVersion | default "networking.k8s.io/v1") }}
+  {{- $_ := set $ingressValues "annotations" ($ingressValues.annotations | default dict) }}
+  {{- if $ingressValues.allowHttp }}
+    {{- $_ := set $ingressValues.annotations
+                    "kubernetes.io/ingress.allow-http"
+                    (eq (toString $ingressValues.allowHttp) "true" | quote)
+    }}
+  {{- end }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "defaultBackend"
                          "ingressClassName"	}}
-  {{- include "elcicd-common.outputToYaml" (list $ $ingressValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $ingressValues "whiteList" $whiteList) }}
   {{- if $ingressValues.rules }}
   rules: {{- $ingressValues.rules | toYaml | nindent 4 }}
   {{- else }}
@@ -162,20 +161,19 @@ spec:
   Defines a el-CICD template for a Kubernetes Service.
 */}}
 {{- define "elcicd-kubernetes.service" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $svcValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $svcValues := get . "elCicdTemplate" }}
 
-{{- if or ($svcValues.prometheus).port $.Values.usePrometheus }}
-  {{- include "elcicd-kubernetes.prometheusAnnotations" . }}
-{{- end }}
-{{- if or $svcValues.threeScalePort $.Values.use3Scale }}
-  {{- include "elcicd-kubernetes.3ScaleAnnotations" . }}
-  {{- $_ := set $svcValues "labels" ($svcValues.labels  | default dict) }}
-  {{- $_ := set $svcValues.labels "discovery.3scale.net" true }}
-{{- end }}
-{{- $_ := set $svcValues "kind" "Service" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- if or ($svcValues.prometheus).port $.Values.usePrometheus }}
+    {{- include "elcicd-kubernetes.prometheusAnnotations" . }}
+  {{- end }}
+  {{- if or $svcValues.threeScalePort $.Values.use3Scale }}
+    {{- include "elcicd-kubernetes.3ScaleAnnotations" . }}
+    {{- $_ := set $svcValues "labels" ($svcValues.labels  | default dict) }}
+    {{- $_ := set $svcValues.labels "discovery.3scale.net" true }}
+  {{- end }}
+  {{- $_ := set $svcValues "kind" "Service" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   selector:
     elcicd.io/selector: {{ include "elcicd-common.elcicdLabels" . }}

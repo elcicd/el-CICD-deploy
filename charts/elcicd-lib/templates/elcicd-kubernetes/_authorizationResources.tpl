@@ -45,12 +45,11 @@
   Defines a el-CICD template for a Kubernetes ClusterRole.
 */}}
 {{- define "elcicd-kubernetes.clusterRole" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $roleValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $roleValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $roleValues "kind" "ClusterRole" }}
-{{- include "elcicd-kubernetes.genericRoleDefinition" . }}
+  {{- $_ := set $roleValues "kind" "ClusterRole" }}
+  {{- include "elcicd-kubernetes.genericRoleDefinition" . }}
 {{- end }}
 
 {{/*
@@ -80,12 +79,11 @@
   Defines a el-CICD template for a Kubernetes ClusterRoleBinding.
 */}}
 {{- define "elcicd-kubernetes.clusterRoleBinding" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $clusterRoleBindingValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $clusterRoleBindingValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $clusterRoleBindingValues "kind" "ClusterRoleBinding" }}
-{{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}
+  {{- $_ := set $clusterRoleBindingValues "kind" "ClusterRoleBinding" }}
+  {{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}
 {{- end }}
 
 {{/*
@@ -115,12 +113,11 @@
   Defines a el-CICD template for a Kubernetes Role.
 */}}
 {{- define "elcicd-kubernetes.role" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $roleValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $roleValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $roleValues "kind" "Role" }}
-{{- include "elcicd-kubernetes.genericRoleDefinition" . }}
+  {{- $_ := set $roleValues "kind" "Role" }}
+  {{- include "elcicd-kubernetes.genericRoleDefinition" . }}
 {{- end }}
 
 {{/*
@@ -150,10 +147,9 @@
   Defines a el-CICD template for a Kubernetes RoleBinding.
 */}}
 {{- define "elcicd-kubernetes.roleBinding" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $roleBindingValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $roleBindingValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $roleBindingValues "kind" "RoleBinding" }}
-{{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}
+  {{- $_ := set $roleBindingValues "kind" "RoleBinding" }}
+  {{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}
 {{- end }}

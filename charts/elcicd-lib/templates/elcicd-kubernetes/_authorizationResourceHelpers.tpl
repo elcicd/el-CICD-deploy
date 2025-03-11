@@ -2,9 +2,8 @@
 genericRoleDefinition: all ClusterRoles and Roles have this structure
 */}}
 {{- define "elcicd-kubernetes.genericRoleDefinition" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $roleValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $roleValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $roleValues "apiVersion" ($roleValues.apiVersion | default "rbac.authorization.k8s.io/v1") }}
   {{- include "elcicd-common.apiObjectHeader" . }}
@@ -20,9 +19,8 @@ rules: {{- $roleValues.rules | toYaml | nindent 0 }}
 genericRoleBindingDefinition: all ClusterRoleBindings and RoleBindings have this structure
 */}}
 {{- define "elcicd-kubernetes.genericRoleBindingDefinition" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $genericRoleBindingBindingValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $genericRoleBindingBindingValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $genericRoleBindingBindingValues "apiVersion" ($genericRoleBindingBindingValues.apiVersion | default "rbac.authorization.k8s.io/v1") }}
   {{- include "elcicd-common.apiObjectHeader" . }}

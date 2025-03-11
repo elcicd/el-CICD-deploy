@@ -17,9 +17,8 @@
   The final list of templates to be rendered is set to $.Values.allTemplates
 */}}
 {{- define "elcicd-renderer.generateAllTemplates" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $templates := get $args "templates" }}
+  {{- $ := get . "$" }}
+  {{- $templates := get . "elCicdTemplates" }}
 
   {{- $allTemplates := list }}
   {{- $resultKey := uuidv4 }}
@@ -31,21 +30,33 @@
       {{- end }}
     {{- end }}
 
-    {{- include "elcicd-renderer.processModularTemplate" (list $ $template $resultKey) }}
+    {{- include "elcicd-renderer.processModularTemplate" (dict "$" $ "elCicdTemplate" $template "resultKey" $resultKey) }}
     {{- $modularTemplates := get $.Values.__EC_RESULT_DICT $resultKey }}
     {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 
     {{- $objNameTemplates := list }}
     {{- range $modularTemplate := $modularTemplates }}
       {{- include "elcicd-renderer.processMatrixKey"
-                  (list $ $modularTemplate "objNames" "objName" $.Values.elCicdDefaults.objName $.Values.elCicdDefs $resultKey) }}
+                  (dict "$" $
+                         "elCicdTemplate" $modularTemplate
+                         "matrixKey" "objNames"
+                         "templateKey" "objName"
+                         "defaultValue" $.Values.elCicdDefaults.objName
+                         "elCicdDefs" $.Values.elCicdDefs
+                         "resultKey" $resultKey) }}
       {{- $objNameTemplates = concat $objNameTemplates (get $.Values.__EC_RESULT_DICT $resultKey) }}
       {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
     {{- end }}
 
     {{- range $objNameTemplate := $objNameTemplates }}
       {{- include "elcicd-renderer.processMatrixKey"
-                  (list $ $objNameTemplate "namespaces" "namespace" $.Release.Namespace $.Values.elCicdDefs $resultKey) }}
+                  (dict "$" $
+                         "elCicdTemplate" $objNameTemplate
+                         "matrixKey" "namespaces"
+                         "templateKey" "namespace"
+                         "defaultValue" $.Release.Namespace
+                         "elCicdDefs" $.Values.elCicdDefs
+                         "resultKey" $resultKey) }}
       {{- $allTemplates = concat $allTemplates (get $.Values.__EC_RESULT_DICT $resultKey) }}
       {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
     {{- end }}
@@ -69,9 +80,9 @@
   If a templateName is a list of templates, generates an individual template for member of the list.
   */}}
 {{ define "elcicd-renderer.processModularTemplate" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
-  {{- $resultKey := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $resultKey := get . "resultKey" }}
 
   {{- $modularTemplates := list }}
   {{- range $newTemplateName := $template.templateNames }}
@@ -114,21 +125,21 @@
   If the namespace key has a value with $<#> in it, it will be replaced with the index of baseObjName in the namespaces list.
 */}}
 {{- define "elcicd-renderer.processMatrixKey" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
-  {{- $matrixKey := index . 2 }}
-  {{- $templateKey := index . 3 }}
-  {{- $defaultValue := index . 4 }}
-  {{- $elCicdDefs := index . 5 }}
-  {{- $resultKey := index . 6 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $matrixKey := get . "matrixKey" }}
+  {{- $templateKey := get . "templateKey" }}
+  {{- $defaultValue := get . "defaultValue" }}
+  {{- $elCicdDefs := get . "elCicdDefs" }}
+  {{- $resultKey := get . "resultKey" }}
 
   {{- $matrixTemplates := list }}
   {{- $matrix := get $template $matrixKey }}
   {{- if $matrix }}
-    {{- include "elcicd-renderer.processTemplateMatrixValue" (list $ $template $matrixKey) }}
+    {{- include "elcicd-renderer.processTemplateMatrixValue" (dict "$" $ "elCicdTemplate" $template "matrixKey" $matrixKey) }}
     {{- $matrix := get $template $matrixKey }}
 
-    {{- include "elcicd-renderer.generateTemplateMatrixValues" (list $ $template $matrixKey) }}
+    {{- include "elcicd-renderer.generateTemplateMatrixValues" (dict "$" $ "elCicdTemplate" $template "matrixKey" $matrixKey) }}
     {{- $matrix := get $template $matrixKey }}
 
     {{- range $index, $matrixValue := $matrix }}
@@ -168,14 +179,15 @@
   Dereferences any el-CICD variables references in a matrices list; e.g. the objNames or namespaces list.
 */}}
 {{- define "elcicd-renderer.processTemplateMatrixValue" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
-  {{- $matrixKey := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $matrixKey := get . "matrixKey" }}
 
   {{- $generatorVal := get $template $matrixKey }}
 
   {{- $resultKey := uuidv4 }}
-  {{- include "elcicd-renderer.processValue" (list $ $generatorVal $.Values.elCicdDefs list $resultKey) }}
+  {{- include "elcicd-renderer.processValue"
+              (dict "$" $ "value" $generatorVal "elCicdDefs" $.Values.elCicdDefs "processedVarsList" list "resultKey" $resultKey) }}
   {{- $generatorVal := (get $.Values.__EC_RESULT_DICT $resultKey) | default list }}
   {{- if $generatorVal }}
     {{- if not (kindIs "slice" $generatorVal) }}
@@ -202,9 +214,9 @@
   Generates multiple entries if specified.
 */}}
 {{- define "elcicd-renderer.generateTemplateMatrixValues" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
-  {{- $matrixKey := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $matrixKey := get . "matrixKey" }}
 
   {{- $matrix := get $template $matrixKey }}
 
@@ -284,14 +296,13 @@
  10. For debugging/documentation purposes, $tplElCicdDefs is added to the template.
 */}}
 {{- define "elcicd-renderer.processTemplates" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $templates := get $args "templates" }}
+  {{- $ := get . "$" }}
+  {{- $templates := get . "elCicdTemplates" }}
 
   {{- range $template := $templates }}
     {{- $tplElCicdDefs := dict }}
-    {{- include "elcicd-renderer.deepCopyDict" (list $.Values.elCicdDefs $tplElCicdDefs) }}
-    {{- include "elcicd-renderer.deepCopyDict" (list $template.elCicdDefs $tplElCicdDefs) }}
+    {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $.Values.elCicdDefs "destDict" $tplElCicdDefs) }}
+    {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $template.elCicdDefs "destDict" $tplElCicdDefs) }}
 
     {{- $args := dict "$" $ "parentMap" $template "elCicdDefs" $tplElCicdDefs }}
     {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" $args }}
@@ -304,15 +315,15 @@
     {{- include "elcicd-renderer.mergeElCicdDefs" $args }}
     {{- $_ := set $args "elCicdDefsMap" $template }}
     {{- include "elcicd-renderer.mergeElCicdDefs" $args }}
-    {{- include "elcicd-renderer.preProcessFilesAndConfig" (list $ $tplElCicdDefs) }}
+    {{- include "elcicd-renderer.preProcessFilesAndConfig" (dict "$" $ "elCicdDefs" $tplElCicdDefs) }}
 
-    {{- $args := dict "$" $ "template" $template "tplElCicdDefs" $tplElCicdDefs }}
-    {{- include "elcicd-renderer.setBuiltInTplElCicdDefsValues" $args }}
+    {{- include "elcicd-renderer.setBuiltInTplElCicdDefsValues" (dict "$" $ "elCicdTemplate" $template "tplElCicdDefs" $tplElCicdDefs ) }}
 
     {{- $_ := set $template "elCicdDefaults" dict }}
-    {{- include "elcicd-renderer.deepCopyDict" (list $.Values.elCicdDefaults $template.elCicdDefaults) }}
+    {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $.Values.elCicdDefaults "destDict" $template.elCicdDefaults) }}
 
-    {{- include "elcicd-renderer.replaceVarRefsInMap" (list $ $template $tplElCicdDefs list dict) }}
+    {{- include "elcicd-renderer.replaceVarRefsInMap"
+                (dict "$" $ "map" $template "elCicdDefs" $tplElCicdDefs "processedVarsList" list) }}
     {{- if and ($template.objName) (not (regexMatch $.Values.__EC_OBJNAME_REGEX $template.objName)) }}
       {{- fail (printf "objName \"%s\" does match regex naming requirements , \"%s\"" $template.objName $.Values.__EC_OBJNAME_REGEX) }}
     {{- end }}
@@ -322,10 +333,9 @@
 {{- end }}
 
 {{- define "elcicd-renderer.setBuiltInTplElCicdDefsValues" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $template := get $args "template" }}
-  {{- $tplElCicdDefs := get $args "tplElCicdDefs" }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $tplElCicdDefs := get . "tplElCicdDefs" }}
 
   {{- $_ := set $tplElCicdDefs "EL_CICD_DEPLOYMENT_TIME_NUM" $.Values.__EC_DEPLOYMENT_TIME_NUM }}
   {{- $_ := set $tplElCicdDefs "EL_CICD_DEPLOYMENT_TIME" $.Values.__EC_DEPLOYMENT_TIME }}
@@ -370,15 +380,15 @@
   variable definitions NOT of the form elCicdDefs-* ATTACHED DIRECTLY TO THE TEMPLATE.
   */}}
 {{- define "elcicd-renderer.preProcessElCicdDefsMapNames" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $parentMap := get $args "parentMap" }}
-  {{- $elCicdDefs := get $args "elCicdDefs" }}
+  {{- $ := get . "$" }}
+  {{- $parentMap := get . "parentMap" }}
+  {{- $elCicdDefs := get . "elCicdDefs" }}
 
   {{- $resultKey := uuidv4 }}
   {{- range $key, $value := $parentMap }}
     {{- if hasPrefix "elCicdDefs-" $key }}
-      {{- include "elcicd-renderer.replaceRefsInMapKey" (list $ $parentMap $key $elCicdDefs $resultKey) }}
+      {{- include "elcicd-renderer.replaceRefsInMapKey"
+                  (dict "$" $ "map" $parentMap "key" $key "elCicdDefs" $elCicdDefs "resultKey" $resultKey) }}
     {{- end }}
   {{- end }}
 {{- end }}
@@ -404,20 +414,21 @@
   a list of el-CICD templates.
 */}}
 {{- define "elcicd-renderer.replaceVarRefsInMap" }}
-  {{- $ := index . 0 }}
-  {{- $map := index . 1 }}
-  {{- $elCicdDefs := index . 2 }}
-  {{- $processedVarsList := index . 3 }}
+  {{- $ := index . "$" }}
+  {{- $map := get . "map" }}
+  {{- $elCicdDefs := get . "elCicdDefs" }}
+  {{- $processedVarsList := index . "processedVarsList" }}
 
   {{- $resultKey := uuidv4 }}
   {{- range $key, $value := $map }}
-    {{- include "elcicd-renderer.processValue" (list $ $value $elCicdDefs $processedVarsList $resultKey) }}
+    {{- include "elcicd-renderer.processValue"
+                (dict "$" $ "value" $value "elCicdDefs" $elCicdDefs "processedVarsList" $processedVarsList "resultKey" $resultKey) }}
     {{- $newValue := get $.Values.__EC_RESULT_DICT $resultKey }}
     {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 
     {{- if and (not (and (kindIs "string" $newValue) (empty $newValue))) (not (eq (typeOf $newValue) "<nil>")) }}
       {{- $_ := set $map $key $newValue }}
-      {{- include "elcicd-renderer.replaceRefsInMapKey" (list $ $map $key $elCicdDefs $resultKey) }}
+      {{- include "elcicd-renderer.replaceRefsInMapKey" (dict "$" $ "map" $map "key" $key "elCicdDefs" $elCicdDefs "resultKey" $resultKey) }}
     {{- else }}
       {{- $_ := unset $map $key }}
     {{- end }}
@@ -443,15 +454,16 @@
   is an empty string, remove the key/value pair.  Note that keys MUST resolve to strings, or an error will be raised by Helm.
 */}}
 {{- define "elcicd-renderer.replaceRefsInMapKey" }}
-  {{- $ := index . 0 }}
-  {{- $map := index . 1 }}
-  {{- $key := index . 2 }}
-  {{- $elCicdDefs := index . 3 }}
-  {{- $resultKey := index . 4 }}
+  {{- $ := get . "$" }}
+  {{- $map := get . "map" }}
+  {{- $key := get . "key" }}
+  {{- $elCicdDefs := get . "elCicdDefs" }}
+  {{- $resultKey := get . "resultKey" }}
 
   {{- $value := get $map $key }}
 
-  {{- include "elcicd-renderer.processValue" (list $ $key $elCicdDefs list $resultKey) }}
+  {{- include "elcicd-renderer.processValue"
+              (dict "$" $ "value" $key "elCicdDefs" $elCicdDefs "processedVarsList" list "resultKey" $resultKey) }}
   {{- $newKey := get $.Values.__EC_RESULT_DICT $resultKey }}
   {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 
@@ -480,16 +492,17 @@
   el-CICD Chart result dictionary with the given key, and retrieved by the caller of this template.
 */}}
 {{- define "elcicd-renderer.replaceVarRefsInSlice" }}
-  {{- $ := index . 0 }}
-  {{- $slice := index . 1 }}
-  {{- $elCicdDefs := index . 2 }}
-  {{- $processedVarsList := index . 3 }}
-  {{- $resultKey := index . 4 }}
+  {{- $ := get . "$" }}
+  {{- $slice := get . "slice" }}
+  {{- $elCicdDefs := get . "elCicdDefs" }}
+  {{- $processedVarsList := get . "processedVarsList" }}
+  {{- $resultKey := get . "resultKey" }}
 
   {{- $newSlice := list }}
   {{- $sliceResultKey := uuidv4 }}
   {{- range $element := $slice }}
-    {{- include "elcicd-renderer.processValue" (list $ $element $elCicdDefs $processedVarsList $sliceResultKey) }}
+    {{- include "elcicd-renderer.processValue"
+                (dict "$" $ "value" $element "elCicdDefs" $elCicdDefs "processedVarsList" $processedVarsList "resultKey" $sliceResultKey) }}
     {{- $newElement := get $.Values.__EC_RESULT_DICT $sliceResultKey }}
     {{- $_ := unset $.Values.__EC_RESULT_DICT $sliceResultKey }}
 
@@ -536,11 +549,11 @@
 
 */}}
 {{- define "elcicd-renderer.processValue" }}
-  {{- $ := index . 0 }}
-  {{- $value := index . 1 }}
-  {{- $elCicdDefs := index . 2 }}
-  {{- $processedVarsList := index . 3 }}
-  {{- $resultKey := index . 4 }}
+  {{- $ := get . "$" }}
+  {{- $value := get . "value" }}
+  {{- $elCicdDefs := get . "elCicdDefs" }}
+  {{- $processedVarsList := get . "processedVarsList" }}
+  {{- $resultKey := get . "resultKey" }}
 
   {{- $depth := add1 (get $.Values.__EC_RESULT_DICT $.Values.__EC_DEPTH | default 0) }}
   {{- if eq $depth 1 }}
@@ -548,14 +561,22 @@
   {{- end }}
 
   {{- if (kindIs "map" $value) }}
-    {{- include "elcicd-renderer.replaceVarRefsInMap" (list $ $value $elCicdDefs $processedVarsList) }}
+    {{- include "elcicd-renderer.replaceVarRefsInMap"
+                (dict "$" $ "map" $value "elCicdDefs" $elCicdDefs "processedVarsList" $processedVarsList) }}
     {{- $_ := set $.Values.__EC_RESULT_DICT $resultKey $value }}
   {{- else }}
     {{- if (kindIs "slice" $value) }}
-      {{- include "elcicd-renderer.replaceVarRefsInSlice" (list $ $value $elCicdDefs $processedVarsList $resultKey) }}
+      {{- include "elcicd-renderer.replaceVarRefsInSlice"
+                  (dict "$" $ "slice" $value "elCicdDefs" $elCicdDefs "processedVarsList" $processedVarsList "resultKey" $resultKey) }}
     {{- else if (kindIs "string" $value) }}
       {{- $processedVarsKey := uuidv4 }}
-      {{- include "elcicd-renderer.replaceVarRefsInString" (list $ $value $elCicdDefs $processedVarsList $resultKey $processedVarsKey) }}
+      {{- include "elcicd-renderer.replaceVarRefsInString"
+                  (dict "$" $ 
+                        "value" $value
+                        "elCicdDefs" $elCicdDefs
+                        "processedVarsList" $processedVarsList
+                        "resultKey" $resultKey
+                        "processedVarsKey" $processedVarsKey) }}
       {{- $processedVarsList = get $.Values.__EC_RESULT_DICT $processedVarsKey }}
       {{- $_ := unset $.Values.__EC_RESULT_DICT $processedVarsKey }}
     {{- else }}
@@ -569,7 +590,8 @@
         {{- $origValue := get $.Values.__EC_RESULT_DICT $.Values.__EC_ORIG_VALUE_KEY }}
         {{- fail (print "Stack depth (" $.Values.__EC_MAX_DEPTH ") exceeded: \nVAR STACK: " (join " -> " $processedVarsList) "\nvalues.yaml REF: " $origValue) }}
       {{- end }}
-      {{- include "elcicd-renderer.processValue" (list $ $newValue $elCicdDefs $processedVarsList $resultKey) }}
+      {{- include "elcicd-renderer.processValue"
+                  (dict "$" $ "value" $newValue "elCicdDefs" $elCicdDefs "processedVarsList" $processedVarsList "resultKey" $resultKey) }}
     {{- end }}
     {{- $_ := set $.Values.__EC_RESULT_DICT $.Values.__EC_DEPTH (sub $depth 1) }}
   {{- end  }}
@@ -606,12 +628,12 @@
   to the processed vars list.
 */}}
 {{- define "elcicd-renderer.replaceVarRefsInString" }}
-  {{- $ := index . 0 }}
-  {{- $value := index . 1 }}
-  {{- $elCicdDefs := index . 2 }}
-  {{- $processedVarsList := index . 3 }}
-  {{- $resultKey := index . 4 }}
-  {{- $processedVarsKey := index . 5 }}
+  {{- $ := get . "$" }}
+  {{- $value := get . "value" }}
+  {{- $elCicdDefs := get . "elCicdDefs" }}
+  {{- $processedVarsList := get . "processedVarsList" }}
+  {{- $resultKey := get . "resultKey" }}
+  {{- $processedVarsKey := get . "processedVarsKey" }}
 
   {{- $matches := regexFindAll $.Values.__EC_PARAM_REGEX $value -1 }}
   {{- $localProcessedVars := list }}

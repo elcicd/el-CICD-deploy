@@ -33,14 +33,13 @@
   Defines a el-CICD template for a Kubernetes ServiceAccount.
 */}}
 {{- define "elcicd-kubernetes.serviceAccount" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $svcAcctValues := get $args "elCicdTemplate" }}
+{{- $ := get . "$" }}
+{{- $svcAcctValues := get . "elCicdTemplate" }}
 
 {{- $_ := set $svcAcctValues "kind" "ServiceAccount" }}
 {{- include "elcicd-common.apiObjectHeader" . }}
 {{- $whiteList := list "automountServiceAccountToken"	}}
-{{- include "elcicd-common.outputToYaml" (list $ $svcAcctValues $whiteList) }}
+{{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $svcAcctValues "whiteList" $whiteList) }}
 {{- if $svcAcctValues.imagePullSecrets }}
 imagePullSecrets:
 {{- range $imagePullSecret := $svcAcctValues.imagePullSecrets  }}

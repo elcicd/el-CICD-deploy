@@ -42,15 +42,15 @@
 */}}
 
 {{- define "elcicd-kubernetes.projectedVolumes" }}
-  {{- $ := index . 0 }}
-  {{- $podValues := index . 1 }}
-  {{- $containerVals := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $podValues := get . "podValues" }}
+  {{- $containerVals := get . "containerVals" }}
   
   {{- $volumeMounts := dict }}
   {{- range $projectedVolume := $containerVals.projectedVolumes }}
-    {{- include "elcicd-kubernetes.addConfigMapsAndSecretsByLabels" (list $ $podValues $projectedVolume) }}
-
-    {{- include "elcicd-kubernetes.createProjectedVolume" (list $ $podValues $projectedVolume) }}
+    {{- $projectedVolumeArgs := (dict "$" $ "podValues" $podValues "projectedVolume" $projectedVolume) }}
+    {{- include "elcicd-kubernetes.addConfigMapsAndSecretsByLabels" $projectedVolumeArgs }}
+    {{- include "elcicd-kubernetes.createProjectedVolume" $projectedVolumeArgs }}
 
     {{- $mountedVolume := dict "mountPath" $projectedVolume.mountPath }}
     {{- $_ := set $mountedVolume "name" $projectedVolume.name }}
@@ -70,9 +70,9 @@
 {{- end }}
 
 {{- define "elcicd-kubernetes.createProjectedVolume" }}
-  {{- $ := index . 0 }}
-  {{- $podValues := index . 1 }}
-  {{- $projectedVolume := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $podValues := get . "podValues" }}
+  {{- $projectedVolume := get . "projectedVolume" }}
 
   {{- $volume := dict }}
   {{- $_ := set $volume "name" $projectedVolume.name }}
@@ -113,9 +113,9 @@
 {{- end }}
 
 {{- define "elcicd-kubernetes.addConfigMapsAndSecretsByLabels" }}
-  {{- $ = index . 0 }}
-  {{- $podValues := index . 1 }}
-  {{- $projectedVolume := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $podValues := get . "podValues" }}
+  {{- $projectedVolume := get . "projectedVolume" }}
   
   {{- $resultKey := uuidv4 }}
 

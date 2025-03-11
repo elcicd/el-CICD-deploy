@@ -41,17 +41,16 @@
   Defines a el-CICD template for a Kubernetes ResourceQuota.
 */}}
 {{- define "elcicd-kubernetes.resourceQuota" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $quotaValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $quotaValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $quotaValues "kind" "ResourceQuota" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $_ := set $quotaValues "kind" "ResourceQuota" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "hard"
                          "scopeSelector"
                          "scopes"	}}
-  {{- include "elcicd-common.outputToYaml" (list $ $quotaValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $quotaValues "whiteList" $whiteList) }}
 {{- end }}
 
 {{/*
@@ -80,13 +79,12 @@ spec:
   Defines a el-CICD template for a Kubernetes LimitRange.
 */}}
 {{- define "elcicd-kubernetes.limitRange" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $limitValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $limitValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $limitValues "kind" "LimitRange" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $_ := set $limitValues "kind" "LimitRange" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "limits"	}}
-  {{- include "elcicd-common.outputToYaml" (list $ $limitValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $limitValues "whiteList" $whiteList) }}
 {{- end }}

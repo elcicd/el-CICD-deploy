@@ -31,10 +31,9 @@
   Defines a el-CICD template for a Kubernetes Namespace.
 */}}
 {{- define "elcicd-kubernetes.namespace" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $nsValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $nsValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $nsValues "kind" "Namespace" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $_ := set $nsValues "kind" "Namespace" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 {{- end }}

@@ -2,9 +2,8 @@
 el-CIDC support for templating an a kustomization.  No expectation of known keys is given.
 */}}
 {{- define "elcicd-kubernetes.kustomization" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $kustValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $kustValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $kustValues "kind" "Kustomization" }}
   {{- $_ := set $kustValues "apiVersion" ($kustValues.apiVersion | default "kustomize.config.k8s.io/v1beta1") }}
@@ -19,9 +18,8 @@ el-CIDC support for templating an a kustomization.  No expectation of known keys
 el-CIDC support for templating an a Chart.yaml for generating a Helm Chart.
 */}}
 {{- define "elcicd-kubernetes.chart-yaml" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $chartValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $chartValues := get . "elCicdTemplate" }}
 
 apiVersion: {{ $chartValues.apiVersion | default "v2" }}
 name: {{ $chartValues.objName }}
@@ -43,5 +41,5 @@ version: {{ semver (required "A valid chart version is required" $chartValues.ve
                          "appVersion"
                          "deprecated"
                          "annotations" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $chartValues $whiteList 0) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $chartValues "whiteList" $whiteList) }}
 {{- end }}

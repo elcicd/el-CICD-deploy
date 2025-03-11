@@ -44,16 +44,15 @@
   Defines a el-CICD template for a Kubernetes ConfigMap.
 */}}
 {{- define "elcicd-kubernetes.configMap" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $cmValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $cmValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $cmValues "kind" "ConfigMap" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
-{{- $whiteList := list "binaryData"
-                       "data"
-                       "immutable"	}}
-{{- include "elcicd-common.outputToYaml" (list $ $cmValues $whiteList 0) }}
+  {{- $_ := set $cmValues "kind" "ConfigMap" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $whiteList := list "binaryData"
+                         "data"
+                         "immutable"	}}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $cmValues "whiteList" $whiteList "indent" 0) }}
 {{- end }}
 
 {{/*
@@ -104,34 +103,33 @@
   Defines a el-CICD template for a Kubernetes Secret.
 */}}
 {{- define "elcicd-kubernetes.secret" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $secretValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $secretValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $secretValues "kind" "Secret" }}
-{{- if eq ($secretValues.type | default "") "dockerconfigjson" }}
-  {{- $_ := set  $secretValues "type" "kubernetes.io/dockerconfigjson" }}
-  {{- $dockerconfigjson := "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"auth\":\"%s\"}}}" }}
-  {{- $base64Auths := (printf "%s:%s" $secretValues.username $secretValues.password | b64enc) }}
-  {{- $dockerconfigjson = (printf $dockerconfigjson $secretValues.server $secretValues.username $secretValues.password $base64Auths | b64enc) }}
+  {{- $_ := set $secretValues "kind" "Secret" }}
+  {{- if eq ($secretValues.type | default "") "dockerconfigjson" }}
+    {{- $_ := set  $secretValues "type" "kubernetes.io/dockerconfigjson" }}
+    {{- $dockerconfigjson := "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"auth\":\"%s\"}}}" }}
+    {{- $base64Auths := (printf "%s:%s" $secretValues.username $secretValues.password | b64enc) }}
+    {{- $dockerconfigjson = (printf $dockerconfigjson $secretValues.server $secretValues.username $secretValues.password $base64Auths | b64enc) }}
 
-  {{- $_ := set  $secretValues "data"  ($secretValues.data | default dict) }}
-  {{- $_ := set  $secretValues.data ".dockerconfigjson" $dockerconfigjson }}
+    {{- $_ := set  $secretValues "data"  ($secretValues.data | default dict) }}
+    {{- $_ := set  $secretValues.data ".dockerconfigjson" $dockerconfigjson }}
 
-  {{- $_ := set  $secretValues "stringData" ($secretValues.stringData | default dict) }}
-  {{- $_ := set  $secretValues.stringData "username" $secretValues.username }}
-  {{- $_ := set  $secretValues.stringData "password" $secretValues.password }}
-{{- else if and (eq ($secretValues.type | default "") "service-account-token") $secretValues.serviceAccount }}
-  {{- $_ := set  $secretValues "type" "kubernetes.io/service-account-token" }}
-  {{- $_ := set  $secretValues "annotations"  ($secretValues.annotations | default dict) }}
-  {{- $_ := set  $secretValues.annotations "kubernetes.io/service-account.name" $secretValues.serviceAccount }}
-{{- end }}
-{{- include "elcicd-common.apiObjectHeader" . }}
-{{- $whiteList := list "data"
-                       "immutable"
-                       "stringData"
-                       "type"	}}
-{{- include "elcicd-common.outputToYaml" (list $ $secretValues $whiteList 0) }}
+    {{- $_ := set  $secretValues "stringData" ($secretValues.stringData | default dict) }}
+    {{- $_ := set  $secretValues.stringData "username" $secretValues.username }}
+    {{- $_ := set  $secretValues.stringData "password" $secretValues.password }}
+  {{- else if and (eq ($secretValues.type | default "") "service-account-token") $secretValues.serviceAccount }}
+    {{- $_ := set  $secretValues "type" "kubernetes.io/service-account-token" }}
+    {{- $_ := set  $secretValues "annotations"  ($secretValues.annotations | default dict) }}
+    {{- $_ := set  $secretValues.annotations "kubernetes.io/service-account.name" $secretValues.serviceAccount }}
+  {{- end }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $whiteList := list "data"
+                         "immutable"
+                         "stringData"
+                         "type"	}}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $secretValues "whiteList" $whiteList "indent" 0) }}
 {{- end }}
 
 {{/*
@@ -202,12 +200,11 @@
   Defines a el-CICD template for a Kubernetes PersistentVolume.
 */}}
 {{- define "elcicd-kubernetes.persistentVolume" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $pvValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $pvValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $pvValues "kind" "PersistentVolume" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $_ := set $pvValues "kind" "PersistentVolume" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "awsElasticBlockStore"
                          "azureDisk"
@@ -236,7 +233,7 @@ spec:
                          "storageos"
                          "vsphereVolume"
                          "volumeMode"	}}
-  {{- include "elcicd-common.outputToYaml" (list $ $pvValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $pvValues "whiteList" $whiteList) }}
   accessModes:
   {{- if $pvValues.accessModes }}
   {{ $pvValues.accessModes | toYaml }}
@@ -296,12 +293,11 @@ spec:
   Defines a el-CICD template for a Kubernetes PersistentVolumeClaim.
 */}}
 {{- define "elcicd-kubernetes.persistentVolumeClaim" }}
-{{- $args := . }}
-{{- $ := get $args "$" }}
-{{- $pvcValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $pvcValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $pvcValues "kind" "PersistentVolumeClaim" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- $_ := set $pvcValues "kind" "PersistentVolumeClaim" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "dataSource"
                          "dataSourceRef"
@@ -309,7 +305,7 @@ spec:
                          "storageClassName"
                          "volumeMode"
                          "volumeName"	}}
-  {{- include "elcicd-common.outputToYaml" (list $ $pvcValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $pvcValues "whiteList" $whiteList) }}
   accessModes:
   {{- if $pvcValues.accessModes }}
   {{ $pvcValues.accessModes | toYaml | indent 2 }}

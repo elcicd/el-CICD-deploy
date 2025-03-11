@@ -50,9 +50,8 @@
   Defines a el-CICD template for a Kubernetes CronJob.
 */}}
 {{- define "elcicd-kubernetes.cronjob" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $cjValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $cjValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $cjValues "kind" "CronJob" }}
   {{- $_ := set $cjValues "apiVersion" ($cjValues.apiVersion | default "batch/v1") }}
@@ -65,7 +64,7 @@ spec:
                          "startingDeadlineSeconds"
                          "successfulJobsHistoryLimit"
                          "ttlSecondsAfterFinished" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $cjValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $cjValues "whiteList" $whiteList) }}
   jobTemplate: {{ include "elcicd-kubernetes.jobTemplate" . | indent 4 }}
 {{- end }}
 
@@ -114,9 +113,8 @@ spec:
   Defines a el-CICD template for a Kubernetes Deployment.
 */}}
 {{- define "elcicd-kubernetes.deployment" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $deployValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $deployValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $deployValues "kind" "Deployment" }}
   {{- $_ := set $deployValues "apiVersion" ($deployValues.apiVersion | default "apps/v1") }}
@@ -125,7 +123,7 @@ spec:
   {{- $whiteList := list "minReadySeconds"
                          "progressDeadlineSeconds"
                          "replicas" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $deployValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $deployValues "whiteList" $whiteList) }}
   revisionHistoryLimit: {{ ($deployValues.revisionHistoryLimit | default $.Values.elCicdDefaults.deploymentRevisionHistoryLimit) | int }}
   {{- include "elcicd-kubernetes.labelSelector" . | indent 2 }}
   {{- if $deployValues.strategyType }}
@@ -205,9 +203,8 @@ spec:
   YAML structure.
 */}}
 {{- define "elcicd-kubernetes.horizontalPodAutoscaler" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $hpaValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $hpaValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $hpaValues "kind" "HorizontalPodAutoscaler" }}
   {{- $_ := set $hpaValues "apiVersion" ($hpaValues.apiVersion | default "autoscaling/v2") }}
@@ -217,7 +214,7 @@ spec:
                          "maxReplicas"
                          "metrics"
                          "minReplicas" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $hpaValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $hpaValues "whiteList" $whiteList) }}
   scaleTargetRef:
     apiVersion: {{ ($hpaValues.scaleTargetRef).apiVersion | default "apps/v1"  }}
     kind: {{ ($hpaValues.scaleTargetRef).kind | default "Deployment" }}
@@ -245,9 +242,8 @@ spec:
   Defines a el-CICD template for a Kubernetes Job.
 */}}
 {{- define "elcicd-kubernetes.job" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $jobValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $jobValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $jobValues "kind" "Job" }}
   {{- $_ := set $jobValues "apiVersion" ($jobValues.apiVersion | default "batch/v1") }}
@@ -276,9 +272,8 @@ spec:
   Defines a el-CICD template for a Kubernetes Pod.
 */}}
 {{- define "elcicd-kubernetes.pod" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $podValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $podValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $podValues "kind" "Pod" }}
   {{- include "elcicd-common.apiObjectHeader" . }}
@@ -323,9 +318,8 @@ spec:
   Defines a el-CICD template for a Kubernetes StatefulSet.
 */}}
 {{- define "elcicd-kubernetes.statefulset" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $stsValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $stsValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $stsValues "kind" "StatefulSet" }}
   {{- $_ := set $stsValues "apiVersion" ($stsValues.apiVersion | default "apps/v1") }}
@@ -339,7 +333,7 @@ spec:
                          "revisionHistoryLimit"
                          "updateStrategy"
                          "volumeClaimTemplates" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $stsValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $stsValues "whiteList" $whiteList) }}
   {{- include "elcicd-kubernetes.labelSelector" . | indent 2 }}
   template:
   {{- $args := dict "$" $ "elCicdTemplate" $stsValues }}
@@ -380,9 +374,8 @@ spec:
   Defines a el-CICD template for a Kubernetes DaemonSet.
 */}}
 {{- define "elcicd-kubernetes.daemonset" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $dsValues := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $dsValues := get . "elCicdTemplate" }}
 
   {{- $_ := set $dsValues "kind" "DaemonSet" }}
   {{- $_ := set $dsValues "apiVersion" ($dsValues.apiVersion | default "apps/v1") }}
@@ -391,7 +384,7 @@ spec:
   {{- $whiteList := list "minReadySeconds"
                          "revisionHistoryLimit"
                          "updateStrategy" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $dsValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $dsValues "whiteList" $whiteList) }}
   {{- include "elcicd-kubernetes.labelSelector" . | indent 2 }}
   template:
   {{- $args := dict "$" $ "elCicdTemplate" $dsValues }}

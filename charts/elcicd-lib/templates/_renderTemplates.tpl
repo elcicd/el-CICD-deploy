@@ -170,11 +170,11 @@
 
     {{- include "elcicd-renderer.gatherElCicdTemplates" $ }}
 
-    {{- include "elcicd-renderer.filterTemplates" (dict "$" $ "templates" $.Values.elCicdTemplates) }}
+    {{- include "elcicd-renderer.filterTemplates" (dict "$" $ "elCicdTemplates" $.Values.elCicdTemplates) }}
 
-    {{- include "elcicd-renderer.generateAllTemplates" (dict "$" $ "templates" $.Values.renderingTemplates) }}
+    {{- include "elcicd-renderer.generateAllTemplates" (dict "$" $ "elCicdTemplates" $.Values.renderingTemplates) }}
 
-    {{- include "elcicd-renderer.processTemplates" (dict "$" $ "templates" $.Values.allTemplates) }}
+    {{- include "elcicd-renderer.processTemplates" (dict "$" $ "elCicdTemplates" $.Values.allTemplates) }}
 
     {{- if (or $.Values.renderProcessedValues $.Values.global.renderProcessedValues) }}
       {{- $_ := unset $.Values "renderProcessedValues" }}
@@ -206,9 +206,8 @@
   ======================================
 */}}
 {{- define "elcicd-renderer.renderTemplate" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $template := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
 
   {{- $templateName := $template.templateName | default "elcicd-renderer.__render-default" }}
   {{- if not (contains "." $templateName) }}
@@ -241,9 +240,8 @@
   If kubeOjbect is false, do NOT render the Kubernetes metadata section.
 */}}
 {{- define "elcicd-renderer.__render-default" }}
-  {{- $args := . }}
-  {{- $ := get $args "$" }}
-  {{- $template := get $args "elCicdTemplate" }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
 
   {{- $_ := required (printf "template or templateName must be defined for an el-CICD Chart template: %s" $template.objName) $template.template }}
 
