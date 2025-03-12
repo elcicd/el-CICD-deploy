@@ -23,16 +23,17 @@
   General header for a Kubernetes compliant resource.
 */}}
 {{- define "elcicd-common.apiObjectHeader" }}
-{{- $ := index . 0 }}
-{{- $template := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+
 apiVersion: {{ $template.apiVersion | default "v1" }}
 kind: {{ required "Kubernetes API objects require a \"kind\"" $template.kind }}
-{{- if $template.metadata }}
+  {{- if $template.metadata }}
 metadata:
-{{ toYaml $template.metadata | nindent 2 }}
-{{- else }}
-  {{- include "elcicd-common.metadata" . }}
-{{- end }}
+    {{ toYaml $template.metadata | nindent 2 }}
+  {{- else }}
+    {{- include "elcicd-common.metadata" . }}
+  {{- end }}
 {{- end }}
 
 {{/*
@@ -63,8 +64,8 @@ metadata:
   General header for a Kubernetes compliant resource metadata.
 */}}
 {{- define "elcicd-common.metadata" }}
-{{- $ := index . 0 }}
-{{- $metadataValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $metadataValues := get . "elCicdTemplate" }}
 metadata:
   {{- $_ := set $metadataValues "annotations" (mergeOverwrite ($metadataValues.annotations | default dict) ($.Values.elCicdDefaults.annotations | default dict)) }}
   {{- if $metadataValues.annotations }}
@@ -75,7 +76,7 @@ metadata:
   {{- end }}
   {{- $_ := set $metadataValues "labels" (mergeOverwrite ($metadataValues.labels | default dict) ($.Values.elCicdDefaults.labels | default dict)) }}
   labels:
-    {{- include "elcicd-common.labels" (list $ $metadataValues.labels) }}
+    {{- include "elcicd-common.labels" (dict "$" $ "labels" $metadataValues.labels) }}
     {{- $_ := set $metadataValues.labels "elcicd.io/selector" (include "elcicd-common.elcicdLabels" .) }}
     {{- $metadataValues.labels | toYaml | nindent 4 }}
   name: {{ required (printf "Unnamed apiObject Name in template: %s!" $metadataValues.templateName) $metadataValues.objName }}
@@ -111,8 +112,8 @@ metadata:
   Generates some default labels for a Kubernetes compliant resource based on the values in Chart.yaml.
 */}}
 {{- define "elcicd-common.labels" }}
-  {{- $ := index . 0 }}
-  {{- $labels := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $labels := get . "labels" }}
 
   {{- $_ := set $labels "app.kubernetes.io/instance" (toString $.Release.Name) }}
   {{- $_ := set $labels "app.kubernetes.io/managed-by" $.Release.Service }}
@@ -144,8 +145,8 @@ metadata:
   Generates a selector label, elcicd.io/selector.
 */}}
 {{- define "elcicd-common.elcicdLabels" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
 
   {{- $selector := $template.elcicdSelector | default (regexReplaceAll "[^\\w-.]" $template.objName "-") }}
   {{- if (gt (len $selector) 63 ) }}
@@ -172,15 +173,13 @@ metadata:
   ======================================
 
   This is a catch-all that renders all extraneous key/values pairs that don't have helper keys or structures.
-  Checks the template values for each resource's whitelist, and if it exists renders it properly.
+  Checks the template values for each resource's whiteList, and if it exists renders it properly.
 */}}
 {{- define "elcicd-common.outputToYaml" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
-  {{- $whiteList := index . 2 }}
-
-  {{- $defaultIndent := append . 2 }}
-  {{- $indent := index $defaultIndent 3 | int }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $whiteList := get . "whiteList" }}
+  {{- $indent := (get . "indent" | default 2) }}
 
   {{- include "elcicd-common.setTemplateDefaultValue" . }}
 
@@ -213,13 +212,13 @@ metadata:
 
   ======================================
 
-  Support function for the outputToYaml function.  Assigns a value for anything in the whitelist
+  Support function for the outputToYaml function.  Assigns a value for anything in the whiteList
   that is empty and has n elCicdDefault value defined.
 */}}
 {{- define "elcicd-common.setTemplateDefaultValue" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
-  {{- $whiteList := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $whiteList := get . "whiteList" }}
 
   {{- range $key := $whiteList }}
     {{- if not (hasKey $template $key) }}
@@ -245,8 +244,8 @@ metadata:
   Supports defining metadata for a free form Kubernetes compatible resource.
 */}}
 {{- define "elcicd-common.kubeObjectMetadata" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
 
   {{- $_ := set $template.template "apiVersion" ($template.template.apiVersion | default $template.apiVersion | default "v1") }}
   {{- $_ := set $template.template "kind" ($template.template.kind | default $template.kind) }}
@@ -263,7 +262,7 @@ metadata:
   {{- $_ := set $metadata "annotations" (merge $metadata.annotations $template.annotations) }}
 
   {{- $_ := set $metadata "labels" ($metadata.labels | default dict) }}
-  {{- include "elcicd-common.labels" (list $ $metadata.labels)  }}
+  {{- include "elcicd-common.labels" (dict "$" $ "labels" $metadata.labels)  }}
   {{- $_ := set $metadata.labels "elcicd.io/selector" (include "elcicd-common.elcicdLabels" .) }}
   {{- $_ := set $template "labels" ($template.labels | default dict) }}
   {{- $_ := set $metadata "labels" (merge $metadata.labels $template.labels) }}

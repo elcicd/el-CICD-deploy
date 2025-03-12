@@ -25,8 +25,8 @@
   the resource cannot be found; otherwise, the chart will be failed.
 */}}
 {{- define "elcicd-renderer.copyResource" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
   
   {{- $resource := (lookup ($template.apiVersion | default "v1") 
                             $template.kind 

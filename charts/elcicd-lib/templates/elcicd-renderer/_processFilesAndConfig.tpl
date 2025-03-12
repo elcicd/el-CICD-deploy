@@ -1,21 +1,21 @@
 
 {{- define "elcicd-renderer.preProcessFilesAndConfig" }}
-  {{- $ := index . 0 }}
-  {{- $tplElCicdDefs := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $tplElCicdDefs := get . "elCicdDefs" }}
   
-  {{- range $param, $value := $tplElCicdDefs }}
+  {{- range $variable, $value := $tplElCicdDefs }}
     {{- if $value }}
       {{- if or (kindIs "map" $value) }}
-        {{- include "elcicd-renderer.preProcessFilesAndConfig" (list $ $value) }}
+        {{- include "elcicd-renderer.preProcessFilesAndConfig" (dict "$" $ "elCicdDefs" $value) }}
       {{- else if (kindIs "string" $value) }}
         {{- if (hasPrefix $.Values.__EC_FILE_PREFIX $value) }}
           {{- $filePath := ( $value | trimPrefix $.Values.__EC_FILE_PREFIX | trimSuffix ">") }}
           {{- $value = $.Files.Get $filePath }}
-          {{- $_ := set $tplElCicdDefs $param (toString $value) }}
+          {{- $_ := set $tplElCicdDefs $variable (toString $value) }}
         {{- end }}
   
-        {{- if (hasPrefix $.Values.__EC_CONFIG_PREFIX $param) }}
-          {{- include "elcicd-renderer.asConfig" (list $ $param $value $tplElCicdDefs) }}
+        {{- if (hasPrefix $.Values.__EC_CONFIG_PREFIX $variable) }}
+          {{- include "elcicd-renderer.asConfig" (dict "$" $ "variable" $variable "value" $value "elCicdDefs" $tplElCicdDefs) }}
         {{- end }}
       {{- end }}
     {{- end }}
@@ -23,13 +23,13 @@
 {{- end }}
 
 {{- define "elcicd-renderer.asConfig" }}
-  {{- $ := index . 0 }}
-  {{- $param := index . 1 }}
-  {{- $value := index . 2 }}
-  {{- $tplElCicdDefs := index . 3 }}
+  {{- $ := get . "$" }}
+  {{- $variable := get . "variable" }}
+  {{- $value := get . "value" }}
+  {{- $tplElCicdDefs := get . "elCicdDefs" }}
   
-  {{- $_ := unset $tplElCicdDefs $param }}
-  {{- $param = ( $param | trimPrefix $.Values.__EC_CONFIG_PREFIX | trimSuffix ">") }}
+  {{- $_ := unset $tplElCicdDefs $variable }}
+  {{- $variable = ( $variable | trimPrefix $.Values.__EC_CONFIG_PREFIX | trimSuffix ">") }}
   {{- $newValue := dict }}
   {{- range $configLine := (regexSplit "\n" $value -1) }}
     {{- $keyValue := (regexSplit "\\s*=\\s*" $configLine -1) }}
@@ -40,5 +40,5 @@
     {{- end }}
   {{- end }}
   
-  {{- $_ := set $tplElCicdDefs $param $newValue }}
+  {{- $_ := set $tplElCicdDefs $variable $newValue }}
 {{- end }}

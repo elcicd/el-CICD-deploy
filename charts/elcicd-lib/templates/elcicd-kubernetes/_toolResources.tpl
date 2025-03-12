@@ -2,8 +2,9 @@
 el-CIDC support for templating an a kustomization.  No expectation of known keys is given.
 */}}
 {{- define "elcicd-kubernetes.kustomization" }}
-  {{- $ := index . 0 }}
-  {{- $kustValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $kustValues := get . "elCicdTemplate" }}
+
   {{- $_ := set $kustValues "kind" "Kustomization" }}
   {{- $_ := set $kustValues "apiVersion" ($kustValues.apiVersion | default "kustomize.config.k8s.io/v1beta1") }}
   {{- include "elcicd-common.apiObjectHeader" . }}
@@ -17,11 +18,12 @@ el-CIDC support for templating an a kustomization.  No expectation of known keys
 el-CIDC support for templating an a Chart.yaml for generating a Helm Chart.
 */}}
 {{- define "elcicd-kubernetes.chart-yaml" }}
-  {{- $ := index . 0 }}
-  {{- $chartValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $chartValues := get . "elCicdTemplate" }}
+
 apiVersion: {{ $chartValues.apiVersion | default "v2" }}
 name: {{ $chartValues.objName }}
-{{- $semverRegex := "^(?P<major>0|[1-9]\\d*)\\.(?P<minor>0|[1-9]\\d*)\\.(?P<patch>0|[1-9]\\d*)(?:-(?P<prerelease>(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$" }}
+  {{- $semverRegex := "^(?P<major>0|[1-9]\\d*)\\.(?P<minor>0|[1-9]\\d*)\\.(?P<patch>0|[1-9]\\d*)(?:-(?P<prerelease>(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$" }}
   {{- if (and $chartValues.version (regexMatch $semverRegex $chartValues.version)) }}
 version: {{ semver (required "A valid chart version is required" $chartValues.version) | toYaml }}
   {{- else }}
@@ -39,5 +41,5 @@ version: {{ semver (required "A valid chart version is required" $chartValues.ve
                          "appVersion"
                          "deprecated"
                          "annotations" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $chartValues $whiteList 0) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $chartValues "whiteList" $whiteList) }}
 {{- end }}

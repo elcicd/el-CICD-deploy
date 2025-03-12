@@ -62,23 +62,24 @@
   Defines a el-CICD template for a Kubernetes Ingress.
 */}}
 {{- define "elcicd-kubernetes.ingress" }}
-{{- $ := index . 0 }}
-{{- $ingressValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $ingressValues := get . "elCicdTemplate" }}
 
-{{- $_ := set $ingressValues "kind" "Ingress" }}
-{{- $_ := set $ingressValues "apiVersion" ($ingressValues.apiVersion | default "networking.k8s.io/v1") }}
-{{- $_ := set $ingressValues "annotations" ($ingressValues.annotations | default dict) }}
-{{- if $ingressValues.allowHttp }}
-  {{- $_ := set $ingressValues.annotations
-                  "kubernetes.io/ingress.allow-http"
-                  (eq (toString $ingressValues.allowHttp) "true" | quote)
-  }}
-{{- end }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+
+  {{- $_ := set $ingressValues "kind" "Ingress" }}
+  {{- $_ := set $ingressValues "apiVersion" ($ingressValues.apiVersion | default "networking.k8s.io/v1") }}
+  {{- $_ := set $ingressValues "annotations" ($ingressValues.annotations | default dict) }}
+  {{- if $ingressValues.allowHttp }}
+    {{- $_ := set $ingressValues.annotations
+                    "kubernetes.io/ingress.allow-http"
+                    (eq (toString $ingressValues.allowHttp) "true" | quote)
+    }}
+  {{- end }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   {{- $whiteList := list "defaultBackend"
                          "ingressClassName"	}}
-  {{- include "elcicd-common.outputToYaml" (list $ $ingressValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $ingressValues "whiteList" $whiteList) }}
   {{- if $ingressValues.rules }}
   rules: {{- $ingressValues.rules | toYaml | nindent 4 }}
   {{- else }}
@@ -160,19 +161,19 @@ spec:
   Defines a el-CICD template for a Kubernetes Service.
 */}}
 {{- define "elcicd-kubernetes.service" }}
-{{- $ := index . 0 }}
-{{- $svcValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $svcValues := get . "elCicdTemplate" }}
 
-{{- if or ($svcValues.prometheus).port $.Values.usePrometheus }}
-  {{- include "elcicd-kubernetes.prometheusAnnotations" . }}
-{{- end }}
-{{- if or $svcValues.threeScalePort $.Values.use3Scale }}
-  {{- include "elcicd-kubernetes.3ScaleAnnotations" . }}
-  {{- $_ := set $svcValues "labels" ($svcValues.labels  | default dict) }}
-  {{- $_ := set $svcValues.labels "discovery.3scale.net" true }}
-{{- end }}
-{{- $_ := set $svcValues "kind" "Service" }}
-{{- include "elcicd-common.apiObjectHeader" . }}
+  {{- if or ($svcValues.prometheus).port $.Values.usePrometheus }}
+    {{- include "elcicd-kubernetes.prometheusAnnotations" . }}
+  {{- end }}
+  {{- if or $svcValues.threeScalePort $.Values.use3Scale }}
+    {{- include "elcicd-kubernetes.3ScaleAnnotations" . }}
+    {{- $_ := set $svcValues "labels" ($svcValues.labels  | default dict) }}
+    {{- $_ := set $svcValues.labels "discovery.3scale.net" true }}
+  {{- end }}
+  {{- $_ := set $svcValues "kind" "Service" }}
+  {{- include "elcicd-common.apiObjectHeader" . }}
 spec:
   selector:
     elcicd.io/selector: {{ include "elcicd-common.elcicdLabels" . }}
@@ -180,11 +181,11 @@ spec:
     {{ $key }}: {{ $value }}
     {{- end }}
   ports:
-  {{- if and (or ($svcValues.service).ports $svcValues.ports) $svcValues.port }}
+  {{- if and $svcValues.ports $svcValues.port }}
     {{- fail "A Service cannot define both port and ports values!" }}
   {{- end }}
-  {{- if or $svcValues.ports ($svcValues.service).ports }}
-    {{- (($svcValues.service).ports | default $svcValues.ports) | toYaml | nindent 2 }}
+  {{- if $svcValues.ports }}
+    {{- $svcValues.ports | toYaml | nindent 2 }}
   {{- else }}
   - name: {{ $svcValues.objName }}-port
     port: {{ $svcValues.port | default $.Values.elCicdDefaults.port }}

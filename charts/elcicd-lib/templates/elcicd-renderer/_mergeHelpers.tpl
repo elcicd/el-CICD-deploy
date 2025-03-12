@@ -41,45 +41,45 @@
     Merged results are contained in destElCicdDefs.
 */}}
 {{- define "elcicd-renderer.mergeElCicdDefs" }}
-  {{- $ := index . 0 }}
-  {{- $elCicdDefsMap := index . 1 }}
-  {{- $destElCicdDefs := index . 2 }}
-  {{- $baseObjName := index . 3 }}
-  {{- $objName := index . 4 }}
+  {{- $ := get . "$" }}
+  {{- $elCicdDefsMap := get . "elCicdDefsMap" }}
+  {{- $destElCicdDefs := get . "destElCicdDefs" }}
+  {{- $baseObjName := get . "baseObjName" }}
+  {{- $objName := get . "objName" }}
 
   {{- range $profile := $.Values.elCicdProfiles }}
     {{- if not (regexMatch $.Values.__EC_PROFILE_REGEX $profile) }}
       {{- fail (printf "profile \"%s\" does match regex naming requirements, \"%s\"" $profile $.Values.__EC_PROFILE_REGEX) }}
     {{- end }}
     {{- $profileDefs := get $elCicdDefsMap (printf "elCicdDefs-%s" $profile) }}
-    {{- include "elcicd-renderer.deepCopyDict" (list $profileDefs $destElCicdDefs) }}
+    {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $profileDefs "destDict" $destElCicdDefs) }}
   {{- end }}
 
   {{- if ne $baseObjName $objName }}
     {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s" $baseObjName) }}
-    {{- include "elcicd-renderer.deepCopyDict" (list $baseObjNameDefs $destElCicdDefs) }}
+    {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $baseObjNameDefs "destDict" $destElCicdDefs) }}
   {{- end }}
 
   {{- if $objName }}
     {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s" $objName) }}
-    {{- include "elcicd-renderer.deepCopyDict" (list $objNameDefs $destElCicdDefs) }}
+    {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $objNameDefs "destDict" $destElCicdDefs) }}
   {{- end }}
 
   {{- range $profile := $elCicdDefsMap.elCicdProfiles }}
     {{- if ne $baseObjName $objName }}
       {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $profile $baseObjName) }}
-      {{- include "elcicd-renderer.deepCopyDict" (list $baseObjNameDefs $destElCicdDefs) }}
+      {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $baseObjNameDefs "destDict" $destElCicdDefs) }}
 
       {{- $baseObjNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $baseObjName $profile) }}
-      {{- include "elcicd-renderer.deepCopyDict" (list $baseObjNameDefs $destElCicdDefs) }}
+      {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $baseObjNameDefs "destDict" $destElCicdDefs) }}
     {{- end }}
 
     {{- if $objName }}
       {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $profile $objName) }}
-      {{- include "elcicd-renderer.deepCopyDict" (list $objNameDefs $destElCicdDefs) }}
+      {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $objNameDefs "destDict" $destElCicdDefs) }}
 
       {{- $objNameDefs := get $elCicdDefsMap (printf "elCicdDefs-%s-%s" $objName $profile) }}
-      {{- include "elcicd-renderer.deepCopyDict" (list $objNameDefs $destElCicdDefs) }}
+      {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $objNameDefs "destDict" $destElCicdDefs) }}
     {{- end }}
   {{- end }}
 {{- end }}
@@ -102,14 +102,14 @@
   NOTE: This template was created because of potential anamolies with Helm's deepcopy.  Will need to revisit in the future.
 */}}
 {{- define "elcicd-renderer.deepCopyDict" }}
-  {{- $srcDict := index . 0 }}
-  {{- $destDict := index . 1 }}
+  {{- $srcDict := get . "srcDict" }}
+  {{- $destDict := get . "destDict" }}
 
   {{- if $srcDict }}
     {{- range $key, $value := $srcDict }}
       {{- if (kindIs "map" $value) }}
         {{- $newValue := dict }}
-        {{- include "elcicd-renderer.deepCopyDict" (list $value $newValue) }}
+        {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $value "destDict" $newValue) }}
         {{- $value = $newValue }}
       {{- end }}
       {{- $_ := set $destDict $key ($value | default "") }}

@@ -158,8 +158,8 @@
   Skipped templates will be listed when the Chart has completed rendering.
 */}}
 {{- define "elcicd-renderer.filterTemplates" }}
-  {{- $ := index . 0 }}
-  {{- $templates := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $templates := get . "elCicdTemplates" }}
 
   {{- $_ := set $.Values "elCicdProfiles" ($.Values.elCicdProfiles | default list) }}
 
@@ -167,7 +167,7 @@
   {{- $skippedList := list }}
   {{- $resultKey := uuidv4 }}
   {{- range $template := $templates }}
-    {{- include "elcicd-renderer.processFilteringLists" (list $ $template $resultKey) }}
+    {{- include "elcicd-renderer.processFilteringLists" (dict "$" $ "elCicdTemplate" $template "resultKey" $resultKey) }}
 
     {{- $hasMatchingProfile := not $template.mustHaveAnyProfile }}
     {{- range $profile := $template.mustHaveAnyProfile }}
@@ -204,27 +204,37 @@
 {{- end }}
 
 {{- define "elcicd-renderer.processFilteringLists" }}
-  {{- $ := index . 0 }}
-  {{- $template := index . 1 }}
-  {{- $resultKey := index . 2 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
+  {{- $resultKey := get . "resultKey" }}
+
+  {{- $processValueArgs := (dict "$" $ "elCicdDefs" $.Values.elCicdDefs "resultKey" $resultKey) }}
 
   {{- $_ := set $template "mustHaveAnyProfile" ($template.mustHaveAnyProfile | default list) }}
-  {{- include "elcicd-renderer.processValue" (list $ $template.mustHaveAnyProfile $.Values.elCicdDefs list $resultKey) }}
+  {{- $_ := set $processValueArgs "value" $template.mustHaveAnyProfile }}
+  {{- $_ := set $processValueArgs "processedVarsList" list }}
+  {{- include "elcicd-renderer.processValue" $processValueArgs }}
   {{- $_ := set $template "mustHaveAnyProfile" (get $.Values.__EC_RESULT_DICT $resultKey) }}
   {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 
   {{- $_ := set $template "mustNotHaveAnyProfile" ($template.mustNotHaveAnyProfile | default list) }}
-  {{- include "elcicd-renderer.processValue" (list $ $template.mustNotHaveAnyProfile $.Values.elCicdDefs list $resultKey) }}
+  {{- $_ := set $processValueArgs "value" $template.mustNotHaveAnyProfile }}
+  {{- $_ := set $processValueArgs "processedVarsList" list }}
+  {{- include "elcicd-renderer.processValue" $processValueArgs }}
   {{- $_ := set $template "mustNotHaveAnyProfile" (get $.Values.__EC_RESULT_DICT $resultKey) }}
   {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 
   {{- $_ := set $template "mustHaveEveryProfile" ($template.mustHaveEveryProfile | default list) }}
-  {{- include "elcicd-renderer.processValue" (list $ $template.mustHaveEveryProfile $.Values.elCicdDefs list $resultKey) }}
+  {{- $_ := set $processValueArgs "value" $template.mustHaveEveryProfile }}
+  {{- $_ := set $processValueArgs "processedVarsList" list }}
+  {{- include "elcicd-renderer.processValue" $processValueArgs }}
   {{- $_ := set $template "mustHaveEveryProfile" (get $.Values.__EC_RESULT_DICT $resultKey) }}
   {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 
   {{- $_ := set $template "mustNotHaveEveryProfile" ($template.mustNotHaveEveryProfile | default list) }}
-  {{- include "elcicd-renderer.processValue" (list $ $template.mustNotHaveEveryProfile $.Values.elCicdDefs list $resultKey) }}
+  {{- $_ := set $processValueArgs "value" $template.mustNotHaveEveryProfile }}
+  {{- $_ := set $processValueArgs "processedVarsList" list }}
+  {{- include "elcicd-renderer.processValue" $processValueArgs }}
   {{- $_ := set $template "mustNotHaveEveryProfile" (get $.Values.__EC_RESULT_DICT $resultKey) }}
   {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 {{- end }}

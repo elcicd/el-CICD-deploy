@@ -20,8 +20,8 @@
 General k8s selector definition.
 */}}
 {{- define "elcicd-kubernetes.labelSelector" }}
-{{- $ := index . 0 }}
-{{- $template := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $template := get . "elCicdTemplate" }}
 selector:
   matchExpressions:
   - key: elcicd.io/selector
@@ -47,11 +47,11 @@ Defines the basic structure of a jobTemplate and the keys under it.
     [template]:
 */}}
 {{- define "elcicd-kubernetes.jobTemplate" }}
-{{- $ := index . 0 }}
-{{- $jobValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $jobValues := get . "elCicdTemplate" }}
 
-{{- include "elcicd-common.metadata" . }}
-{{- include "elcicd-kubernetes.jobSpec" . }}
+  {{- include "elcicd-common.metadata" . }}
+  {{- include "elcicd-kubernetes.jobSpec" . }}
 {{- end }}
 
 {{/*
@@ -62,9 +62,9 @@ Defines the basic structure of a jobTemplate and the keys under it.
   PARAMETERS LIST:
     . -> should always be root of chart
     $jobValues -> elCicd template values
-  
+
   ======================================
-  
+
   DEFAULT KEYS
   [spec]:
     [template]:
@@ -78,19 +78,19 @@ Defines the basic structure of a jobTemplate and the keys under it.
         restartPolicy -> "Never"
         suspend
         ttlSecondsAfterFinished
-        
+
   "elcicd-kubernetes.podTemplate"
   [spec]:
     [template]:
       [spec]:
-      
+
 Defines the spec.template portion of a Job or JobTemplate (CronJob).
 
-  
+
 */}}
 {{- define "elcicd-kubernetes.jobSpec" }}
-{{- $ := index . 0 }}
-{{- $jobValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $jobValues := get . "elCicdTemplate" }}
 spec:
   {{- $whiteList := list "activeDeadlineSeconds"
                          "backoffLimit"
@@ -101,10 +101,11 @@ spec:
                          "podFailurePolicy"
                          "suspend"
                          "ttlSecondsAfterFinished" }}
-  {{- include "elcicd-common.outputToYaml" (list $ $jobValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $jobValues "whiteList" $whiteList) }}
   template:
-    {{- $_ := set $jobValues "restartPolicy" ($jobValues.restartPolicy | default "Never") }}
-    {{- include "elcicd-kubernetes.podTemplate" (list $ $jobValues false) | indent 4 }}
+  {{- $_ := set $jobValues "restartPolicy" ($jobValues.restartPolicy | default "Never") }}
+  {{- $args := dict "$" $ "elCicdTemplate" $jobValues }}
+  {{- include "elcicd-kubernetes.podTemplate" $args | indent 4 }}
 {{- end }}
 
 {{/*
@@ -127,9 +128,9 @@ spec:
   initContainers
   securityContext
   useLegacyPodSecurityContextDefault [NOTE: in case of running in older version of k8s]
-  
+
   ======================================
-  
+
   DEFAULT KEYS
     activeDeadlineSeconds
     affinity
@@ -162,17 +163,49 @@ spec:
     tolerations
     topologySpreadConstraints
     volumes
-  
+
   ======================================
-    
+
   Generates a PodTemplate.  Used by CronJobs, Deployments, StatefulSets, Pods, and Jobs.
 */}}
 {{- define "elcicd-kubernetes.podTemplate" }}
-{{- $ := index . 0 }}
-{{- $podValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $podValues := get . "elCicdTemplate" }}
 
-{{- include "elcicd-common.metadata" . }}
+  {{- include "elcicd-common.metadata" . }}
 spec:
+  {{- if or $podValues.containers (not (eq $podValues.templateName "podTemplate")) }}
+  containers:
+    {{- $containers := prepend ($podValues.containers | default list) $podValues }}
+    {{- include "elcicd-kubernetes.containers" (dict "$" $ "podValues" $podValues "containers" $containers) | trim | nindent 2 }}
+  {{- end }}
+  {{- if $podValues.ephemeralContainers }}
+  ephemeralContainers:
+    {{- include "elcicd-kubernetes.containers" (dict "$" $ "podValues" $podValues "containers" $podValues.ephemeralContainers) | trim | nindent 2 }}
+  {{- end }}
+  {{- $_ := set $podValues "imagePullSecrets" ($podValues.imagePullSecrets | default $.Values.elCicdDefaults.imagePullSecrets) }}
+  {{- $_ := set $podValues "imagePullSecret" ($podValues.imagePullSecret | default $.Values.elCicdDefaults.imagePullSecret) }}
+  {{- if $podValues.imagePullSecrets }}
+  imagePullSecrets: {{ $podValues.imagePullSecrets | toYaml | nindent 2 }}
+  {{- else if $podValues.imagePullSecret }}
+  imagePullSecrets:
+  - name: {{ $podValues.imagePullSecret }}
+  {{- else }}
+  imagePullSecrets: []
+  {{- end }}
+  {{- if $podValues.initContainers }}
+  initContainers:
+    {{- include "elcicd-kubernetes.containers" (dict "$" $ "podValues" $podValues "containers" $podValues.initContainers) | trim | nindent 2 }}
+  {{- end }}
+  {{- if $podValues.securityContext }}
+  securityContext: {{ $podValues.securityContext | toYaml | nindent 4 }}
+  {{- else }}
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  {{- end }}
+
   {{- $whiteList := list  "activeDeadlineSeconds"
                           "affinity"
                           "automountServiceAccountToken"
@@ -204,38 +237,7 @@ spec:
                           "tolerations"
                           "topologySpreadConstraints"
                           "volumes" }}
-  {{- if or $podValues.containers (not (eq $podValues.templateName "podTemplate")) }}
-  containers:
-    {{- $containers := prepend ($podValues.containers | default list) $podValues }}
-    {{- include "elcicd-kubernetes.containers" (list $ $podValues $containers) | trim | nindent 2 }}
-  {{- end }}
-  {{- if $podValues.ephemeralContainers }}
-  ephemeralContainers:
-    {{- include "elcicd-kubernetes.containers" (list $ $podValues.ephemeralContainers false) | trim | nindent 2 }}
-  {{- end }}
-  {{- $_ := set $podValues "imagePullSecrets" ($podValues.imagePullSecrets | default $.Values.elCicdDefaults.imagePullSecrets) }}
-  {{- $_ := set $podValues "imagePullSecret" ($podValues.imagePullSecret | default $.Values.elCicdDefaults.imagePullSecret) }}
-  {{- if $podValues.imagePullSecrets }}
-  imagePullSecrets: {{ $podValues.imagePullSecrets | toYaml | nindent 2 }}
-  {{- else if $podValues.imagePullSecret }}
-  imagePullSecrets:
-  - name: {{ $podValues.imagePullSecret }}
-  {{- else }}
-  imagePullSecrets: []
-  {{- end }}
-  {{- if $podValues.initContainers }}
-  initContainers:
-    {{- include "elcicd-kubernetes.containers" (list $ $podValues.initContainers false) | trim | nindent 2 }}
-  {{- end }}
-  {{- if $podValues.securityContext }}
-  securityContext: {{ $podValues.securityContext | toYaml | nindent 4 }}
-  {{- else }}
-  securityContext:
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-  {{- end }}
-  {{- include "elcicd-common.outputToYaml" (list $ $podValues $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $podValues "whiteList" $whiteList) }}
 {{- end }}
 
 {{/*
@@ -263,9 +265,9 @@ spec:
     securityContext
     projectedVolumes
     usePrometheus
-  
+
   ======================================
-  
+
   DEFAULT KEYS
     args
     command
@@ -283,21 +285,21 @@ spec:
     volumeDevices
     volumeMounts
     workingDir
-  
+
   ======================================
 
   el-CICD SUPPORTING TEMPLATES:
     "elcicd-kubernetes.envFrom"
     "elcicd-kubernetes.projectedVolumes"
-  
+
   ======================================
-    
+
   Generates a PodTemplate.  Used by CronJobs, Deployments, StatefulSets, Pods, and Jobs.
 */}}
 {{- define "elcicd-kubernetes.containers" }}
-{{- $ := index . 0 }}
-{{- $podValues := index . 1 }}
-{{- $containers := index . 2 }}
+{{- $ := get . "$" }}
+{{- $podValues := get . "podValues" }}
+{{- $containers := get . "containers" }}
 
 {{- $whiteList := list "args"
                        "command"
@@ -315,8 +317,10 @@ spec:
                        "volumeDevices"
                        "volumeMounts"
                        "workingDir" }}
-{{- range $containerVals := $containers }}
-- name: {{ $containerVals.name | default $containerVals.objName }}
+{{- range $index, $containerVals := $containers }}
+- {{ if or (eq $index 0) $containerVals.name -}}
+  name: {{ $containerVals.name | default $containerVals.objName }}
+  {{ end -}}
   image: {{ $containerVals.image | default $.Values.elCicdDefaults.image }}
   imagePullPolicy: {{ $containerVals.imagePullPolicy | default $.Values.elCicdDefaults.imagePullPolicy }}
   {{- if or $containerVals.ports $containerVals.port $.Values.elCicdDefaults.port $containerVals.usePrometheus }}
@@ -375,8 +379,8 @@ spec:
       - ALL
   {{- end }}
   {{- if $containerVals.projectedVolumes }}
-    {{- include "elcicd-kubernetes.projectedVolumes" (list $ $podValues $containerVals) }}
+    {{- include "elcicd-kubernetes.projectedVolumes" (dict "$" $ "podValues" $podValues "containerVals" $containerVals) }}
   {{- end }}
-  {{- include "elcicd-common.outputToYaml" (list $ $containerVals $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $podValues "whiteList" $whiteList) }}
 {{- end }}
 {{- end }}

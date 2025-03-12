@@ -55,8 +55,9 @@ Service Prometheus Annotations definition.  Add the following annotations:
   prometheus.io/scrape -> .Values.elCicdDefaults.scrape
 */}}
 {{- define "elcicd-kubernetes.prometheusAnnotations" }}
-  {{- $ := index . 0 }}
-  {{- $svcValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $svcValues := get . "elCicdTemplate" }}
+
   {{- $_ := set $svcValues "annotations" ($svcValues.annotations | default dict) }}
 
   {{- if or ($svcValues.prometheus).path $.Values.elCicdDefaults.prometheusPath }}
@@ -84,8 +85,9 @@ Service Prometheus 3Scale definition.  Adds the following annotations:
   discovery.3scale.net/scheme -> .Values.elCicdDefaults.3ScalePath
 */}}
 {{- define "elcicd-kubernetes.3ScaleAnnotations" }}
-  {{- $ := index . 0 }}
-  {{- $svcValues := index . 1 }}
+  {{- $ := get . "$" }}
+  {{- $svcValues := get . "elCicdTemplate" }}
+
   {{- $_ := set $svcValues "annotations" ($svcValues.annotations | default dict) }}
   {{- $_ := set $svcValues.annotations "discovery.3scale.net/path" ($svcValues.threeScale.port | default $svcValues.port | default $.Values.elCicdDefaults.port) }}
   {{- $_ := set $svcValues.annotations "discovery.3scale.net/port" ($svcValues.threeScale.path | default (get $.Values.elCicdDefaults "3ScalePath")) }}
