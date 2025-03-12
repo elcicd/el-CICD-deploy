@@ -152,7 +152,7 @@
 # renderPreprocessedValues: true
     {{- $_ := unset $.Values "renderPreprocessedValues" }}
     {{- $_ := unset $.Values.global "renderPreprocessedValues" }}
-    {{- $.Values | toYaml }}
+    {{- $.Values | toYaml | nindent 0 }}
   {{- else }}
     {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME" (now | date "Mon Jan 2 15:04:05 MST 2006") }}
     {{- $_ := set $.Values "__EC_DEPLOYMENT_TIME_NUM" (now | date "2006_01_02_15_04_05") }}
@@ -180,7 +180,7 @@
       {{- $_ := unset $.Values "renderProcessedValues" }}
       {{- $_ := unset $.Values.global "renderProcessedValues" }}
 # renderProcessedValues: true
-      {{ $.Values | toYaml }}
+      {{- $.Values | toYaml | nindent 0}}
     {{- else }}
       {{- range $template := $.Values.allTemplates }}
         {{- include "elcicd-renderer.renderTemplate" (dict "$" $ "elCicdTemplate" $template) }}
