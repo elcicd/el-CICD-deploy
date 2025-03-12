@@ -41,5 +41,5 @@ version: {{ semver (required "A valid chart version is required" $chartValues.ve
                          "appVersion"
                          "deprecated"
                          "annotations" }}
-  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $chartValues "whiteList" $whiteList) }}
+  {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $chartValues "whiteList" $whiteList "indent" 0) }}
 {{- end }}
