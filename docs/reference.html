@@ -561,28 +561,28 @@ pre.rouge .gs {
 <ul class="sectlevel1">
 <li><a href="#_overview">1. Overview</a>
 <ul class="sectlevel2">
-<li><a href="#_issues_with_helm_templates">1.1. Issues with Helm templates</a></li>
-<li><a href="#_a_better_way_to_create_templates_in_helm">1.2. A better way to create templates in Helm</a></li>
+<li><a href="#_issues_with_helm_templates">1.1. Issues With Helm Templates</a></li>
+<li><a href="#_a_better_way_to_create_templates_in_helm">1.2. A Better Way To Create Templates In Helm</a></li>
 </ul>
 </li>
-<li><a href="#_helm_repository_contents_and_usage">2. Helm Repository contents and usage</a></li>
-<li><a href="#_deployment_definitions">3. Deployment definitions</a>
+<li><a href="#_helm_repository_contents_and_usage">2. Helm Repository Contents And Usage</a></li>
+<li><a href="#_deployment_definitions">3. Deployment Definitions</a>
 <ul class="sectlevel2">
-<li><a href="#_basic_structure">3.1. Basic structure</a></li>
+<li><a href="#_basic_structure">3.1. Basic Structure</a></li>
 <li><a href="#_deployment_profiles">3.2. Deployment Profiles</a></li>
 <li><a href="#_templates">3.3. Templates</a>
 <ul class="sectlevel3">
-<li><a href="#_types_of_templates">3.3.1. Types of templates</a></li>
-<li><a href="#_helper_attributes">3.3.2. Helper attributes</a></li>
-<li><a href="#_built_in_templates">3.3.3. Built-in templates</a></li>
-<li><a href="#_free_form_templates">3.3.4. Free Form Templates</a></li>
+<li><a href="#_types_of_templates">3.3.1. Types Of Templates</a></li>
+<li><a href="#_helper_attributes">3.3.2. Helper Attributes</a></li>
+<li><a href="#_built_in_templates">3.3.3. Built-in Templates</a></li>
+<li><a href="#_free_form_templates">3.3.4. Free-Form Templates</a></li>
 </ul>
 </li>
 <li><a href="#_variables">3.4. Variables</a>
 <ul class="sectlevel3">
 <li><a href="#_defining">3.4.1. Defining</a></li>
 <li><a href="#_referencing">3.4.2. Referencing</a></li>
-<li><a href="#_built_in_variables">3.4.3. Built-in variables</a></li>
+<li><a href="#_built_in_variables">3.4.3. Built-in Variables</a></li>
 <li><a href="#_scoping">3.4.4. Scoping</a></li>
 <li><a href="#_overriding">3.4.5. Overriding</a></li>
 </ul>
@@ -592,25 +592,43 @@ pre.rouge .gs {
 <li><a href="#_rendering_process_overview">4. Rendering Process Overview</a></li>
 <li><a href="#_specialized_utilities">5. Specialized Utilities</a>
 <ul class="sectlevel2">
-<li><a href="#_projectedvolumes_by_labels">5.1. projectedVolumes by labels</a></li>
+<li><a href="#_projectedvolumes_by_labels">5.1. projectedVolumes By Labels</a></li>
 <li><a href="#_copyresources">5.2. copyResources</a></li>
 </ul>
 </li>
-<li><a href="#_debugging_utilities">6. Debugging utilities</a></li>
-<li><a href="#_unconventional_use_cases">7. Unconventional use-cases</a>
+<li><a href="#_debugging_utilities">6. Debugging Utilities</a></li>
+<li><a href="#_unconventional_use_cases">7. Unconventional Use-Cases</a>
 <ul class="sectlevel2">
-<li><a href="#_third_party_helm_charts">7.1. Third-party Helm charts</a></li>
+<li><a href="#_third_party_helm_charts">7.1. Third-party Helm Charts</a></li>
 <li><a href="#_kustomize">7.2. Kustomize</a></li>
 </ul>
 </li>
-<li><a href="#_el_cicd_chart_reference">8. el-CICD Chart Reference</a>
+<li><a href="#_extending_el_cicd_chart">8. Extending el-CICD Chart</a></li>
+<li><a href="#_el_cicd_chart_reference">9. el-CICD Chart Reference</a>
 <ul class="sectlevel2">
-<li><a href="#_glossary">8.1. Glossary</a></li>
-<li><a href="#_keywords">8.2. Keywords</a></li>
-<li><a href="#_built_in_variables_2">8.3. Built-in Variables</a></li>
-<li><a href="#_built_in_defaults">8.4. Built-in Defaults</a></li>
-<li><a href="#_default_template_helper_attributes">8.5. Default Template Helper Attributes</a></li>
-<li><a href="#_built_in_templates_2">8.6. Built-in Templates</a></li>
+<li><a href="#_glossary">9.1. Glossary</a></li>
+<li><a href="#_keywords">9.2. Keywords</a></li>
+<li><a href="#_built_in_deployment_definition_variables">9.3. Built-In Deployment Definition Variables</a></li>
+<li><a href="#_built_in_defaults">9.4. Built-In Defaults</a></li>
+<li><a href="#_standard_helper_attributes">9.5. Standard Helper Attributes</a>
+<ul class="sectlevel3">
+<li><a href="#_must">9.5.1. must*</a></li>
+</ul>
+</li>
+<li><a href="#_built_in_templates_2">9.6. Built-in Templates</a>
+<ul class="sectlevel3">
+<li><a href="#_kubernetes_authentication_resources">9.6.1. Kubernetes Authentication Resources</a></li>
+<li><a href="#_kubernetes_authorization_resources">9.6.2. Kubernetes Authorization Resources</a></li>
+<li><a href="#_kubernetes_cluster_resources">9.6.3. Kubernetes Cluster Resources</a></li>
+<li><a href="#_kubernetes_config_and_storage_resources">9.6.4. Kubernetes Config and Storage Resources</a></li>
+<li><a href="#_el_cicd_chart_resources">9.6.5. el-CICD Chart Resources</a></li>
+<li><a href="#_kubernetes_policy_resources">9.6.6. Kubernetes Policy Resources</a></li>
+<li><a href="#_kubernetes_service_resources">9.6.7. Kubernetes Service Resources</a></li>
+<li><a href="#_general_tool_resources">9.6.8. General Tool Resources</a></li>
+<li><a href="#_kubernetes_workload_helper_resources">9.6.9. Kubernetes Workload Helper Resources</a></li>
+<li><a href="#_kubernetes_workload_resources">9.6.10. Kubernetes Workload Resources</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -641,35 +659,54 @@ pre.rouge .gs {
 <h2 id="_overview">1. Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Helm is an excellent package management tool for deploying to Kubernetes, but it falls short when it comes to defining Kubernetes manifests through its templates.  Creating templates in Helm can be difficult to learn and master, has no support for Kubernetes resources, and it provides no support and is a poor tool for configuration management.</p>
+<p>Helm is an excellent package management tool for deploying to Kubernetes, but it falls short when it comes to templating Kubernetes manifests.  Creating templates in Helm can be difficult to learn and master, and it has no support for Kubernetes resources or configuration management.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For the remainder of this document and unless otherwise explicitly noted, "templates" will refer only to el-CICD Chart templates, and <strong>NOT</strong> Helm templates.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
-<h3 id="_issues_with_helm_templates">1.1. Issues with Helm templates</h3>
+<h3 id="_issues_with_helm_templates">1.1. Issues With Helm Templates</h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Verbose</dt>
 <dd>
-<p>Helm/Go templates and associated values files are verbose, and assume a good understanding of the Kubernetes resources required when creating templates.  Multiple copies of the same resource type with varying structural content can require multiple copies of the same, verbose boilerplate, because reuse of YAML is not directly supported, either.</p>
+<p>Helm/Go templates and associated values files are verbose, and a good understanding of the Kubernetes resources is required when creating templates.  Multiple copies of the same resource type with varying structural content can require multiple copies of the same, verbose template boilerplate, because reuse of YAML is not directly supported, too.</p>
 </dd>
 <dt class="hdlist1">Obtuse</dt>
 <dd>
-<p>Helm/Go Template syntax and the supporting Sprig library is not very user friendly, which can be a steep learning curve even for experienced developers.</p>
+<p>Go Template syntax (everything between the double-brackets) and the supporting Sprig library is not very user friendly, but it&#8217;s required knowledge to understand and modify Helm templates.</p>
 </dd>
-<dt class="hdlist1">Brittle</dt>
+</dl>
+</div>
+<div class="paragraph">
+<p>Values used to render the chart are defined in files separate from Helm templates, and structured far differently, which can make understanding what will rendered difficult.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">No configuration management</dt>
 <dd>
-<p>Configuration management isn&#8217;t supported by Helm.  If structural changes are needed depending on the deployment context, charts can require significant rework to support each environment and/or configuration.</p>
+<p>Configuration management is not supported by Helm.  Defining charts that can adapts across even a narrowly defined set of different deployments can be challenging.</p>
 </dd>
 <dt class="hdlist1">It&#8217;s code</dt>
 <dd>
-<p>Helm templates are code.  This means Helm charts need to be tested as if they are software, and any changes to the templates in chart also require testing.  This testing is separate from whatever they are meant to deploy.</p>
+<p>Helm templates are code; it constitutes a separate application.  This means Helm charts need to be tested in isolation from the application they are meant to deploy.  Helm charts acknowledge this by supporting a <a href="https://helm.sh/docs/topics/chart_tests/">built-in testing framework</a>.</p>
 </dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_a_better_way_to_create_templates_in_helm">1.2. A better way to create templates in Helm</h3>
+<h3 id="_a_better_way_to_create_templates_in_helm">1.2. A Better Way To Create Templates In Helm</h3>
 <div class="paragraph">
-<p>el-CICD Chart is a 100% compatible Helm chart that does away with the need for Go templates and replaces it with a much simpler and&#8201;&#8212;&#8201;in some cases&#8201;&#8212;&#8201;more flexible alternative for defining deployments to Kubernetes.  No other tool is required other than Helm, and el-CICD Chart only uses strict YAML for defining it&#8217;s deployment definitions.  The goal is to make sure there is no need to ever define a Helm/Go template again, and turn Helm into an effective YAML templating tool.</p>
+<p>el-CICD Chart is a 100% compatible Helm chart that does away with the need for Go templates and replaces it with a much simpler and&#8201;&#8212;&#8201;in some cases&#8201;&#8212;&#8201;more flexible alternative for defining Kubernetes deployment manifests.  No other tool is required other than Helm, and el-CICD Chart only uses strict YAML for defining it&#8217;s deployment definitions.  The goal is to make sure there is no need to ever define a Helm/Go template again, and make creating Helm compatible templates easier much easier.</p>
 </div>
 <div class="paragraph">
 <p>With el-CICD Chart values.yaml files have the following features:</p>
@@ -690,18 +727,18 @@ pre.rouge .gs {
 </dd>
 <dt class="hdlist1">Deployment profiles</dt>
 <dd>
-<p>Define <em>deployment profiles</em>, which allow multiple definitions of the same resources to be quickly defined in the same values.yaml file.</p>
+<p>Define <em>deployment profiles</em>, which makes defining multiple definitions of the same resource in the same values.yaml file.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Adding these easy to use features to Helm&#8217;s values.yaml files significantly reduces the amount of boilerplate necessary to define Kubernetes deployments, as well as significantly reducing the learning curve needed to write them.</p>
+<p>Adding these easy to use features to Helm&#8217;s values.yaml files significantly reduces the amount of boilerplate necessary to define Kubernetes deployment manifests, as well as significantly reducing the learning curve needed to write them.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_helm_repository_contents_and_usage">2. Helm Repository contents and usage</h2>
+<h2 id="_helm_repository_contents_and_usage">2. Helm Repository Contents And Usage</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>el-CICD Chart as a project is made up of two charts, a <a href="https://helm.sh/docs/topics/library_charts/">Helm library chart</a> and an application chart:</p>
@@ -742,7 +779,7 @@ $ helm repo update
 </ul>
 </div>
 <div class="paragraph">
-<p>Because library charts cannot render anything by definition, the application chart is provided as a convenience chart that merely references the library chart as a dependency so that end users aren&#8217;t required to create their own charts.</p>
+<p>Because library charts cannot render anything by definition, the application chart is provided as a convenience chart that references the library chart as a dependency so that end users aren&#8217;t required to create their own charts.</p>
 </div>
 <div class="paragraph">
 <p>GitHub pages is the current hosting platform for the charts.  The charts is also provided from GitHub&#8217;s OCI registry, but Helm must be authenticated with GitHub before attempting to use this method:</p>
@@ -753,46 +790,54 @@ $ helm repo update
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deployment_definitions">3. Deployment definitions</h2>
+<h2 id="_deployment_definitions">3. Deployment Definitions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In el-CICD Chart, a collection of one or more <a href="https://helm.sh/docs/chart_template_guide/values_files/">Helm values.yaml files</a> defining a deployment will be referred to as a <strong><em>deployment definition</em></strong>.  These are the only files required to be written by the end user for deploying to Kubernetes when used in conjunction with Helm and el-CICD Chart.  It was a fundamental requirement when designing el-CICD Chart that it remain 100% compatible with Helm, and only requiring values.yaml files for use was how the requirement was met.</p>
 </div>
 <div class="paragraph">
-<p>A deployment definition consists of el-CICD Chart templates for defining what is rendered through Helm, variables for defining any reusable data the templates need, and deployment profiles to support different configurations among the same templates.  el-CICD Chart adds built-in Kubernetes resource definitions with reasonable default values in order to further reduce boilerplate.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-For the remainder of this document, "templates" will refer only to el-CICD Chart templates, and <strong>NOT</strong> Helm templates.
-</td>
-</tr>
-</table>
+<p>A deployment definition consists of el-CICD Chart templates for defining what is rendered through Helm, el-CICD variables for defining any reusable data the templates need, and el-CICD deployment profiles to support different configurations among the same templates.  el-CICD Chart adds built-in Kubernetes resource definitions with reasonable default values in order to further reduce boilerplate.</p>
 </div>
 <div class="sect2">
-<h3 id="_basic_structure">3.1. Basic structure</h3>
+<h3 id="_basic_structure">3.1. Basic Structure</h3>
 <div class="paragraph">
-<p>The basic structure of an el-CICD Chart deployment definition is as follows:</p>
+<p>The basic structure of an el-CICD Chart deployment definition in a values.yaml file is as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-</pre></td><td class="code"><pre>elCicdDefs(-<em>&lt;unique identifier 1&gt;</em>)(-<em>&lt;unique identifier 2&gt;</em>): <i class="conum" data-value="1"></i><b>(1)</b>
-  &lt;SOME_VARIABLE_NAME&gt;: &lt;some-value&gt;
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="code"><pre>elCicdDefs:  <i class="conum" data-value="1"></i><b>(1)</b>
   ...
 
-elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-value="2"></i><b>(2)</b>
-- template(Name): &lt;built-in-template-name&gt;
+elCicdDefs-&lt;profile or object name&gt;<em>: <i class="conum" data-value="1"></i><b>(1)</b>
+  ...
+
+elCicdDefs-</em>&lt;object name&gt;<em>-</em>&lt;profile&gt;<em>: <i class="conum" data-value="1"></i><b>(1)</b>
+  ...
+
+elCicdDefs-</em>&lt;profile&gt;<em>-</em>&lt;object name&gt;<em>: <i class="conum" data-value="1"></i><b>(1)</b>
+  ...
+
+elCicdTemplates: <i class="conum" data-value="2"></i><b>(2)</b>
+  ...
+
+elCicdTemplates-</em>&lt;unique identifier&gt;__: <i class="conum" data-value="2"></i><b>(2)</b>
   ...
 </pre></td></tr></tbody></table></code></pre>
 </div>
@@ -801,63 +846,11 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>elCicdDefs</code> or <code>elCicdDefs-*</code> are maps of variables and their values.
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Variables can be any valid YAML string.</p>
-</li>
-<li>
-<p>Variable values can be any valid YAML type.</p>
-</li>
-<li>
-<p>Variables can incorporate other variable references within them.</p>
-</li>
-<li>
-<p>Can have optional unique identifiers defined after the <code>elCicdDefs-</code> prefix.</p>
-<div class="olist lowerroman">
-<ol class="lowerroman" type="i">
-<li>
-<p>Refers to an object name and/or a deployment profile.</p>
-</li>
-<li>
-<p>Only one of each is allowed.</p>
-</li>
-<li>
-<p>Each must follow their naming requirements or they will be ignored.</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div></td>
+<td><code>elCicdDefs(-*)</code> maps define  el-CICD Chart variables.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><code>elCicdTemplates</code> or <code>elCicdTemplates-*</code> are lists of el-CICD Chart templates.
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Templates can be either built-in el-CICD Chart templates referenced by name (templateName), or are expressed as the complete YAML to be rendered (template).</p>
-</li>
-<li>
-<p>Variables can be referenced within templates.</p>
-</li>
-<li>
-<p>Can have optional unique identifier defined after the <code>elCicdTemplates-</code> prefix.</p>
-<div class="olist lowerroman">
-<ol class="lowerroman" type="i">
-<li>
-<p>Ensures each list of templates is not overwritten when Helm merges the values.yaml files.  They have no other meaning.</p>
-</li>
-<li>
-<p>All <code>elCicdTemplates-*</code> lists will be concatenated to <code>elCicdTemplates</code> before processing.</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div></td>
+<td><code>elCicdTemplates(-*)</code> lists define el-CICD Chart templates.</td>
 </tr>
 </table>
 </div>
@@ -868,7 +861,7 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 <p><strong><em>Deployment profiles</em></strong> are the primary mechanism by which el-CICD Chart supports configuration management within a deployment definition.</p>
 </div>
 <div class="paragraph">
-<p>Deployment profiles are generally defined on the command line in a list using the <code>elCicdProfiles</code> identifier:</p>
+<p>Deployment profiles are typically defined dynamically on the command line in a list using the <code>elCicdProfiles</code> identifier:</p>
 </div>
 <div class="paragraph">
 <p><code>helm upgrade --install --set elCicdProfiles='{&lt;PROFILE_1&gt;,&#8230;&#8203;,&lt;PROFILE_N&gt;}' &#8230;&#8203;</code></p>
@@ -880,13 +873,13 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 <p><code><span class="A-Z0-9">(?:[._][A-Z0-9]</span>)*</code></p>
 </div>
 <div class="paragraph">
-<p>Profile naming standards were defined so that they could never be confused with a <code>objName</code>.</p>
+<p>Profile naming standards were defined to disambiguate them from <code>objNames</code>.</p>
 </div>
 <div class="paragraph">
-<p>A profile is said to be <strong><em>active</em></strong> during the rendering of a deployment definition if included in the <code>elCicdProfiles</code> list.</p>
+<p>A profile is said to be an <strong><em>active profile</em></strong> during the rendering of a deployment definition if included in the <code>elCicdProfiles</code> list.</p>
 </div>
 <div class="paragraph">
-<p>Within a deployment definition, profiles are defined as either a discriminator for a map of <a href="#_variables">variables</a> or as condition for <a href="#_template_filtering">filtering templates</a>.  Which deployment profiles are active at rendering will determine which values are ultimately assigned to variables and whether a template is rendered or not.  This is how a single deployment definition can easily hold multiple different configurations.</p>
+<p>Within a deployment definition, profiles are defined as either a discriminator for a map of <a href="#_variables">variables</a> or as condition for <a href="#_discriminator_lists">filtering templates</a>.  Which deployment profiles are active at rendering will determine which values are ultimately assigned to variables and whether a template is rendered or not.  This is how a single deployment definition can easily hold multiple different configurations.</p>
 </div>
 <div class="paragraph">
 <p>The default deployment profile is an empty list; i.e. no active profiles.  If more than one profile is active at a time, precedence is defined as least to greatest in the order of the list per Helm convention.</p>
@@ -895,7 +888,7 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 <div class="sect2">
 <h3 id="_templates">3.3. Templates</h3>
 <div class="paragraph">
-<p>el-CICD Chart templates are defined in one or more lists starting with <code>elCicdTemplates</code>:</p>
+<p>el-CICD Chart templates are defined in one or more lists starting with the prefix <code>elCicdTemplates</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -905,11 +898,11 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 4
 5
 6
-</pre></td><td class="code"><pre>elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-value="1"></i><b>(1)</b>
+</pre></td><td class="code"><pre>elCicdTemplates-<em>&lt;unique identifier&gt;</em>: <i class="conum" data-value="1"></i><b>(1)</b>
 - templateName: &lt;built-in-template-name&gt;  <i class="conum" data-value="2"></i><b>(2)</b>
   ...
 - template: <i class="conum" data-value="3"></i><b>(3)</b>
-    &lt;full-yaml-definition&gt;
+    &lt;full-YAML-definition&gt;
   ...
 </pre></td></tr></tbody></table></code></pre>
 </div>
@@ -918,11 +911,11 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>List of el-CICD Chart templates.</td>
+<td>List of el-CICD Chart templates. The unique identifier suffix is optional.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>el-CICD Chart template using a built-in helper template.</td>
+<td>el-CICD Chart template using a built-in template.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -931,7 +924,7 @@ elCicdTemplates(-<em>&lt;unique identifier&gt;</em>): <i class="conum" data-valu
 </table>
 </div>
 <div class="paragraph">
-<p>In order to support multiple values.yaml files for flexibility and modularity when rendering deployment definitions with Helm, multiple <code>elCicdTemplates</code> lists may be defined using the optional unique identifier suffixes.  The order the lists and templates is irrelevant.  All <code>elCicdTemplates</code> lists will be concatenated before processing.  Each list name should be unique per deployment definitions, or the Helm rules for merging values.yaml will overwrite matching lists.  The text after <code>elCicdTemplates-</code> can be any valid YAML string.</p>
+<p>In order to support multiple values.yaml files for flexibility and modularity when rendering deployment definitions with Helm, multiple <code>elCicdTemplates</code> lists may be defined using the optional unique identifier suffixes.  The order the lists and templates is irrelevant.  All <code>elCicdTemplates</code> lists will be concatenated before processing.  Each list name should be unique per deployment definitions, or the Helm rules for merging values.yaml will overwrite lists with matching names.  The text after <code>elCicdTemplates-</code> can be any valid YAML string.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example deployment definition with three <code>elCicdTemplates</code> lists</div>
@@ -956,15 +949,15 @@ elCicdTemplates-my-secondList:
 - templateName: &lt;built-in-template-name&gt;
   ...
 
-elCicdTemplates-WITH_YAML:
+elCicdTemplates-WITH_YA%ML:
 - template:
-    &lt;full-yaml-definition&gt;
+    &lt;full-YAML-definition&gt;
   ...
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_types_of_templates">3.3.1. Types of templates</h4>
+<h4 id="_types_of_templates">3.3.1. Types Of Templates</h4>
 <div class="paragraph">
 <p>el-CICD Chart supports two types of templates:</p>
 </div>
@@ -978,35 +971,53 @@ elCicdTemplates-WITH_YAML:
 <p>Includes many predefined defaults and helper attributes to make rendering resources simpler and less verbose.</p>
 </li>
 <li>
-<p>Requested with the <a href="#_built_in_templates"><code>templateName</code></a> key to use a single built-in or <a href="#_compound_built_in_templates"><code>templateNames</code></a> to use more than.</p>
+<p>Defined using the <a href="#_built_in_templates"><code>templateName</code></a> key to use a single built-in or <a href="#_compound_built_in_templates"><code>templateNames</code></a> for compound definitions.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><strong>Free form templates</strong>: Templates of plain YAML that define all or most of resource to be rendered.</p>
-<div class="paragraph">
-<p>Free form templates use the <code>template</code> key to define a full YAML template.</p>
+<p><strong>free-form templates</strong>: Templates of plain YAML that define all or most of resource to be rendered.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Defined using the <code>template</code> key.</p>
+</li>
+</ul>
 </div>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_helper_attributes">3.3.2. Helper attributes</h4>
+<h4 id="_helper_attributes">3.3.2. Helper Attributes</h4>
 <div class="paragraph">
-<p>All el-CICD templates, whether free form or built-in, have a number of helper attributes.  All attributes that are not <code>template</code>,</p>
+<p>All el-CICD templates, whether free-form or built-in, have a number of helper attributes.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code><strong>kubeObject</strong></code>: Default value is <code>true</code>.  Set to <code>false</code> to disable generating the Kubernetes object fields such as <code>apiVersion</code> or the <code>metadata</code> map.  Only applies to free form templates.</p>
+<p><code><strong>kubeObject</strong></code>: Default value is <code>true</code>.  Set to <code>false</code> to disable generating the Kubernetes object fields such as <code>apiVersion</code> or the <code>metadata</code> map.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Only applies to free-form templates.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p><code><strong>objName</strong></code>: Directly corresponds to <code>metadata.name</code>.</p>
 </li>
 <li>
-<p><code><strong>apiVersion</strong></code>: Directly corresponds to <code>apiVersion</code>.  <strong>Only define this value for a built-in template if a different version than the default is required.</strong></p>
+<p><code><strong>apiVersion</strong></code>: Directly corresponds to <code>apiVersion</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Only define this value for a built-in template if a different version than the default is required.</strong></p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p><code><strong>namespace</strong></code>: Directly corresponds to <code>metadata.namespace</code>.</p>
@@ -1020,12 +1031,12 @@ elCicdTemplates-WITH_YAML:
 </ul>
 </div>
 <div class="paragraph">
-<p>Free form templates will use the helper attributes as alternative convenience fields.  They will be ignored if defined directly in the <code>template</code> map.</p>
+<p>free-form templates will use the helper attributes as alternative convenience fields.  They will be ignored if defined directly in the <code>template</code> map.</p>
 </div>
 <div class="sect4">
-<h5 id="_template_filtering">3.3.2.1. Template filtering</h5>
+<h5 id="_discriminator_lists">3.3.2.1. Discriminator Lists</h5>
 <div class="paragraph">
-<p><strong><em>Filters</em></strong> are special types of helper attributes the determine whether a template is rendered or not.  Each is a list of one or more profiles.  The act of defining an element in any of the lists below is one way in which profiles are defined in deployment definitions.</p>
+<p><strong><em>Discriminator</em></strong> profile lists are helper attributes that define whether a template is rendered or not based on what deployment profiles are active during rendering.  The available discriminator lists are:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1044,7 +1055,7 @@ elCicdTemplates-WITH_YAML:
 </ul>
 </div>
 <div class="paragraph">
-<p>Each of the above may be used in combination with each other, and their order of precedence is not defined.</p>
+<p>Each of the above may be used in combination with each other, and their order of precedence is undefined.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example of template filtering</div>
@@ -1065,39 +1076,21 @@ elCicdTemplates-WITH_YAML:
 14
 15
 16
-17
-18
-19
-20
-21
-22
-23
-24
-25
 </pre></td><td class="code"><pre>elCicdTemplates:
 - templateName: &lt;built-in-template-name&gt;
   objName: obj-1
   mustHaveAnyProfile: [PROFILE_1, PROFILE_2] <i class="conum" data-value="1"></i><b>(1)</b>
-  ...
-
-elCicdTemplates-with-yaml:
-- mustHaveEveryProfile: [PROFILE_1, PROFILE_2] <i class="conum" data-value="2"></i><b>(2)</b>
-  objName: obj-2
+- objName: obj-2
+  mustHaveEveryProfile: [PROFILE_1, PROFILE_2] <i class="conum" data-value="2"></i><b>(2)</b>
   template:
-    &lt;full-yaml-definition&gt;
-  ...
-
-elCicdTemplates-second-list:
-- templateName: &lt;built-in-template-name&gt;
+    &lt;full-YAML-definition&gt;
+- templateNames: [&lt;built-in-template-name1, built-in-template-name2&gt;]
   objName: obj-3
   mustNotHaveAnyProfile: [PROFILE_1, PROFILE_2] <i class="conum" data-value="3"></i><b>(3)</b>
-  ...
-
-elCicdTemplates-with-yaml:
-- mustNotHaveEveryProfile: [PROFILE_1, PROFILE_2, PROFILE_3] <i class="conum" data-value="4"></i><b>(4)</b>
-  objName: obj-4
+- objName: obj-4
+  mustNotHaveEveryProfile: [PROFILE_1, PROFILE_2, PROFILE_3] <i class="conum" data-value="4"></i><b>(4)</b>
   template:
-    &lt;full-yaml-definition&gt;
+    &lt;full-YAML-definition&gt;
   ...
 </pre></td></tr></tbody></table></code></pre>
 </div>
@@ -1109,19 +1102,19 @@ elCicdTemplates-with-yaml:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>mustHaveAnyProfile</code> requires either PROFILE_1 or PROFILE_3 to be active, so <code>obj-1</code> <strong>IS</strong> rendered.</td>
+<td><code>mustHaveAnyProfile</code> requires <strong>either</strong> PROFILE_1 or PROFILE_3 to be active, so <code>obj-1</code> <strong>IS</strong> rendered.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><code>mustHaveEveryProfile</code> requires both PROFILE_1 and PROFILE_2 to be active, so <code>obj-2</code> is <strong>NOT</strong> rendered.</td>
+<td><code>mustHaveEveryProfile</code> requires <strong>both</strong> PROFILE_1 and PROFILE_2 to be active, so <code>obj-2</code> is <strong>NOT</strong> rendered.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><code>mustNotHaveAnyProfile</code> requires neither PROFILE_1 or PROFILE_2 to be active, , so <code>obj-3</code> is <strong>NOT</strong> rendered.</td>
+<td><code>mustNotHaveAnyProfile</code> requires <strong>neither</strong> PROFILE_1 or PROFILE_2 to be active, , so <code>obj-3</code> is <strong>NOT</strong> rendered.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><code>mustNotHaveEveryProfile</code> requires PROFILE_1, PROFILE_2, and PROFILE_3 to not all be active at the same time, so <code>obj-4</code> <strong>IS</strong> rendered.</td>
+<td><code>mustNotHaveEveryProfile</code> requires PROFILE_1, PROFILE_2, and PROFILE_3 to <strong>not all be active at the same time</strong>, so <code>obj-4</code> <strong>IS</strong> rendered.</td>
 </tr>
 </table>
 </div>
@@ -1129,7 +1122,7 @@ elCicdTemplates-with-yaml:
 <div class="sect4">
 <h5 id="_matrices">3.3.2.2. Matrices</h5>
 <div class="paragraph">
-<p><strong><em>Matrices</em></strong> are a special kind of helper attribute.  Matrices are lists of strings, and el-CICD Chart will generate a <em>copy of the template</em> for each element in the matrix.</p>
+<p><strong><em>Matrices</em></strong> are a special kind of helper attribute.  Matrices are lists of strings, and el-CICD Chart before final rendering <em>it will be replaced by a copy of the template</em> for each element in the matrix.</p>
 </div>
 <div class="paragraph">
 <p>el-CICD Chart currently only supports two matrix keys:</p>
@@ -1170,8 +1163,8 @@ elCicdTemplates-with-yaml:
 - templateName: &lt;built-in-template-name&gt;
   objNames: [foo, bar]  <i class="conum" data-value="1"></i><b>(1)</b>
   namespaces: [zip, zap] <i class="conum" data-value="2"></i><b>(2)</b>
-  objName: $&lt;&gt;-static-text-$&lt;#&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-  namespace: $&lt;&gt;-some-text-$&lt;#&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+  objName: $&lt;&gt;-static-name-$&lt;#&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+  namespace: $&lt;&gt;-some-namepace-$&lt;#&gt; <i class="conum" data-value="3"></i><b>(3)</b>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
@@ -1179,27 +1172,15 @@ elCicdTemplates-with-yaml:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Will generate two copies of this template for rendering; this template will then be ignored.</td>
+<td>Will generate two copies of this template for rendering; the original template will then be ignored.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Will generate two copies of the template, one for each namespace.
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-When using the <code>namespaces</code> matrix, you must explicitly list the release namespace, <code>$&lt;HELM_RELEASE_NAMESPACE&gt;</code>, in order to deploy a copy there.
-</td>
-</tr>
-</table>
-</div></td>
+<td>Will generate two copies of the template, one for each namespace.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Pattern to generate final name and namespace; e.g. &lt;objNames element&gt;-static-text-&lt;index of element&gt;</td>
+<td>Pattern to generate final name and namespace; e.g. &lt;objNames element&gt;-static-text-&lt;index of matrix element&gt;</td>
 </tr>
 </table>
 </div>
@@ -1227,29 +1208,29 @@ When using the <code>namespaces</code> matrix, you must explicitly list the rele
 16
 </pre></td><td class="code"><pre>elCicdTemplates:
 - templateName: &lt;built-in-template-name&gt;
-  objName: foo-static-text-1
-  namespace: zip-some-text-1
+  objName: foo-static-name-1
+  namespace: zip-some-namespace-1
 
 - templateName: &lt;built-in-template-name&gt;
-  objName: bar-static-text-2
-  namespace: zip-some-text-1
+  objName: bar-static-name-2
+  namespace: zip-some-namespace-1
 
 - templateName: &lt;built-in-template-name&gt;
-  objName: foo-static-text-1
-  namespace: zap-some-text-2
+  objName: foo-static-name-1
+  namespace: zap-some-namespace-2
 
 - templateName: &lt;built-in-template-name&gt;
-  objName: bar-static-text-2
-  namespace: zap-some-text-2
+  objName: bar-static-name-2
+  namespace: zap-some-namespace-2
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_built_in_templates">3.3.3. Built-in templates</h4>
+<h4 id="_built_in_templates">3.3.3. Built-in Templates</h4>
 <div class="paragraph">
-<p>el-CICD Chart defines a number of pre-defined templates in order to further reduce end-user boilerplate, and these are referred to as <strong><em>built-in templates</em></strong>.  By convention, the names of built-in templates reflect the Kubernetes object they are to render; e.g. <code>deployment</code> for a Deployment and <code>horizontalPodAutoscaler</code> for a HorizontalPodAutoscaler.  Built-in templates are requested via the <code>templateName</code> key.</p>
+<p>el-CICD Chart defines a number of pre-defined templates in order to further reduce excess boilerplate YAML, and these are referred to as <strong><em>built-in templates</em></strong>.  By convention, the names of built-in templates reflect the Kubernetes object they are to render; e.g. <code>deployment</code> for a Deployment and <code>horizontalPodAutoscaler</code> for a HorizontalPodAutoscaler.  Built-in templates are requested via the <code>templateName</code> key.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example using the ConfigMap built-in template</div>
@@ -1260,13 +1241,9 @@ When using the <code>namespaces</code> matrix, you must explicitly list the rele
 4
 5
 6
-7
-8
 </pre></td><td class="code"><pre>elCicdTemplates:
 - templateName: configMap <i class="conum" data-value="1"></i><b>(1)</b>
   objName: my-configmap <i class="conum" data-value="2"></i><b>(2)</b>
-  labels: <i class="conum" data-value="3"></i><b>(3)</b>
-    my-label: my-app
   data: <i class="conum" data-value="4"></i><b>(4)</b>
     a-key: a-value
     b-key: b-value
@@ -1285,10 +1262,6 @@ When using the <code>namespaces</code> matrix, you must explicitly list the rele
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Helper attribute rendered to <code>metadata.labels</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>Helper attribute rendered to <code>configmap.data</code>.</td>
 </tr>
 </table>
@@ -1306,15 +1279,11 @@ When using the <code>namespaces</code> matrix, you must explicitly list the rele
 5
 6
 7
-8
-9
 </pre></td><td class="code"><pre>apiVersion: v1 <i class="conum" data-value="1"></i><b>(1)</b>
 kind: ConfigMap <i class="conum" data-value="1"></i><b>(1)</b>
 metadata: <i class="conum" data-value="1"></i><b>(1)</b>
   name: my-configmap  <i class="conum" data-value="2"></i><b>(2)</b>
-  labels:
-    my-label: my-app  <i class="conum" data-value="3"></i><b>(3)</b>
-data:  <i class="conum" data-value="4"></i><b>(4)</b>
+data:  <i class="conum" data-value="3"></i><b>(3)</b>
   a-key: a-value
   b-key: b-value
 </pre></td></tr></tbody></table></code></pre>
@@ -1332,16 +1301,12 @@ data:  <i class="conum" data-value="4"></i><b>(4)</b>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><code>metadata.labels</code> generated from <code>labels</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td><code>data</code> map generated from <code>data</code> helper attribute.</td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Some built-in templates only include helper attributes that reflect their normal attributes, such as the ConfigMap example above, and are small conveniences for reducing unnecessary boilerplate.  Some built-ins have a few extra helper attributes that significantly reduce the amount a boilerplate needed to define a complete object.  See the <a href="#_built_in_templates_2">Built-in Templates</a> section for a complete list of all built-ins and their helper attributes.</p>
+<p>Some built-in templates only include helper attributes that reflect their normal attributes, such as the ConfigMap example above, and are small conveniences for reducing unnecessary boilerplate.  Some built-ins have a few extra helper attributes that significantly reduce the amount a boilerplate needed to define a complete object.  See the <a href="#_built_in_templates">Built-in Templates</a> section for a complete list of all built-ins and their helper attributes.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1350,15 +1315,15 @@ data:  <i class="conum" data-value="4"></i><b>(4)</b>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The current set of built-in templates focus almost exclusively on application deployments and supporting Kubernetes resources.  It is hoped that el-CICD Chart will be able to fully support all Kubernetes resources in the future, as well as some popular Custom Resource Definitions.
+The current set of built-in templates focus almost exclusively on application deployments and supporting Kubernetes resources.  It is hoped that el-CICD Chart will be able to fully support all Kubernetes resources in the future, as well as some of the more widely used Custom Resource Definitions.
 </td>
 </tr>
 </table>
 </div>
 <div class="sect4">
-<h5 id="_compound_built_in_templates">3.3.3.1. Compound Built-in templates</h5>
+<h5 id="_compound_built_in_templates">3.3.3.1. Compound Built-in Templates</h5>
 <div class="paragraph">
-<p>In order to further reduce excess boilerplate, el-CICD Chart allows defining <strong><em>compound built-in templates</em></strong>.  Compound built-in templates combine more than one built-in template definitions into a single definition with each individual built-in re-using any shared helper attributes.  Compound built-in templates are defined as a list of one more strings under the <code>templateNames</code> key.</p>
+<p>In order to further reduce excess boilerplate YAML, el-CICD Chart allows defining <strong><em>compound built-in templates</em></strong>.  Compound built-in templates combine more than one built-in template definitions into a single definition with each individual built-in re-using any shared helper attributes.  Compound built-in templates are defined as a list of one more strings under the <code>templateNames</code> key.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example Deployment, Service, and Ingress as individual built-in templates</div>
@@ -1483,17 +1448,17 @@ For more concise compound templates, take advantage of the fact that YAML is a s
 </div>
 </div>
 <div class="paragraph">
-<p>The above is the minimal amount that&#8217;s needed in a deployment definition for a simple deployment of an application to a Kubernetes cluster using el-CICD Chart.  Add the <code>ingress</code> built-in to the list and define the <code>host</code> helper attribute if the application is accessible from outside the cluster.</p>
+<p>The above is the minimal amount that&#8217;s needed in a deployment definition for a simple deployment of an application to a Kubernetes cluster using el-CICD Chart.  Add the <code>ingress</code> built-in to the list and define the <code>host</code> helper attribute if the application is meant to be accessed from outside the cluster.</p>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_free_form_templates">3.3.4. Free Form Templates</h4>
+<h4 id="_free_form_templates">3.3.4. Free-Form Templates</h4>
 <div class="paragraph">
-<p>If more complex template definitions are required, or a built-in template doesn&#8217;t exist for a resource, a <strong><em>free form template</em></strong> can be defined. Free form templates are just fully defined YAML definitions of resources.  While more verbose than using the simpler, built-in templates, Kubernetes is infinitely extensible with <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">Custom Resource Definitions</a> (CRD&#8217;s), and having free form templates means that no matter what CRD&#8217;s are introduced now or in the future, el-CICD Chart deployment definitions can adapt without requiring the user to resort to creating new Helm/Go templates.</p>
+<p>If more complex template definitions are required, or a built-in template doesn&#8217;t exist for a resource, a <strong><em>free-form template</em></strong> can be defined. free-form templates are just fully defined YAML definitions of resources.  While more verbose than using the simpler, built-in templates, Kubernetes is infinitely extensible with <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">Custom Resource Definitions</a> (CRD&#8217;s), and having free-form templates means that no matter what CRD&#8217;s are introduced now or in the future, el-CICD Chart deployment definitions can adapt without requiring the user to resort to creating new Helm/Go templates.</p>
 </div>
 <div class="paragraph">
-<p>For example, <a href="https://argo-cd.readthedocs.io/en/stable/">ArgoCD</a> is a popular GitOps solution for managing deployments to Kubernetes cluster, but el-CICD Chart currently has no built-in templates to support an ArgoCD <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications">Application</a>, but with free form templates this isn&#8217;t an issue:</p>
+<p>For example, <a href="https://argo-cd.readthedocs.io/en/stable/">ArgoCD</a> is a popular GitOps solution for managing deployments to Kubernetes clusters, and el-CICD Chart currently has no built-in templates to support an ArgoCD <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications">Application</a>, but with free-form templates this isn&#8217;t an issue:</p>
 </div>
 <div class="listingblock">
 <div class="title">Defining an ArgoCD Application for my-app</div>
@@ -1534,7 +1499,7 @@ For more concise compound templates, take advantage of the fact that YAML is a s
 </div>
 </div>
 <div class="paragraph">
-<p>Built-in templates are a convenience, and not a necessity.  The advantage of free form templates are that they can still use all other features of el-CICD Chart, which means easier templating and configuration management.  Anywhere a built-in template is used a YAML template can be substituted, and vice versa if a built-in template exists for the object being rendered; however, if a <code>templateName</code> or <code>templateNames</code> are defined, <code>template</code> will be ignored.</p>
+<p>Built-in templates are a convenience, and not a necessity.  The advantage of free-form templates are that they can still use all other features of el-CICD Chart (e.g. <a href="#_matrices">matrices</a>), which means easier templating and configuration management.  Anywhere a built-in template is used a free-form template can be substituted, and vice versa if a built-in template exists for the object being rendered; however, if a <code>templateName</code> or <code>templateNames</code> helper attribute are defined, <code>template</code> will be ignored.</p>
 </div>
 </div>
 </div>
@@ -1547,7 +1512,7 @@ Helm/Go templates and processed to produce resource definitions for deployment t
 <div class="sect3">
 <h4 id="_defining">3.4.1. Defining</h4>
 <div class="paragraph">
-<p>Variables are defined in YAML maps named starting with <code>elCicdDefs</code> either at the root of a document or within a <a href="#_templates">template</a>.  Variables may contain any any valid YAML syntax and type.</p>
+<p>Variables are defined in YAML maps named starting with <code>elCicdDefs</code> either at the root of a document or within an el-CICD Chart <a href="#_templates">template</a> definition.  Variables may contain any any valid YAML syntax and type.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example el-CICD variable definitions by type</div>
@@ -1673,13 +1638,13 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 <p>Variables are referenced with the following syntax:</p>
 </div>
 <div class="paragraph">
-<p><code>$&lt;&#8230;&#8203;&gt;</code></p>
+<p><code>$&lt;VARIABLE_NAME&gt;</code></p>
 </div>
 <div class="paragraph">
 <p>Escaping a variable performed with a backslash:</p>
 </div>
 <div class="paragraph">
-<p><code>\$&lt;&#8230;&#8203;&gt;</code></p>
+<p><code>\$&lt;VARIABLE_NAME&gt;</code></p>
 </div>
 <div class="paragraph">
 <p>This notation was chosen for two reasons:</p>
@@ -1687,7 +1652,7 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 <div class="ulist">
 <ul>
 <li>
-<p>No scripting languages use it, making the templating of scripts in other languages within an deployment definition straightforward.</p>
+<p>No scripting languages use it, making the templating of scripts in other languages within a deployment definition straightforward.</p>
 </li>
 <li>
 <p>Variables and their references are valid YAML both as keys in maps and as values in strings, maps, and lists.  Helm requires that values.yaml files (and therefore el-CICD Chart deployment definitions) be valid YAML.</p>
@@ -1721,9 +1686,9 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 
   ESCAPED_VARIABLE: \$&lt;LITERAL_VALUE&gt; <i class="conum" data-value="4"></i><b>(4)</b>
 
+  $&lt;$&lt;FOO&gt;$&lt;BAR&gt;&gt;: dynamic-$&lt;FOO&gt;$&lt;BAR&gt;-value <i class="conum" data-value="5"></i><b>(5)</b>
   FOO: foo
   BAR: bar
-  $&lt;$&lt;FOO&gt;$&lt;BAR&gt;&gt;: dynamic-$&lt;FOO&gt;$&lt;BAR&gt;-value <i class="conum" data-value="5"></i><b>(5)</b>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
@@ -1747,18 +1712,18 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td><code>FOO</code> and <code>BAR</code> are dynamically used to define the variable <code>foobar</code>, with a value of <code>dynamic-foobar-value</code></td>
+<td><code>FOO</code> and <code>BAR</code> are dynamically used to define the variable <code>foobar</code>, with a value of <code>dynamic-foobar-value</code>.</td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_built_in_variables">3.4.3. Built-in variables</h4>
+<h4 id="_built_in_variables">3.4.3. Built-in Variables</h4>
 <div class="paragraph">
 <p>el-CICD Chart defines a number of built-in variables for use in templates, Helm and template.</p>
 </div>
 <div class="sect4">
-<h5 id="_helm_built_in_variables">3.4.3.1. Helm built-in variables</h5>
+<h5 id="_helm_built_in_variables">3.4.3.1. Helm Built-In Variables</h5>
 <div class="paragraph">
 <p>el-CICD Chart has a few built-in variables derived from <a href="https://helm.sh/docs/chart_template_guide/builtin_objects/">Helm&#8217;s built-in objects</a>.</p>
 </div>
@@ -1788,7 +1753,7 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect4">
-<h5 id="_template_built_in_variables">3.4.3.2. Template built-in variables</h5>
+<h5 id="_template_built_in_variables">3.4.3.2. Template Built-In Variables</h5>
 <div class="paragraph">
 <p>Each template has it&#8217;s own set of built-in variables set when being processed for use in deployment definitions:</p>
 </div>
@@ -1833,20 +1798,20 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 <div class="sect3">
 <h4 id="_scoping">3.4.4. Scoping</h4>
 <div class="paragraph">
-<p><code>elCicdDefs</code> map definitions have two different scopes:</p>
+<p><code>elCicdDefs</code> variables have two different scopes:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><strong>Deployment</strong></p>
 <div class="paragraph">
-<p>All <code>elCicdDefs</code> maps defined outside of templates; i.e. defined from the root of the deployment definition.  Covers every template in the deployment definition.</p>
+<p>All <code>elCicdDefs</code> variables defined outside of any el-CICD Chart templates; i.e. defined under <code>elCicdDefs</code> maps at the root of the deployment definition.  Every el-CICD template in the deployment definition may reference these variables.</p>
 </div>
 </li>
 <li>
 <p><strong>Template</strong></p>
 <div class="paragraph">
-<p>All <code>elCicdDefs</code> maps defined under a specific template.</p>
+<p>All <code>elCicdDefs</code> variables defined under a specific el-CICD Chart template.  Only the specific el-CICD template may use these variables.</p>
 </div>
 </li>
 </ul>
@@ -1865,15 +1830,15 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
  9
 10
 </pre></td><td class="code"><pre>elCicdDefs: <i class="conum" data-value="1"></i><b>(1)</b>
-  VAR: a-var
+  VAR: outer
 
 elCicdTemplates:
 - templateName: &lt;template name&gt;
-  objName: first-template
+  objName: $&lt;VAR&gt;$&lt;INNER_VAR&gt;
   elCicdDefs: <i class="conum" data-value="2"></i><b>(2)</b>
-    INNER_VAR: an-inner-var
+    INNER_VAR: inner
 - templateName: &lt;template name&gt;
-  objName: second-template
+  objName: $&lt;VAR&gt;$&lt;INNER_VAR&gt;
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
@@ -1881,11 +1846,11 @@ elCicdTemplates:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>elCicdDefs</code> defined at the root of the deployment definition are said to have <strong><em>deployment scope </em></strong>.  <code>VAR</code> can be used by <code>first-template</code> and <code>second-template</code>.</td>
+<td><code>elCicdDefs</code> defined at the root of the deployment definition are said to have <strong><em>deployment scope</em></strong>.  <code>VAR</code> can be used by <code>first-template</code> and <code>second-template</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><code>INNER_VAR</code> is only available to the <code>first-template</code>, because its <code>elCicdDefs</code> map is defined directly under it.</td>
+<td><code>INNER_VAR</code> is only available to the <code>first-template</code>, because its <code>elCicdDefs</code> map is defined directly under it; therefore, the first template will be named <code>outerinner</code>, and the second <code>outer</code>.</td>
 </tr>
 </table>
 </div>
@@ -1893,7 +1858,7 @@ elCicdTemplates:
 <div class="sect3">
 <h4 id="_overriding">3.4.5. Overriding</h4>
 <div class="paragraph">
-<p>Variables may be overridden in el-CICD Chart by defining more specific`elCicdDefs` maps.  The types of <code>elCicdDefs</code> maps are:</p>
+<p>Variables may be defined or overridden in el-CICD Chart by defining more specific <code>elCicdDefs</code> maps.  The types of <code>elCicdDefs</code> maps are:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1912,7 +1877,7 @@ elCicdTemplates:
 <li>
 <p><strong>Profile</strong> and <strong>objName</strong></p>
 <div class="paragraph">
-<p><code>elCicdDefs-&lt;PROFILE_NAME&gt;-&lt;OBJ_NAME&gt;</code> or <code>elCicdDefs-&lt;OBJ_NAME&gt;-&lt;PROFILE_NAME&gt;</code> maps defined for a specific deployment profile and <code>objName</code>.  Only one <code>objName</code> and one profile may be named.</p>
+<p><code>elCicdDefs-&lt;PROFILE_NAME&gt;-&lt;OBJ_NAME&gt;</code> or <code>elCicdDefs-&lt;OBJ_NAME&gt;-&lt;PROFILE_NAME&gt;</code> maps defined for a specific deployment profile and <code>objName</code>.  Only one <code>objName</code> and/or profile may be used.</p>
 </div>
 </li>
 </ul>
@@ -1972,12 +1937,12 @@ elCicdDefs-obj-name-PROFILE: <i class="conum" data-value="4"></i><b>(4)</b>
 </table>
 </div>
 <div class="paragraph">
-<p>Every type of <code>elCicdDefs</code> maps may be defined for the deployment or a specific template.</p>
+<p>Each of these types of <code>elCicdDefs</code> maps may be defined at deployment or <strong><em>template scope</em></strong>.</p>
 </div>
 <div class="sect4">
-<h5 id="_order_of_precedence">3.4.5.1. Order of precedence</h5>
+<h5 id="_order_of_precedence">3.4.5.1. Order Of Precedence</h5>
 <div class="paragraph">
-<p>Order of precedence determines which <code>elCicdDefs</code> map determines the ultimate value of a variable if it is defined in multiple variable maps.</p>
+<p>Order of precedence determines as which <code>elCicdDefs</code> map determines the ultimate value of a variable if it is defined in multiple variable maps.</p>
 </div>
 <div class="paragraph">
 <p>From least to greatest:</p>
@@ -2102,7 +2067,7 @@ elCicdTemplates:
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-To null a variable out, define it with an empty value in a higher precedence <code>elCicdDefs</code> map.
+To null a variable out, define it as an empty value in the appropriate map.
 </td>
 </tr>
 </table>
@@ -2147,13 +2112,13 @@ To null a variable out, define it with an empty value in a higher precedence <co
 <li>
 <p><strong>Collect and Filter All Templates</strong></p>
 <div class="paragraph">
-<p><code>elCicdTemplate-*</code> lists are collected and concatenated to create an intermediate <code>elCicdTemplates</code> list.  <a href="#_template_filtering">Filter</a> this list based on the active profiles.</p>
+<p><code>elCicdTemplate-*</code> lists are collected and concatenated to create an intermediate <code>elCicdTemplates</code> list.  Templates are then removed if their <a href="#_discriminator_lists">discriminators</a> fail.</p>
 </div>
 </li>
 <li>
 <p><strong>Expand Matrixes:</strong></p>
 <div class="paragraph">
-<p><a href="#_matrices">Matrix</a> values and lists can be parameterized with variables; e.g. <code>namespaces: $&lt;NAMESPACE_LIST&gt;</code> or <code>objNames: [$&lt;FOO&gt;,$&lt;BAR&gt;]</code>.  Using the profiles-based <code>elCicdDefs</code> map, process the matrix variable references, and then generate all copies for any templates with matrices defined to create a final <code>elCicdTemplates</code> list.</p>
+<p><a href="#_matrices">Matrix</a> values and lists can be parameterized with variables; e.g. <code>namespaces: $&lt;NAMESPACE_LIST&gt;</code> or <code>objNames: [$&lt;FOO&gt;,$&lt;BAR&gt;]</code>.  Using the profiles-based <code>elCicdDefs</code> map, process the matrix variable references, and then generate copies for any templates with matrices defined to create a final <code>elCicdTemplates</code> list.  The original template with the matrix defined is discarded.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -2195,7 +2160,7 @@ To null a variable out, define it with an empty value in a higher precedence <co
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>If <code>templateName</code> or <code>templateNames</code> are defined, process the named templates.</p>
+<p>If <code>templateName</code> or <code>templateNames</code> are defined, process the named templates using the named built-in template(s) in the order they are defined.</p>
 </li>
 <li>
 <p>If <code>templateName</code> or <code>templateNames</code> are NOT defined, render the value of <code>template</code>.</p>
@@ -2206,7 +2171,7 @@ To null a variable out, define it with an empty value in a higher precedence <co
 <li>
 <p><strong>Output Final Metadata</strong></p>
 <div class="paragraph">
-<p>In YAML comments, output:</p>
+<p>As YAML comments, output:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2236,9 +2201,9 @@ To null a variable out, define it with an empty value in a higher precedence <co
 <p>el-CICD Chart has a some extra functionality built in to make creating deployment definitions easier, as well as enabling new means of defining deployment definitions for more dynamic deployments.</p>
 </div>
 <div class="sect2">
-<h3 id="_projectedvolumes_by_labels">5.1. projectedVolumes by labels</h3>
+<h3 id="_projectedvolumes_by_labels">5.1. projectedVolumes By Labels</h3>
 <div class="paragraph">
-<p>While Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a> support mounting ConfigMaps and Secrets as volumes, there are some limitations.  To address these limitations, Kubernetes added the concept of <a href="https://kubernetes.io/docs/concepts/storage/projected-volumes/">projected volumes</a>.  The advantage of Projected volumes is that several different resources&#8201;&#8212;&#8201;and not just ConfigMaps and Secrets&#8201;&#8212;&#8201;could be mounted to a single directly in a container.</p>
+<p>While Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a> support mounting ConfigMaps and Secrets as volumes, there are some limitations.  To address these limitations, Kubernetes added the concept of <a href="https://kubernetes.io/docs/concepts/storage/projected-volumes/">projected volumes</a>.  The advantage of Projected volumes is that several different resources&#8201;&#8212;&#8201;and not just ConfigMaps and Secrets&#8201;&#8212;&#8201;could be mounted to a single directory in a container.</p>
 </div>
 <div class="paragraph">
 <p>Unfortunately, like most tools associated with deploying to Kubernetes, the manifests for mounting Secrets and ConfigMaps, whether individually or in projected volumes, had to be statically declared; i.e. the deployment manifests had to know all the resources to be mounted as volumes beforehand.</p>
@@ -2246,7 +2211,7 @@ To null a variable out, define it with an empty value in a higher precedence <co
 <div class="paragraph">
 <p>In order to enable more dynamic behavior, el-CICD Chart implemented functionality that would mount a collection of ConfigMaps and/or Secrets into a projected volume by their labels.  Lists of labels can be provided, and the namespace of the Pod will be scanned for matching resources, all of which will be mounted into the container.  The values of the labels are not relevant to this functionality.  Only whether the label exists on the resource.</p>
 </div>
-<h4 id="_example_using_projectedvolumes_configmapsbylabels_for_job" class="discrete">Example using <code>projectedVolumes.configMapsByLabels</code> for Job</h4>
+<h4 id="_example_using_projectedvolumes_configmapsbylabels_for_job" class="discrete">Example Using <code>projectedVolumes.configMapsByLabels</code> For Job</h4>
 <div class="listingblock">
 <div class="title">ConfigMaps are deployed first:</div>
 <div class="content">
@@ -2383,7 +2348,7 @@ spec:
 <div class="sect2">
 <h3 id="_copyresources">5.2. copyResources</h3>
 <div class="paragraph">
-<p>Sometimes it makes sense to copy resources from one namespace to another.  From a design perspective, this is analogous to the prototype pattern.</p>
+<p>Sometimes it makes sense to copy resources from one namespace to another.  From a design perspective, this is analogous to the <a href="https://en.wikipedia.org/wiki/Prototype_pattern">prototype design pattern</a>.</p>
 </div>
 <div class="paragraph">
 <p>Example use cases:</p>
@@ -2391,7 +2356,7 @@ spec:
 <div class="ulist">
 <ul>
 <li>
-<p>A pull secret used by many or all applications on the cluster can be deployed in a master namespace.  It&#8217;s easier to copy the ConfigMap from the master namespace to the application namespaces than have every application manage its own copy directly.</p>
+<p>A pull secret used by many or all applications on the cluster can be deployed in a master namespace.  It&#8217;s easier to copy the Secret from the master namespace to the application namespaces than have every application manage its own copy directly.</p>
 </li>
 <li>
 <p>Similarly, a common set of configuration values is defined in a ConfigMap and deployed in a master namespace, and they are used by many or all applications on the cluster.  It&#8217;s easier to copy the ConfigMap from the master namespace to the application namespaces as needed than have every application manage its own copy directly.</p>
@@ -2399,7 +2364,7 @@ spec:
 </ul>
 </div>
 <div class="paragraph">
-<p>el-CICD Chart has implemented a utility helper template that will copy a resource from one namespace to any other.</p>
+<p>el-CICD Chart has implemented a utility built-in template that will copy a resource from one namespace to any other.</p>
 </div>
 <div class="listingblock">
 <div class="title"><code>copyResource</code> built-in template structure</div>
@@ -2424,7 +2389,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_debugging_utilities">6. Debugging utilities</h2>
+<h2 id="_debugging_utilities">6. Debugging Utilities</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>el-CICD Chart supports two utilities to help with debugging deployment definitions.</p>
@@ -2433,12 +2398,12 @@ spec:
 <dl>
 <dt class="hdlist1">renderPreprocessedValues</dt>
 <dd>
-<p>If true, output all merged values.yaml files as YAML and exit.  No el-CICD Chart processing takes place.  Templates will <strong>NOT</strong> be rendered to YAML.  Useful for inspecting how Helm merges multiple deployment definition files.</p>
+<p>If true, output all merged values.yaml files as YAML and exit.  No el-CICD Chart processing takes place.  Templates will <strong>NOT</strong> be rendered to YAML.  Useful for inspecting how Helm merges multiple deployment definition files, or creating a single el-CICD Chart values.yaml file from many values.yaml files.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p><code>helm template --set outputValuesYaml=true &#8230;&#8203;</code></p>
+<p><code>helm template --set renderPreprocessedValues=true &#8230;&#8203;</code></p>
 </div>
 <div class="dlist">
 <dl>
@@ -2446,7 +2411,7 @@ spec:
 <dd>
 <p>If true, output all values of a processed el-CICD Chart deployment definition as YAML and exit.  Includes all values belonging <code>elCicdTemplates</code> and <code>elCicdDefs</code> maps and the <code>elCicdProfiles</code> list.  Templates will <strong>NOT</strong> be rendered to YAML.  Useful for inspecting the results of a processed deployment definition before the templates are rendered.</p>
 <div class="paragraph">
-<p><code>helm template --set valuesYamlToStdOut=true &#8230;&#8203;</code></p>
+<p><code>helm template --set renderProcessedValues=true &#8230;&#8203;</code></p>
 </div>
 </dd>
 </dl>
@@ -2454,18 +2419,18 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_unconventional_use_cases">7. Unconventional use-cases</h2>
+<h2 id="_unconventional_use_cases">7. Unconventional Use-Cases</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Below are a just a few unconventional ways el-CICD Chart can be used.</p>
+<p>Below are a just a few unconventional use cases where el-CICD Chart can be used.</p>
 </div>
 <div class="sect2">
-<h3 id="_third_party_helm_charts">7.1. Third-party Helm charts</h3>
+<h3 id="_third_party_helm_charts">7.1. Third-party Helm Charts</h3>
 <div class="paragraph">
-<p>There are many applications that already Helm charts created for them, and rewriting them to use el-CICD Chart directly might not be possible or useful for a myriad of reasons.  So how can el-CICD Chart still be leveraged for configuration management?  The answer is to define a deployment definition that results in a values.yaml file and pipe it or post-render with a second Helm call to the other chart.</p>
+<p>There are many applications that already have Helm charts created for them, and rewriting them to use el-CICD Chart directly is not an effective use of time and resources.  So how can el-CICD Chart still be leveraged for configuration management?  The answer is to define a deployment definition that results in a values.yaml file compatible with the third-party chart, and pipe it or post-render it with a second Helm call using the target chart.</p>
 </div>
 <div class="listingblock">
-<div class="title">Example deployment definition for third-party Helm chart</div>
+<div class="title">Example deployment definition for third-party Helm chart, third-party-chart-values.yaml</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
  2
@@ -2478,10 +2443,6 @@ spec:
  9
 10
 11
-12
-13
-14
-15
 </pre></td><td class="code"><pre>elCicdDefs:
   SOME_3RD_PARTY_VALUES_YAML_VAR: a-value
 
@@ -2490,12 +2451,8 @@ elCicdDefs-SOME_PROFILE:
 
 elCicdTemplates:
 - kubeObject: false <i class="conum" data-value="1"></i><b>(1)</b>
-  objName: values-yaml-comp-1 <i class="conum" data-value="2"></i><b>(2)</b>
-  template: <i class="conum" data-value="3"></i><b>(3)</b>
-    ...
-- kubeObject: false <i class="conum" data-value="1"></i><b>(1)</b>
-  objName: values-yaml-comp-n <i class="conum" data-value="2"></i><b>(2)</b>
-  template: <i class="conum" data-value="3"></i><b>(3)</b>
+  template:
+    third-party-value: $&lt;SOME_3RD_PARTY_VALUES_YAML_VAR&gt;  <i class="conum" data-value="2"></i><b>(2)</b>
     ...
 </pre></td></tr></tbody></table></code></pre>
 </div>
@@ -2504,45 +2461,29 @@ elCicdTemplates:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Set <code>kubeObject</code> to false so el-CICD does not try and generate <code>apiVersion</code>, <code>kind</code>, and <code>metadata</code> fields.</td>
+<td>Set <code>kubeObject</code> to false so el-CICD does not automatically generate <code>apiVersion</code>, <code>kind</code>, and <code>metadata</code> fields.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Any number of values files can be defined in a single deployment definition.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Create a YAML template for the values.yaml files of the third-party chart.</td>
+<td>Create a YAML template for the values.yaml files of the third-party chart under the <code>template</code> key, and parameterize values as necessary</td>
 </tr>
 </table>
 </div>
 <div class="listingblock">
-<div class="title">Example deploy-to-helm.sh</div>
+<div class="title">Example deploying 3rd party chart</div>
 <div class="content">
 <pre>#!/bin/bash
-cat - &gt; third-party-chart-values.yaml
 
-helm upgrade --install -f third-party-chart-values.yaml third-party-release elcicd-charts/elcicd-chart</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Example using el-CICD Chart with a Helm <code>--post-renderer</code> to deploy third-party chart</div>
-<div class="content">
-<pre>helm template -f deployment-def.yaml --post-renderer deploy-to-helm.sh</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Example  el-CICD Chart with a pipe to deploy third-party chart</div>
-<div class="content">
-<pre>helm template -f deployment-def.yaml gen-values-file elcicd-charts/elcicd-chart | \
-  helm upgrade --install -f - third-party-release elcicd-charts/elcicd-chart</pre>
+helm template -f third-party-chart-values.yaml third-party-values-yaml elcicd-charts/elcicd-chart &gt; final-values.yaml
+
+helm upgrade --install -f final-values.yaml 3rd-party-deployment 3rd-party-charts/3rd-party-chart</pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_kustomize">7.2. Kustomize</h3>
 <div class="paragraph">
-<p>Helm is not good at some things that el-CICD Chart cannot fix on its own; e.g. labeling and/or annotating a random collection of Kubernetes resources.  Or patching resources, for that matter.  <a href="https://kustomize.io/">Kustomize</a> fills the gap in functionality that Helm or el-CICD Chart templates can&#8217;t address.</p>
+<p>Helm is not good at some things that el-CICD Chart cannot fix on its own; e.g. labeling and/or annotating an arbitrary collection of Kubernetes resources, oOr arbitrarily patching resources.  <a href="https://kustomize.io/">Kustomize</a> fills the gap in functionality that Helm in general or el-CICD Chart in particular can&#8217;t address.</p>
 </div>
 <div class="paragraph">
 <p><code>kustomization.yaml</code> files, though, are notoriously static in nature by design.  Using el-CICD Chart to create a template of a Kustomization in order to make the files dynamic (e.g. for a CICD system) is trivial.</p>
@@ -2583,11 +2524,11 @@ elCicdTemplates:
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>el-CICD Chart has a <code>kustomization</code> built-in template so that the normal headers don&#8217;t need to be defined.</td>
+<td>el-CICD Chart has a <code>kustomization</code> built-in template so that the boilerplate headers don&#8217;t need to be defined.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Create the Kustomization definition, and parameterize it where necessary.</td>
+<td>Create the Kustomization definition, and parameterize it as necessary.</td>
 </tr>
 </table>
 </div>
@@ -2625,42 +2566,2233 @@ kustomize build .
 <pre>helm upgrade --install -f deployment-def.yaml --post-renderer kustomize.sh my-app elcicd-charts/elcicd-chart</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>More information on using a Helm <code>--post-renderer</code> can be <a href="https://helm.sh/docs/topics/advanced/">found here</a>.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_el_cicd_chart_reference">8. el-CICD Chart Reference</h2>
+<h2 id="_extending_el_cicd_chart">8. Extending el-CICD Chart</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_el_cicd_chart_reference">9. el-CICD Chart Reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_glossary">8.1. Glossary</h3>
-
+<h3 id="_glossary">9.1. Glossary</h3>
+<div class="paragraph">
+<p>Terms used to help define certain concepts in el-CICD Chart.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Active profile</dt>
+<dd>
+<p>Any values defined in the <code>elCicdProfiles</code> list during rendering of an el-CICD Chart.</p>
+</dd>
+<dt class="hdlist1">Built-in template</dt>
+<dd>
+<p>Pre-defined el-CICD Chart Templates to help make creating deployment definitions.  Referenced using the <code>templateName</code> helper attribute on an el-CICD template definition.</p>
+</dd>
+<dt class="hdlist1">Compound built-in template</dt>
+<dd>
+<p>An el-CICD Chart template that uses multiple built in el-CICD Chart built-in templates.  Referenced using the <code>templateNames</code> helper attribute on an el-CICD template definition.  All values in the el-CICD Chart template are shared among the listed built-templates when rendering.</p>
+</dd>
+<dt class="hdlist1">Deployment definition</dt>
+<dd>
+<p>A collection of Helm values.yaml files for use specifically with an el-CICD Chart.</p>
+</dd>
+<dt class="hdlist1">Deployment profiles</dt>
+<dd>
+<p>List of strings values matching <code><span class="A-Z">(?:_[A-Z]</span>)<strong></code> assigned to <code>elCicdProfiles</code> the for use in a deployment definition. Profiles can be used as a rendering discriminator for el-CICD templates, or as an alternative set of variable definitions in an elCicdDefs-</strong> map.</p>
+</dd>
+<dt class="hdlist1">Deployment scope</dt>
+<dd>
+<p>Where an el-CICD Chart variable defined.  Can be either deployment scope, in which the variable is accessible to all templates, or template, in which the variable is accessible only to the specific el-CICD Chart template where it was defined.  Template scope variables always take precedence over deployment scope variables.</p>
+</dd>
+<dt class="hdlist1">Discriminator</dt>
+<dd>
+<p>Any deployment profile listed in under one of the following elCICD Chart Template properties:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code><strong>mustHaveAnyProfile</strong></code></p>
+</li>
+<li>
+<p><code><strong>mustHaveEveryProfile</strong></code></p>
+</li>
+<li>
+<p><code><strong>mustNotHaveAnyProfile</strong></code></p>
+</li>
+<li>
+<p><code><strong>mustNotHaveEveryProfile</strong></code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Matches of active profiles with the above lists determine whether or not an el-CICD Chart Template is rendered or not.</p>
+</div>
+</dd>
+<dt class="hdlist1">el-CICD Chart Variables</dt>
+<dd>
+<p>Keys defined under elCicdDefs maps in a deployment definition holding arbitrary YAML values.  Can be used to defined and/or reuse values in el-CICD templates.</p>
+</dd>
+<dt class="hdlist1">el-CICD Chart Templates</dt>
+<dd>
+<p>Member of a list under <code>elCicdTemplates</code> in a deployment definition.  Must contain either a <code>templateName</code> referencing a built-in template or a <code>template</code> attribute defining arbitrary YAML.</p>
+</dd>
+<dt class="hdlist1">free-form template</dt>
+<dd>
+<p>An el-CICD Chart template that does not use an el-CICD Chart template, but rather defined itself under the <code>template</code> helper attribute as arbitrary YAML.</p>
+</dd>
+<dt class="hdlist1">Helper attribute</dt>
+<dd>
+<p>Any attributes defined at the root of an el-CICD Chart template, which may or may not directly correlate to an attribute on the rendered resource.</p>
+</dd>
+<dt class="hdlist1">Matrices</dt>
+<dd>
+<p>Optional list of valid Kubernetes namespace (<code>namespaces</code>) or object resource (<code>objNames</code>) values defined per el-CICD Chart Template.  Each member of either list will result in a copy of the original template created and rendered for the particular namespace and/or name, and the original template ignored.</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_keywords">8.2. Keywords</h3>
-
+<h3 id="_keywords">9.2. Keywords</h3>
+<div class="paragraph">
+<p>Helm Chart <code>Values</code> settings defined for use in el-CICD Chart to help define deployment definitions.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">elCicdDefaults</dt>
+<dd>
+<p>Used for overriding el-CICD Chart <a href="#_built_in_defaults">pre-defined defaults</a>.</p>
+</dd>
+<dt class="hdlist1">elCicdDefs</dt>
+<dd>
+<p>Identifier of map for defining el-CICD Chart variables.</p>
+</dd>
+<dt class="hdlist1">elCicdProfiles</dt>
+<dd>
+<p>Identifier of list of strings for defining el-CICD Chart active profiles.</p>
+</dd>
+<dt class="hdlist1">elCicdTemplates</dt>
+<dd>
+<p>Identifier of map for defining el-CICD Chart templates.</p>
+</dd>
+<dt class="hdlist1">renderPreprocessedValues</dt>
+<dd>
+<p>Render the combined values.yaml files before el-CICD Chart processing.</p>
+</dd>
+<dt class="hdlist1">renderProcessedValues</dt>
+<dd>
+<p>Render the combined values.yaml files after el-CICD Chart processing; i.e the values.yaml file after all variables and other el-CICD Chart settings in the deployment definition have been processed, but before the chart has been rendered.</p>
+</dd>
+<dt class="hdlist1">usePrometheus</dt>
+<dd>
+<p>Render Prometheus annotations by default.  This value can be set at either the deployment or template scope (Container or Service definition).  Ignored if not rendering the Service or Container with built-in templates.</p>
+</dd>
+<dt class="hdlist1">use3Scale</dt>
+<dd>
+<p>Render 3Scale annotations by default.  This value can be set at either the deployment or template scope (Service definition).  Ignored if not rendering the Service with the built-in template.</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_built_in_variables_2">8.3. Built-in Variables</h3>
-
+<h3 id="_built_in_deployment_definition_variables">9.3. Built-In Deployment Definition Variables</h3>
+<div class="paragraph">
+<p>Built-in el-CICD Chart variables that can be used in defining other el-CICD Chart variables or within el-CICD Chart templates.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EL_CICD_DEPLOYMENT_TIME_NUM: numerical only time of deployment</p>
+</li>
+<li>
+<p>EL_CICD_DEPLOYMENT_TIME: human readable string time of deployment</p>
+</li>
+<li>
+<p>BASE_OBJ_NAME: Kubernetes object name as listed in <code>objNames</code> matrix, or <code>objName</code> if <code>objNames</code> is empty.</p>
+</li>
+<li>
+<p>OBJ_NAME: Kubernetes object name after value in <code>objNames</code> matrix is processed, or literal string value if directly set.</p>
+</li>
+<li>
+<p>BASE_NAME_SPACE: Kubernetes namespace name as listed in <code>namespaces</code> matrix, or <code>namespace</code> if <code>namespaces</code> is empty.</p>
+</li>
+<li>
+<p>NAME_SPACE: Kubernetes object name after value in <code>namespaces</code> matrix is processed, or literal string value if directly set.</p>
+</li>
+<li>
+<p>HELM_RELEASE_NAME: Helm release name.  Corresponds to <code>.Release.Name</code> in a Helm template.</p>
+</li>
+<li>
+<p>HELM_RELEASE_NAMESPACE: Namespace Helm chart is deployed to.  Corresponds to <code>.Release.Namespace</code> in a Helm template.</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_built_in_defaults">8.4. Built-in Defaults</h3>
-
+<h3 id="_built_in_defaults">9.4. Built-In Defaults</h3>
+<div class="paragraph">
+<p>Default values used by built in el-CICD Chart built-in templates if not otherwise defined.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">General Kubernetes objects defaults</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>annotations: empty dictionary</p>
+</li>
+<li>
+<p>labels: empty dictionary</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Deployment/Service/Ingress specific defaults</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>deploymentRevisionHistoryLimit: 0</p>
+</li>
+<li>
+<p>imagePullPolicy: "Always"</p>
+</li>
+<li>
+<p>port: 8080</p>
+</li>
+<li>
+<p>protocol: "TCP"</p>
+</li>
+<li>
+<p>ingressRulePath: "/"</p>
+</li>
+<li>
+<p>ingressRulePathType: "Prefix"</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Prometheus specific annotation defaults</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>prometheusPort: "9090"</p>
+</li>
+<li>
+<p>prometheusPath: "/metrics"</p>
+</li>
+<li>
+<p>prometheusScheme: "https"</p>
+</li>
+<li>
+<p>prometheusScrape: "false"</p>
+</li>
+<li>
+<p>prometheusProtocol: "TCP"</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">3Scale specific annotation defaults</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>3ScaleScheme:  "https"</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_default_template_helper_attributes">8.5. Default Template Helper Attributes</h3>
-
+<h3 id="_standard_helper_attributes">9.5. Standard Helper Attributes</h3>
+<div class="paragraph">
+<p>Default helper attributes all el-CICD templates, built-in or free-form, share.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">annotations</dt>
+<dd>
+<p>Kubernetes object annotations.  Maps directly to <code>metadata.annotations</code>.</p>
+</dd>
+<dt class="hdlist1">elCicdDefs-*</dt>
+<dd>
+<p>el-CICD variable maps.  Defines maps specific to an el-CICD template, and optional to a profile or <code>objName</code>.</p>
+</dd>
+<dt class="hdlist1">kubeObject</dt>
+<dd>
+<p>Unless otherwise defined for a particular el-CICD template, default value is true.  If false, the Kubernetes apiVersion and kind attributes, and the Kubernetes metadata section, el-CICD Chart will not attempt to render the metadata section.  In a free-form template, any of the above is defined, el-CICD will render it as-is without modification.  In practice, this also means the <code>annotations</code> and <code>labels</code> helper attributes are ignored.</p>
+</dd>
+<dt class="hdlist1">labels</dt>
+<dd>
+<p>Kubernetes object labels.  Maps directly to <code>metadata.labels</code>.</p>
+</dd>
+<dt class="hdlist1">objName</dt>
+<dd>
+<p>Fundamental identifier for an el-CICD template. Can be used in the following way:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the template represents a Kubernetes object, will map directly to <code>metadata.name</code>, otherwise, it is just a unique identifier.</p>
+</li>
+<li>
+<p>If <code>objNames</code> is defined, it represents a pattern that each matrix value should be evaluated to for each copied template <code>objName</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>objName</code> is mapped to the el-CICD variable <code>OBJ_NAME</code> during rendering for each template.  It is also mapped to the el-CICD variable <code>BASE_OBJ_NAME</code> if <code>objNames</code> is not defined.</p>
+</div>
+</dd>
+<dt class="hdlist1">objNames</dt>
+<dd>
+<p>List of string that represents a matrix value for el-CICD template <code>objName</code> identifier. Each member of the list will result in a to a copy of the template, and that member is assigned to the <code>objName</code> helper attribute.</p>
+</dd>
+<dt class="hdlist1">namespace</dt>
+<dd>
+<p>Namespace a rendered el-CICD template should be deployed to. Can be used in the following way:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the template represents a Kubernetes object, will map directly to <code>metadata.namespace</code>, otherwise, it means nothing.</p>
+</li>
+<li>
+<p>If <code>namespaces</code> is defined, it represents a pattern that each matrix value should be evaluated to for each copied template <code>namespace</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>namespace</code> is mapped to the el-CICD variable <code>NAMESPACE</code> during rendering for each template.  It is also mapped to the el-CICD variable <code>BASE_NAMESPACE</code> if <code>namespaces</code> is not defined.</p>
+</div>
+</dd>
+<dt class="hdlist1">namespaces</dt>
+<dd>
+<p>List of string that represents a matrix value for el-CICD template <code>namespace</code>. Each member of the list will result in a to a copy of the template, and that member is assigned to the <code>namespace</code> helper attribute.</p>
+</dd>
+<dt class="hdlist1">template</dt>
+<dd>
+<p>Arbitrary YAML to render defining the template. Ignored if <code>templateName</code> is defined.</p>
+</dd>
+<dt class="hdlist1">templateName</dt>
+<dd>
+<p>Name of el-CICD template to apply values to.</p>
+</dd>
+<dt class="hdlist1">templateNames</dt>
+<dd>
+<p>List of name of el-CICD templates to apply values to.  Each member of the list will result in a separate rendering based on the template values.</p>
+</dd>
+</dl>
+</div>
+<div class="sect3">
+<h4 id="_must">9.5.1. must*</h4>
+<div class="paragraph">
+<p>Every helper attribute below must evaluate to true for the template to render; i.e. they all have equal precedence when determining whether a template should be rendered or not.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">mustHaveAnyProfile</dt>
+<dd>
+<p>An array of strings representing profiles.  If any profile in this list is active, the template will be rendered.</p>
+</dd>
+<dt class="hdlist1">mustHaveEveryProfile</dt>
+<dd>
+<p>An array of strings representing profiles.  Every profile in this list must be active for the template to render.</p>
+</dd>
+<dt class="hdlist1">mustNotHaveAnyProfile</dt>
+<dd>
+<p>An array of strings representing profiles.  If any profile in this list is active, the template will not be rendered.</p>
+</dd>
+<dt class="hdlist1">mustNotHaveEveryProfile</dt>
+<dd>
+<p>An array of strings representing profiles.  Every profile in this list must not be active for the template to render.</p>
+</dd>
+</dl>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_built_in_templates_2">8.6. Built-in Templates</h3>
-
+<h3 id="_built_in_templates_2">9.6. Built-in Templates</h3>
+<div class="paragraph">
+<p>The following is a comprehensive list of all el-CICD Chart built-in templates and their helper attributes. While the full name of the template is given (e.g. <code>elcicd-kubernetes.cronJob</code>), only the latter part of the name is needed for rendering built-in templates (i.e. <code>cronjob</code>).</p>
+</div>
+<div class="paragraph">
+<p>Helper attributes specific to the built-in template will be listed under each heading, along with a JSON path-like dot notation of where the value will be rendered; i.e. how the value is used in a rendered Kubernetes resource, if applicable. If a default value is defined internally for the helper attribute, it will noted.</p>
+</div>
+<div class="paragraph">
+<p>Unless otherwise described here, the content under each helper attribute mirrors the rendered resource definition as described in their reference documentation.  Follow the link under each template to its reference documentation for more information.</p>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_authentication_resources">9.6.1. <a href="https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/">Kubernetes Authentication Resources</a></h4>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_serviceaccount">9.6.1.1. elcicd-kubernetes.serviceAccount</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/service-account-v1/#ServiceAccount">ServiceAccount</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">automountServiceAccountToken</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">automountServiceAccountToken</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullSecrets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullSecrets</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secrets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secrets</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_authorization_resources">9.6.2. <a href="https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/">Kubernetes Authorization Resources</a></h4>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_clusterrole">9.6.2.1. elcicd-kubernetes.clusterRole</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/cluster-role-v1/">ClusterRole</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregationRule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregationRule</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rules</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_clusterrolebinding">9.6.2.2. elcicd-kubernetes.clusterRoleBinding</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/cluster-role-binding-v1/">ClusterRoleBinding</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roleRef</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roleRef</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subjects</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subjects</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_role">9.6.2.3. elcicd-kubernetes.role</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/role-v1/">Role</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregationRule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregationRule</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rules</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_rolebinding">9.6.2.4. elcicd-kubernetes.roleBinding</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/role-binding-v1/">RoleBinding</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roleRef</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roleRef</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subjects</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subjects</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_cluster_resources">9.6.3. <a href="https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/">Kubernetes Cluster Resources</a></h4>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_namespace">9.6.3.1. elcicd-kubernetes.namespace</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/namespace-v1/">Namespace</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>No attributes to render</em></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_config_and_storage_resources">9.6.4. <a href="https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/">Kubernetes Config and Storage Resources</a></h4>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_configmap">9.6.4.1. elcicd-kubernetes.configMap</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/config-map-v1/">ConfigMap</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">binaryData</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">binaryData</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">immutable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">immutable</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_persistentvolume">9.6.4.2. elcicd-kubernetes.persistentVolume</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/">PersistentVolume</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accessModes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.accessModes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">awsElasticBlockStore</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.awsElasticBlockStore</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">azureDisk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.azureDisk</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">azureFile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.azureFile</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cephfs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.cephfs</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cinder</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.cinder</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">claimRef</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.claimRef</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">csi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.csi</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fc</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.fc</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">flexVolume</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.flexVolume</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">csi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.csi</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">flocker</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.flocker</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gcePersistentDisk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.gcePersistentDisk</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">glusterfs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.glusterfs</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostPath</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.hostPath</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iscsi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.iscsi</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">local</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.local</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mountOptions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.mountOptions</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nfs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.nfs</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodeAffinity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.nodeAffinity</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">persistentVolumeReclaimPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.persistentVolumeReclaimPolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">portworxVolume</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.portworxVolume</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">quobyte</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.quobyte</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rbd</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.rbd</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scaleIO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.scaleIO</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>storageCapacity</strong>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.capacity.storage</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">storageClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.storageClassName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">storageos</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.storageos</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">csi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.csi</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vsphereVolume</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.vsphereVolume</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeMode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.volumeMode</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_persistentvolumeclaim">9.6.4.3. elcicd-kubernetes.persistentVolumeClaim</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/">PersistentVolumeClaim</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accessModes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.accessModes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dataSource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.dataSource</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dataSourceRef</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.dataSourceRef</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.resources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Will override <code>storageRequest</code> and <code>storageLimit</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.selector</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">storageClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.storageClassName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">storageRequest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.resources.requests.storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>resources</code> is defined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">storageLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.resources.limits.storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>resources</code> is defined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeMode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.volumeMode</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.volumeName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_secret">9.6.4.4. elcicd-kubernetes.secret</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/secret-v1/">Secret</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">immutable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">immutable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stringData</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stringData</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_el_cicd_chart_resources">9.6.5. el-CICD Chart Resources</h4>
+<div class="sect4">
+<h5 id="_elcicd_renderer_copyresource">9.6.5.1. elcicd-renderer.copyResource</h5>
+<div class="paragraph">
+<p>copyResource is a special el-CICD Chart helper template for copying resources already deployed to a Kubernetes cluster from one namespace to another. The objName should reflect the name of the resource to be copied in the <code>fromNamespace</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">apiVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">apiVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apiVersion</code> of source object; DEFAULT: "v1"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fromNamespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fromNamespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Namespace of source object</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ignoreAnnotations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ignoreAnnotations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Do not copy annotations from source if "true"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ignoreLabels</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ignoreLabels</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Do not copy labels from source if "true"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kind</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kind</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kind</code> of source object</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If "true", only output WARNING if not found; otherwise,fail</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">srcMetadataName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">srcMetadataName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>objName</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">toNamespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">toNamespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Namespace to copy object to</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_policy_resources">9.6.6. <a href="https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/">Kubernetes Policy Resources</a></h4>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_limitrange">9.6.6.1. elcicd-kubernetes.limitRange</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/limit-range-v1/">LimitRange</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">limits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.limits</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_resourcequota">9.6.6.2. elcicd-kubernetes.resourceQuota</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/resource-quota-v1/">ResourceQuota</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hard</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.hard</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scopes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.scopes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scopeSelector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.scopeSelector</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_service_resources">9.6.7. <a href="https://kubernetes.io/docs/reference/kubernetes-api/service-resources/">Kubernetes Service Resources</a></h4>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_ingress">9.6.7.1. elcicd-kubernetes.ingress</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/service-resources/ingress-v1/">Ingress</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">defaultBackend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.defaultBackend</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">host</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.rules[0].host</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>rules</code> is defined<br>
+DEFAULT: N/A<br>
+<code>elCicdDefaults.ingressHostDomain</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ingressClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.rules.ingressClassName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.rules[0].http.paths[0].path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>rules</code> is defined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pathType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.rules[0].http.paths[0].pathType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>rules</code> is defined<br>
+DEFAULT: <code>Prefix</code><br>
+<code>elCicdDefaults.ingressRulePathType</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.rules[0].http.paths[0].backend.service.port.number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>rules</code> is defined<br>
+DEFAULT: <code>8080</code><br>
+<code>elCicdDefaults.port</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Will override <code>host</code>, <code>path</code>, <code>pathType</code>, and <code>port</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secretName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.tls.secretName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>tls</code> is defined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tls</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.tls</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Will override <code>secretName</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_service">9.6.7.2. elcicd-kubernetes.service</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/">Service</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">containerPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.containerPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Helper atribute to define targetPort if used as part of compound template with a container definition<br>
+Ignored if <code>targetPort</code> is defined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.ports[0].name: ${objName}-port<br>
+spec.ports[0].port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rendering will fail if <code>ports</code> is also defined<br>
+DEFAULT: <code>8080</code><br>
+<code>elCicdDefaults.port</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.ports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rendering will fail if <code>port</code> is also defined<br>
+Overrides <code>containerPort</code>, <code>port</code>, <code>prometheus</code>, <code>protocol</code>, <code>targetPort</code>, and <code>usePrometheus</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">prometheus.port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.ports[1].name: ${objName}-port<br>
+spec.ports[1].port<br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code> is hard-coded<br>
+DEFAULT: <code>9090</code><br>
+<code>elCicdDefaults.prometheusPort</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">prometheus.protocol</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.ports[1].name: ${objName}-port<br>
+spec.ports[1].protocol<br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code> is hard-coded<br>
+DEFAULT: <code>TCP</code><br>
+<code>elCicdDefaults.prometheusProtocol</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">protocol</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.ports[0].protocol</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored if <code>ports</code> is also defined<br>
+DEFAULT: <code>TCP</code><br>
+<code>elCicdDefaults.protocol</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.selector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>elcicd.io/selector</code> will be defined in addition to any optional values here</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">targetPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.targetPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CAUTION: Overrides <code>containerPort</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">usePrometheus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.ports[1].name: prometheus-port<br>
+spec.ports[1].port<br>
+spec.ports[1].protocol<br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Will generate a Prometheus integration port definition from defaults if "true"<br>
+DEFAULT port: <code>9090</code><br>
+<code>elCicdDefaults.prometheusPort</code><br>
+DEFAULT protocol: <code>TCP</code><br>
+<code>elCicdDefaults.prometheusProtocol</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_general_tool_resources">9.6.8. General Tool Resources</h4>
+<div class="paragraph">
+<p>These resources YAML documents for common Kubernetes associated tools, Kustomize and Helm, are not used for rendering to Kubernetes directly.</p>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_chart_yaml">9.6.8.1. elcicd-kubernetes.chart-yaml</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://helm.sh/docs/topics/charts/#the-chartyaml-file">Helm Chart.yaml</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">appVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">appVersion</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deprecated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deprecated</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dependencies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dependencies</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">home</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">home</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">icon</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">icon</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keywords</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keywords</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubeVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubeVersion</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maintainers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maintainers</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sources</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_kustomization">9.6.8.2. elcicd-kubernetes.kustomization</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="http://kubectl.docs.kubernetes.io/references/kustomize/kustomization/">Kustomize kustomization.yaml</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">generators</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">generators</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transformers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transformers</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">validators</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">validators</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_workload_helper_resources">9.6.9. Kubernetes Workload Helper Resources</h4>
+<div class="paragraph">
+<p>The following templates are documented for brevity in the <a href="#_kubernetes_workload_resources">Kubernetes Workload Resources</a> reference documentation, and shouldn&#8217;t be used directly in deployment definitions; i.e. never referenced either in <code>templateName</code> or <code>templateNames</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If a Kubernetes resource contains a PodTemplate, the associated el-CICD template may use all podTemplate and container helper attributes in the root of the template definition.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_container">9.6.9.1. elcicd-kubernetes.container</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container">Container</a><br>
+<strong>RENDERED TO:</strong> <code>[<a href="#_elcicd_kubernetes_podtemplate">PodTemplate</a>].containers[0]</code></p>
+</div>
+<div class="paragraph">
+<p>Containers are rendered in various lists contained in a PodTemplate. If a <a href="#_kubernetes_workload_resources">workload resource</a> contains a PodTemplate, then these helper attributes may be expressed under the root el-CICD template for the first, main container. Other containers in either the main Pod list or other container lists must can otherwise use these helper attributes to define themselves, but should <strong>not</strong> use the default values.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to <code>[PodTemplate].containers[0]</code></th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">args</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">args</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">command</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">command</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">containerPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ports[0].containerPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>8080</code><br>
+<code>elCicdDefaults.port</code><br>
+Primary value for <code>containers[0].containerPort</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">env</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">env</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envFrom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envFrom</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envFrom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envFrom</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">image</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">image</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>elCicdDefaults.image</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>Always</code><br>
+<code>elCicdDefaults.imagePullPolicy</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lifecycle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lifecycle</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">limitsCpu</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.limits.cpu</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">limitsMemory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.limits.memory</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">livenessProbe</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">livenessProbe</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>objName</code><br>
+Default is defined for first Container in list only.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ports[0].containerPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only used if <code>containerPort</code> and <code>targetPort</code> are undefined.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides <code>containerPort</code>, <code>port</code>, <code>prometheus</code>, <code>protocol</code>, <code>targetPort</code>, and <code>usePrometheus</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectedVolumes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SEE: <a href="#_projectedvolumes_by_labels">projectedVolumes By Labels</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.limits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.limits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides <code>limitsCpu</code> and <code>limitsMemory</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.requests</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.requests</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides <code>requestsCpu</code> and <code>requestsMemory</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">readinessProbe</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">readinessProbe</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">requestsCpu</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.requests.cpu</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">requestsMemory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources.requests.memory</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startupProbe</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startupProbe</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">securityContext</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">securityContext</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>DEFAULT:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>allowPrivilegeEscalation: false
+capabilities:
+  drop:
+  - ALL</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stdin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stdin</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stdinOnce</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stdinOnce</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">targetPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ports[0].containerPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only used if <code>containerPort</code> is undefined.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">terminationMessagePolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">terminationMessagePolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tty</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tty</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">usePrometheus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">usePrometheus</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>If <code>true</code>, will generate the following under <code>ports</code>:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>- name: prometheus-port
+  containerPort: &lt;prometheus.port&gt;
+  protocol: &lt;prometheus.protocol&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>DEFAULTS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>containerPort: 9090
+protocol: TCP</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>elCicdDefaults.prometheusPort</code>
+<code>elCicdDefaults.prometheusProtocol</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeDevices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeDevices</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeMounts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeMounts</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workingDir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workingDir</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_podtemplate">9.6.9.2. elcicd-kubernetes.podTemplate</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-template-v1/">PodTemplate</a></p>
+</div>
+<div class="paragraph">
+<p><a href="#_kubernetes_workload_resources">Kubernetes workload resources</a> that generate Pods all include a PodTemplate. The following helper attributes may all be defined under any of those el-CICD templates.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to <code>*.template.spec</code></th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">activeDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">activeDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">affinity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">affinity</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">automountServiceAccountToken</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">automountServiceAccountToken</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">containers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">containers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>containers[0]</code> may be defined at the root of template; otherwise, see <a href="#_elcicd_kubernetes_container">elcicd-kubernetes.container</a> for helper attributes for each container in the list.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dnsConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dnsConfig</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dnsPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dnsPolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enableServiceLinks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enableServiceLinks</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ephemeralContainers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ephemeralContainers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_container">elcicd-kubernetes.container</a> for helper attributes for each container in the list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostAliases</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostAliases</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostIPC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostIPC</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostNetwork</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostNetwork</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostPID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostPID</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostname</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hostname</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullSecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullSecrets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>elCicdDefaults.imagePullSecrets</code><br>
+Overridden by <code>imagePullSecrets</code><br>
+Helper for easily defining a single secret</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullSecrets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imagePullSecrets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>elCicdDefaults.imagePullSecrets</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">initContainers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">initContainers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_container">elcicd-kubernetes.container</a> for helper attributes for each container in the list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodeName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodeName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodeSelector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodeSelector</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">os</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">os</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">overhead</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">overhead</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">preemptionPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">preemptionPolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">priorityClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">priorityClassName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">priority</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">priority</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>TCP</code>
+<code>elCicdDefaults.imagePullSecrets</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">readinessGates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">readinessGates</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">restartPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">restartPolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runtimeClassName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runtimeClassName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">schedulerName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">schedulerName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">securityContext</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">securityContext</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>DEFAULT:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>runAsNonRoot: true
+seccompProfile:
+  type: RuntimeDefault</pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serviceAccount</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serviceAccount</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serviceAccountName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serviceAccountName</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setHostnameAsFQDN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setHostnameAsFQDN</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shareProcessNamespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shareProcessNamespace</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subdomain</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subdomain</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">terminationGracePeriodSeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">terminationGracePeriodSeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tolerations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tolerations</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topologySpreadConstraints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topologySpreadConstraints</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_jobspec">9.6.9.3. elcicd-kubernetes.jobSpec</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/job-v1/#JobSpec">JobSpec</a></p>
+</div>
+<div class="paragraph">
+<p>Job related workload resources, <a href="#_elcicd_kubernetes_cronjob">elcicd-kubernetes.cronJob</a> and <a href="#_elcicd_kubernetes_job">elcicd-kubernetes.job</a>, contain JobSpecs. JobSpecs wrap PodTemplates, and the following helper attributes may be used on the root of the el-CICD templates.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to <code>*.spec</code></th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">activeDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">activeDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">backoffLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">backoffLimit</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">completionMode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">completionMode</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">completions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">completions</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">manualSelector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">manualSelector</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parallelism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parallelism</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">podFailurePolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">podFailurePolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;podTemplate&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">template.spec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_podtemplate">elcicd-kubernetes.podTemplate</a> for further helper attributes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">restartPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">restartPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>Never</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">suspend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">suspend</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ttlSecondsAfterFinished</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ttlSecondsAfterFinished</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kubernetes_workload_resources">9.6.10. <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/">Kubernetes Workload Resources</a></h4>
+<div class="paragraph">
+<p>Except for the horizontalPodAutoscaler, the following el-CICD templates all contains a PodTemplate, and therefore[cols="1,2,4"] may make use of the helper attributes defined up in both <a href="#_elcicd_kubernetes_podtemplate">elcicd-kubernetes.podTemplate</a> and <a href="#_elcicd_kubernetes_container">elcicd-kubernetes.container</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Templates with PodTemplates were designed to integrate easily with both the <a href="#_elcicd_kubernetes_service">elcicd-kubernetes.service</a> and <a href="#_elcicd_kubernetes_ingress">elcicd-kubernetes.ingress</a> el-CICD templates to create <a href="#_compound_built_in_templates">compound templates</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_cronjob">9.6.10.1. elcicd-kubernetes.cronJob</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/cron-job-v1/">CronJob</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">concurrencyPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">concurrencyPolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">failedJobsHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">failedJobsHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;jobSpec&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">template.spec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_jobspec">elcicd-kubernetes.jobSpec</a> for further helper attributes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parallelism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parallelism</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">schedule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">schedule</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startingDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startingDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">successfulJobsHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">successfulJobsHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ttlSecondsAfterFinished</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ttlSecondsAfterFinished</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_daemonset">9.6.10.2. elcicd-kubernetes.daemonSet</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/">DaemonSet</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minReadySeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.minReadySeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;podTemplate&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.template.spec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_podtemplate">elcicd-kubernetes.podTemplate</a> for further helper attributes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">revisionHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.revisionHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">updateStrategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.updateStrategy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_deployment">9.6.10.3. elcicd-kubernetes.deployment</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/">Deployment</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minReadySeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.minReadySeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;podTemplate&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.template.spec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_podtemplate">elcicd-kubernetes.podTemplate</a> for further helper attributes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">progressDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.progressDeadlineSeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">revisionHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.revisionHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DEFAULT: <code>0</code><br>
+<code>elCicdDefaults.deploymentRevisionHistoryLimit</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rollingUpdateMaxSurge</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.strategy.rollupdate.maxSurge</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NOTE: strategyType must be <code>RollingUpdate</code><br>
+DEFAULT: <code>elCicdDefaults.rollingUpdateMaxSurge</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rollingUpdateMaxUnavailable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.strategy.rollupdate.maxUnavailable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NOTE: strategyType must be <code>RollingUpdate</code><br>
+DEFAULT: <code>elCicdDefaults.rollingUpdateMaxUnavailable</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">strategyType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.strategy.type</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_horizontalpodautoscaler">9.6.10.4. elcicd-kubernetes.horizontalPodAutoscaler</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/horizontal-pod-autoscaler-v1/">HorizontalPodAutoscaler</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">behavior</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.behavior</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maxReplicas</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.maxReplicas</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.metrics</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minReplicas</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.minReplicas</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scaleTargetRef</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.scaleTargetRef</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>DEFAULTS:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>apiVersion: apps/v1
+kind: Deployment
+apiVersion: $&lt;OBJ_NAME&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Defaults are rendered for any missing key of the scaleTargetRef</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_job">9.6.10.5. elcicd-kubernetes.job</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/job-v1/">Job</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;jobSpec&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.template.spec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_jobspec">elcicd-kubernetes.jobSpec</a> for further helper attributes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_pod">9.6.10.6. elcicd-kubernetes.pod</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/">Pod</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;podTemplate&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.template.spec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_podtemplate">elcicd-kubernetes.podTemplate</a> for further helper attributes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_elcicd_kubernetes_statefulset">9.6.10.7. elcicd-kubernetes.statefulSet</h5>
+<div class="paragraph">
+<p><strong>RENDERS:</strong> <a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/">StatefulSet</a></p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 90%;">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Helper</th>
+<th class="tableblock halign-left valign-top">Rendered to</th>
+<th class="tableblock halign-left valign-top">NOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minReadySeconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.minReadySeconds</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ordinals</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.ordinals</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">persistentVolumeClaimRetentionPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.persistentVolumeClaimRetentionPolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">podManagementPolicy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.podManagementPolicy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;podTemplate&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.template.spec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#_elcicd_kubernetes_podtemplate">elcicd-kubernetes.podTemplate</a> for further helper attributes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replicas</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.replicas</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">revisionHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.revisionHistoryLimit</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">updateStrategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.updateStrategy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">volumeClaimTemplates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec.volumeClaimTemplates</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-17 00:45:49 UTC
+Last updated 2025-03-12 00:32:18 UTC
 </div>
 </div>
 </body>
