@@ -582,9 +582,10 @@ pre.rouge .gs {
 <ul class="sectlevel3">
 <li><a href="#_defining">3.4.1. Defining</a></li>
 <li><a href="#_referencing">3.4.2. Referencing</a></li>
-<li><a href="#_built_in_variables">3.4.3. Built-in Variables</a></li>
-<li><a href="#_scoping">3.4.4. Scoping</a></li>
-<li><a href="#_overriding">3.4.5. Overriding</a></li>
+<li><a href="#_importing_variable_values_from_files">3.4.3. Importing Variable Values from Files</a></li>
+<li><a href="#_built_in_variables">3.4.4. Built-in Variables</a></li>
+<li><a href="#_scoping">3.4.5. Scoping</a></li>
+<li><a href="#_overriding">3.4.6. Overriding</a></li>
 </ul>
 </li>
 </ul>
@@ -1718,12 +1719,195 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_built_in_variables">3.4.3. Built-in Variables</h4>
+<h4 id="_importing_variable_values_from_files">3.4.3. Importing Variable Values from Files</h4>
+<div class="paragraph">
+<p>Variable values may be imported from one or more files. There following three prefixes tell el-CICD Chart to import data from external files:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="#_file_value_import_prefix">$&lt;FILE|path</a>&gt;</code> will import text from a file at the given <code>path</code>.</p>
+</li>
+<li>
+<p><code><a href="#_config_value_import_prefix">$&lt;CONFIG|path</a>&gt;</code> will import and convert a conf/properties/ini file in to YAML at the given <code>path</code>.</p>
+</li>
+<li>
+<p><code><a href="#_glob_value_import_prefix">$&lt;GLOB|path</a>&gt;</code> will import a map of filenames to each file&#8217;s text content at the given <code>path</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a href="https://helm.sh/docs/chart_template_guide/accessing_files/#helm">The rules</a> defining which files may be accessed are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Files in templates/ cannot be accessed.</p>
+</li>
+<li>
+<p>Files excluded using .helmignore cannot be accessed.</p>
+</li>
+<li>
+<p>Files outside of a Helm application subchart, including those of the parent, cannot be accessed</p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="_file_value_import_prefix">3.4.3.1. <code>FILE</code> Value Import Prefix</h5>
+<div class="paragraph">
+<p>Reads in the contents of a single file at the named path and assigns the text as a string to the variable.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of variables whose values come from files</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>elCicdDefs:
+  VALUE_FROM_FILE_TEXT: $&lt;FILE|path/to/file.py&gt;
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">file.py</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">x</span><span class="o">=</span><span class="mi">5</span>
+<span class="n">y</span><span class="o">=</span><span class="mi">2</span>
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s"> + </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s"> = </span><span class="si">{</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Resulting value of variable</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre>elCicdDefs:
+  VALUE_FROM_FILE_TEXT: |-
+    x=5
+    y=2
+    print(f'{x} + {y} = {x + y}')
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_config_value_import_prefix">3.4.3.2. <code>CONFIG</code> Value Import Prefix</h5>
+<div class="paragraph">
+<p>Reads in the contents of a single file where each line has the form <code>key=value</code> at the named path and assigns the text as a string to the variable. Section headers are ignored.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of variables whose values come from files</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>elCicdDefs:
+  VALUE_FROM_CONFIG_FILE: $&lt;CONFIG|path/to/config/file.ini&gt;
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">file.ini</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="ini"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="py">a</span><span class="p">=</span><span class="s">b</span>
+<span class="py">foo</span> <span class="p">=</span> <span class="s">bar</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Resulting value of variable</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre>elCicdDefs:
+  VALUE_FROM_CONFIG_FILE:
+    a: b
+    foo: bar
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_glob_value_import_prefix">3.4.3.3. GLOB Value Import Prefix</h5>
+<div class="paragraph">
+<p>Reads each file in a directory, and if match the given <a href="https://helm.sh/docs/chart_template_guide/accessing_files/#glob-patterns">glob pattern</a> the files contents will be added to a map with the filename as the key.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of variables whose values come from files</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>elCicdDefs:
+  VALUE_FROM_GLOB: $&lt;GLOB|path/to/files/*&gt;
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">file.py</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">x</span><span class="o">=</span><span class="mi">5</span>
+<span class="n">y</span><span class="o">=</span><span class="mi">2</span>
+<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s"> + </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s"> = </span><span class="si">{</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">file.ini</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="ini"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="py">a</span><span class="p">=</span><span class="s">b</span>
+<span class="py">foo</span> <span class="p">=</span> <span class="s">bar</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Resulting value of variable</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="YAML"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+</pre></td><td class="code"><pre>elCicdDefs:
+  VALUE_FROM_GLOB:
+    file.py: |-
+      x=5
+      y=2
+      print(f'{x} + {y} = {x + y}')
+
+    file.ini: |-
+      a=b
+      foo = bar
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_built_in_variables">3.4.4. Built-in Variables</h4>
 <div class="paragraph">
 <p>el-CICD Chart defines a number of built-in variables for use in templates, Helm and template.</p>
 </div>
 <div class="sect4">
-<h5 id="_helm_built_in_variables">3.4.3.1. Helm Built-In Variables</h5>
+<h5 id="_helm_built_in_variables">3.4.4.1. Helm Built-In Variables</h5>
 <div class="paragraph">
 <p>el-CICD Chart has a few built-in variables derived from <a href="https://helm.sh/docs/chart_template_guide/builtin_objects/">Helm&#8217;s built-in objects</a>.</p>
 </div>
@@ -1753,7 +1937,7 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect4">
-<h5 id="_template_built_in_variables">3.4.3.2. Template Built-In Variables</h5>
+<h5 id="_template_built_in_variables">3.4.4.2. Template Built-In Variables</h5>
 <div class="paragraph">
 <p>Each template has it&#8217;s own set of built-in variables set when being processed for use in deployment definitions:</p>
 </div>
@@ -1796,7 +1980,7 @@ Invalid variable definitions that are valid YAML are simply ignored.  It is not 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_scoping">3.4.4. Scoping</h4>
+<h4 id="_scoping">3.4.5. Scoping</h4>
 <div class="paragraph">
 <p><code>elCicdDefs</code> variables have two different scopes:</p>
 </div>
@@ -1856,7 +2040,7 @@ elCicdTemplates:
 </div>
 </div>
 <div class="sect3">
-<h4 id="_overriding">3.4.5. Overriding</h4>
+<h4 id="_overriding">3.4.6. Overriding</h4>
 <div class="paragraph">
 <p>Variables may be defined or overridden in el-CICD Chart by defining more specific <code>elCicdDefs</code> maps.  The types of <code>elCicdDefs</code> maps are:</p>
 </div>
@@ -1940,7 +2124,7 @@ elCicdDefs-obj-name-PROFILE: <i class="conum" data-value="4"></i><b>(4)</b>
 <p>Each of these types of <code>elCicdDefs</code> maps may be defined at deployment or <strong><em>template scope</em></strong>.</p>
 </div>
 <div class="sect4">
-<h5 id="_order_of_precedence">3.4.5.1. Order Of Precedence</h5>
+<h5 id="_order_of_precedence">3.4.6.1. Order Of Precedence</h5>
 <div class="paragraph">
 <p>Order of precedence determines as which <code>elCicdDefs</code> map determines the ultimate value of a variable if it is defined in multiple variable maps.</p>
 </div>
@@ -4792,7 +4976,7 @@ apiVersion: $&lt;OBJ_NAME&gt;</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-12 00:32:18 UTC
+Last updated 2025-03-14 23:57:47 UTC
 </div>
 </div>
 </body>
