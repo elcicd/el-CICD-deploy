@@ -519,6 +519,117 @@ elCicdDefs:
 <4> `ESCAPED_VARIABLE` has the string value "`$<LITERAL_VALUE>`", which is **NOT** a variable reference, because of the `\` in front of the `$` escaping it.  Note that the final value of `ESCAPED_VARIABLE` does **NOT** contain the backslash.  Backslashes are removed during processing.
 <5> `FOO` and `BAR` are dynamically used to define the variable `foobar`, with a value of `dynamic-foobar-value`.
 
+==== Importing Variable Values from Files
+
+Variable values may be imported from one or more files. There following three prefixes tell el-CICD Chart to import data from external files:
+
+* `<<_file_value_import_prefix, $<FILE|path>>>` will import text from a file at the given `path`.
+* `<<_config_value_import_prefix, $<CONFIG|path>>>` will import and convert a conf/properties/ini file in to YAML at the given `path`.
+* `<<_glob_value_import_prefix, $<GLOB|path>>>` will import a map of filenames to each file's text content at the given `path`.
+
+https://helm.sh/docs/chart_template_guide/accessing_files/#helm[The rules] defining which files may be accessed are:
+
+* Files in templates/ cannot be accessed.
+* Files excluded using .helmignore cannot be accessed.
+* Files outside of a Helm application subchart, including those of the parent, cannot be accessed
+
+===== `FILE` Value Import Prefix
+
+Reads in the contents of a single file at the named path and assigns the text as a string to the variable.
+
+.Example of variables whose values come from files
+[source,YAML,linenums]
+----
+elCicdDefs:
+  VALUE_FROM_FILE_TEXT: $<FILE|path/to/file.py>
+----
+
+.file.py
+[source,python,linenums]
+----
+x=5
+y=2
+print(f'{x} + {y} = {x + y}')
+----
+
+.Resulting value of variable
+[source,YAML,linenums]
+----
+elCicdDefs:
+  VALUE_FROM_FILE_TEXT: |-
+    x=5
+    y=2
+    print(f'{x} + {y} = {x + y}')
+----
+
+===== `CONFIG` Value Import Prefix
+
+Reads in the contents of a single file where each line has the form `key=value` at the named path and assigns the text as a string to the variable. Section headers are ignored.
+
+.Example of variables whose values come from files
+[source,YAML,linenums]
+----
+elCicdDefs:
+  VALUE_FROM_CONFIG_FILE: $<CONFIG|path/to/config/file.ini>
+----
+
+.file.ini
+[source,ini,linenums]
+----
+a=b
+foo = bar
+----
+
+.Resulting value of variable
+[source,YAML,linenums]
+----
+elCicdDefs:
+  VALUE_FROM_CONFIG_FILE:
+    a: b
+    foo: bar
+----
+
+===== GLOB Value Import Prefix
+
+Reads each file in a directory, and if match the given https://helm.sh/docs/chart_template_guide/accessing_files/#glob-patterns[glob pattern] the files contents will be added to a map with the filename as the key.
+
+.Example of variables whose values come from files
+[source,YAML,linenums]
+----
+elCicdDefs:
+  VALUE_FROM_GLOB: $<GLOB|path/to/files/*>
+----
+
+.file.py
+[source,python,linenums]
+----
+x=5
+y=2
+print(f'{x} + {y} = {x + y}')
+----
+
+.file.ini
+[source,ini,linenums]
+----
+a=b
+foo = bar
+----
+
+.Resulting value of variable
+[source,YAML,linenums]
+----
+elCicdDefs:
+  VALUE_FROM_GLOB:
+    file.py: |-
+      x=5
+      y=2
+      print(f'{x} + {y} = {x + y}')
+
+    file.ini: |-
+      a=b
+      foo = bar
+----
+
 ==== Built-in Variables
 
 el-CICD Chart defines a number of built-in variables for use in templates, Helm and template.
