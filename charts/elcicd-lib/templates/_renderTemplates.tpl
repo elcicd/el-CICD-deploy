@@ -168,6 +168,8 @@
     {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAME" $.Release.Name }}
     {{- $_ := set $.Values.elCicdDefs "HELM_RELEASE_NAMESPACE" $.Release.Namespace }}
 
+    {{- include "elcicd-renderer.preProcessFilesAndConfig" (dict "$" $ "elCicdDefs" $.Values.elCicdDefs) }}
+
     {{- include "elcicd-renderer.gatherElCicdTemplates" $ }}
 
     {{- include "elcicd-renderer.filterTemplates" (dict "$" $ "elCicdTemplates" $.Values.elCicdTemplates) }}
