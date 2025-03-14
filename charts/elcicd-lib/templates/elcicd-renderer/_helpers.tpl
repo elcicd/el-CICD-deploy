@@ -67,6 +67,8 @@
 
   {{- $_ := set $.Values "__EC_FILE_PREFIX" "$<FILE|" }}
   {{- $_ := set $.Values "__EC_CONFIG_PREFIX" "$<CONFIG|" }}
+  {{- $_ := set $.Values "__EC_GLOB_PREFIX" "$<GLOB|" }}
+  {{- $_ := set $.Values "__EC_IMPORT_FILES_PREFIX_REGEX" "\\$<(?:FILE|CONFIG|GLOB)\\|" }}
 
   {{- $_ := set $.Values "__EC_ESCAPED_REGEX" "[\\\\][\\$][<]" }}
   {{- $_ := set $.Values "__EC_UNESCAPED_REGEX" "$<" }}

@@ -8,14 +8,18 @@
       {{- if or (kindIs "map" $value) }}
         {{- include "elcicd-renderer.preProcessFilesAndConfig" (dict "$" $ "elCicdDefs" $value) }}
       {{- else if (kindIs "string" $value) }}
-        {{- if (hasPrefix $.Values.__EC_FILE_PREFIX $value) }}
-          {{- $filePath := ( $value | trimPrefix $.Values.__EC_FILE_PREFIX | trimSuffix ">") }}
-          {{- $value = $.Files.Get $filePath }}
-          {{- $_ := set $tplElCicdDefs $variable (toString $value) }}
-        {{- end }}
-  
-        {{- if (hasPrefix $.Values.__EC_CONFIG_PREFIX $variable) }}
-          {{- include "elcicd-renderer.asConfig" (dict "$" $ "variable" $variable "value" $value "elCicdDefs" $tplElCicdDefs) }}
+        {{- if (regexMatch $.Values.__EC_IMPORT_FILES_PREFIX_REGEX $value) }}
+          {{- $filePath := (regexReplaceAll $.Values.__EC_IMPORT_FILES_PREFIX_REGEX  $value "" | trimSuffix ">") }}
+          {{- if (hasPrefix $.Values.__EC_GLOB_PREFIX $value) }}
+            {{- $_ := set $tplElCicdDefs $variable (($.Files.Glob $filePath).AsConfig | fromYaml) }}
+          {{- else }}
+            {{- $newValue := $.Files.Get $filePath }}
+            {{- if (hasPrefix $.Values.__EC_CONFIG_PREFIX $value) }}
+              {{- include "elcicd-renderer.asConfig" (dict "$" $ "variable" $variable "value" $newValue "elCicdDefs" $tplElCicdDefs) }}
+            {{- else }}
+              {{- $_ := set $tplElCicdDefs $variable (toString $newValue) }}
+            {{- end }}
+          {{- end }}
         {{- end }}
       {{- end }}
     {{- end }}
