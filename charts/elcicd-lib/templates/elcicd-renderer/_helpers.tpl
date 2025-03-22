@@ -161,7 +161,7 @@
 */}}
 {{- define "elcicd-renderer.filterTemplates" }}
   {{- $ := get . "$" }}
-  {{- $templates := get . "elCicdTemplates" }}
+  {{- $templates := .elCicdTemplates }}
 
   {{- $_ := set $.Values "elCicdProfiles" ($.Values.elCicdProfiles | default list) }}
 
@@ -207,8 +207,8 @@
 
 {{- define "elcicd-renderer.processFilteringLists" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
-  {{- $resultKey := get . "resultKey" }}
+  {{- $template := .elCicdTemplate }}
+  {{- $resultKey := .resultKey }}
 
   {{- $processValueArgs := (dict "$" $ "elCicdDefs" $.Values.elCicdDefs "resultKey" $resultKey) }}
 

@@ -63,7 +63,7 @@
 */}}
 {{- define "elcicd-kubernetes.ingress" }}
   {{- $ := get . "$" }}
-  {{- $ingressValues := get . "elCicdTemplate" }}
+  {{- $ingressValues := .elCicdTemplate }}
 
 
   {{- $_ := set $ingressValues "kind" "Ingress" }}
@@ -162,7 +162,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.service" }}
   {{- $ := get . "$" }}
-  {{- $svcValues := get . "elCicdTemplate" }}
+  {{- $svcValues := .elCicdTemplate }}
 
   {{- if or ($svcValues.prometheus).port $.Values.usePrometheus }}
     {{- include "elcicd-kubernetes.prometheusAnnotations" . }}

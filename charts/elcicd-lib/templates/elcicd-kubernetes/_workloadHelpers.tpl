@@ -21,7 +21,7 @@ General k8s selector definition.
 */}}
 {{- define "elcicd-kubernetes.labelSelector" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
+  {{- $template := .elCicdTemplate }}
 selector:
   matchExpressions:
   - key: elcicd.io/selector
@@ -48,7 +48,7 @@ Defines the basic structure of a jobTemplate and the keys under it.
 */}}
 {{- define "elcicd-kubernetes.jobTemplate" }}
   {{- $ := get . "$" }}
-  {{- $jobValues := get . "elCicdTemplate" }}
+  {{- $jobValues := .elCicdTemplate }}
 
   {{- include "elcicd-common.metadata" . }}
   {{- include "elcicd-kubernetes.jobSpec" . }}
@@ -90,7 +90,7 @@ Defines the spec.template portion of a Job or JobTemplate (CronJob).
 */}}
 {{- define "elcicd-kubernetes.jobSpec" }}
   {{- $ := get . "$" }}
-  {{- $jobValues := get . "elCicdTemplate" }}
+  {{- $jobValues := .elCicdTemplate }}
 spec:
   {{- $whiteList := list "activeDeadlineSeconds"
                          "backoffLimit"
@@ -170,7 +170,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.podTemplate" }}
   {{- $ := get . "$" }}
-  {{- $podValues := get . "elCicdTemplate" }}
+  {{- $podValues := .elCicdTemplate }}
 
   {{- include "elcicd-common.metadata" . }}
 spec:
@@ -298,8 +298,8 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.containers" }}
 {{- $ := get . "$" }}
-{{- $podValues := get . "podValues" }}
-{{- $containers := get . "containers" }}
+{{- $podValues := .podValues }}
+{{- $containers := .containers }}
 
 {{- $whiteList := list "args"
                        "command"

@@ -24,7 +24,7 @@
 */}}
 {{- define "elcicd-common.apiObjectHeader" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
+  {{- $template := .elCicdTemplate }}
 
 apiVersion: {{ $template.apiVersion | default "v1" }}
 kind: {{ required "Kubernetes API objects require a \"kind\"" $template.kind }}
@@ -65,7 +65,7 @@ metadata:
 */}}
 {{- define "elcicd-common.metadata" }}
   {{- $ := get . "$" }}
-  {{- $metadataValues := get . "elCicdTemplate" }}
+  {{- $metadataValues := .elCicdTemplate }}
 metadata:
   {{- $_ := set $metadataValues "annotations" (mergeOverwrite ($metadataValues.annotations | default dict) ($.Values.elCicdDefaults.annotations | default dict)) }}
   {{- if $metadataValues.annotations }}
@@ -113,7 +113,7 @@ metadata:
 */}}
 {{- define "elcicd-common.labels" }}
   {{- $ := get . "$" }}
-  {{- $labels := get . "labels" }}
+  {{- $labels := .labels }}
 
   {{- $_ := set $labels "app.kubernetes.io/instance" (toString $.Release.Name) }}
   {{- $_ := set $labels "app.kubernetes.io/managed-by" $.Release.Service }}
@@ -146,7 +146,7 @@ metadata:
 */}}
 {{- define "elcicd-common.elcicdLabels" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
+  {{- $template := .elCicdTemplate }}
 
   {{- $selector := $template.elcicdSelector | default (regexReplaceAll "[^\\w-.]" $template.objName "-") }}
   {{- if (gt (len $selector) 63 ) }}
@@ -177,9 +177,9 @@ metadata:
 */}}
 {{- define "elcicd-common.outputToYaml" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
-  {{- $whiteList := get . "whiteList" }}
-  {{- $indent := (quote (get . "indent") | int | default 2) }}
+  {{- $template := .elCicdTemplate }}
+  {{- $whiteList := .whiteList }}
+  {{- $indent := quote .indent | default 2 | int }}
 
   {{- include "elcicd-common.setTemplateDefaultValue" . }}
 
@@ -217,8 +217,8 @@ metadata:
 */}}
 {{- define "elcicd-common.setTemplateDefaultValue" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
-  {{- $whiteList := get . "whiteList" }}
+  {{- $template := .elCicdTemplate }}
+  {{- $whiteList := .whiteList }}
 
   {{- range $key := $whiteList }}
     {{- if not (hasKey $template $key) }}
@@ -245,7 +245,7 @@ metadata:
 */}}
 {{- define "elcicd-common.kubeObjectMetadata" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
+  {{- $template := .elCicdTemplate }}
 
   {{- $_ := set $template.template "apiVersion" ($template.template.apiVersion | default $template.apiVersion | default "v1") }}
   {{- $_ := set $template.template "kind" ($template.template.kind | default $template.kind) }}

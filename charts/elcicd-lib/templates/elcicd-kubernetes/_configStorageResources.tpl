@@ -45,7 +45,7 @@
 */}}
 {{- define "elcicd-kubernetes.configMap" }}
   {{- $ := get . "$" }}
-  {{- $cmValues := get . "elCicdTemplate" }}
+  {{- $cmValues := .elCicdTemplate }}
 
   {{- $_ := set $cmValues "kind" "ConfigMap" }}
   {{- include "elcicd-common.apiObjectHeader" . }}
@@ -104,7 +104,7 @@
 */}}
 {{- define "elcicd-kubernetes.secret" }}
   {{- $ := get . "$" }}
-  {{- $secretValues := get . "elCicdTemplate" }}
+  {{- $secretValues := .elCicdTemplate }}
 
   {{- $_ := set $secretValues "kind" "Secret" }}
   {{- if eq ($secretValues.type | default "") "dockerconfigjson" }}
@@ -201,7 +201,7 @@
 */}}
 {{- define "elcicd-kubernetes.persistentVolume" }}
   {{- $ := get . "$" }}
-  {{- $pvValues := get . "elCicdTemplate" }}
+  {{- $pvValues := .elCicdTemplate }}
 
   {{- $_ := set $pvValues "kind" "PersistentVolume" }}
   {{- include "elcicd-common.apiObjectHeader" . }}
@@ -294,7 +294,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.persistentVolumeClaim" }}
   {{- $ := get . "$" }}
-  {{- $pvcValues := get . "elCicdTemplate" }}
+  {{- $pvcValues := .elCicdTemplate }}
 
   {{- $_ := set $pvcValues "kind" "PersistentVolumeClaim" }}
   {{- include "elcicd-common.apiObjectHeader" . }}

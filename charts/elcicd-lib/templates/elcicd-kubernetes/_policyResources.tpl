@@ -42,7 +42,7 @@
 */}}
 {{- define "elcicd-kubernetes.resourceQuota" }}
   {{- $ := get . "$" }}
-  {{- $quotaValues := get . "elCicdTemplate" }}
+  {{- $quotaValues := .elCicdTemplate }}
 
   {{- $_ := set $quotaValues "kind" "ResourceQuota" }}
   {{- include "elcicd-common.apiObjectHeader" . }}
@@ -80,7 +80,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.limitRange" }}
   {{- $ := get . "$" }}
-  {{- $limitValues := get . "elCicdTemplate" }}
+  {{- $limitValues := .elCicdTemplate }}
 
   {{- $_ := set $limitValues "kind" "LimitRange" }}
   {{- include "elcicd-common.apiObjectHeader" . }}

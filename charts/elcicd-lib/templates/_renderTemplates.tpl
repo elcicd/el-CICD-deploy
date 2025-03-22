@@ -209,7 +209,7 @@
 */}}
 {{- define "elcicd-renderer.renderTemplate" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
+  {{- $template := .elCicdTemplate }}
 
   {{- $templateName := $template.templateName | default "elcicd-renderer.__render-default" }}
   {{- if not (contains "." $templateName) }}
@@ -243,7 +243,7 @@
 */}}
 {{- define "elcicd-renderer.__render-default" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
+  {{- $template := .elCicdTemplate }}
 
   {{- $_ := required (printf "template or templateName must be defined for an el-CICD Chart template: %s" $template.objName) $template.template }}
 

@@ -42,10 +42,10 @@
 */}}
 {{- define "elcicd-renderer.mergeElCicdDefs" }}
   {{- $ := get . "$" }}
-  {{- $elCicdDefsMap := get . "elCicdDefsMap" }}
-  {{- $destElCicdDefs := get . "destElCicdDefs" }}
-  {{- $baseObjName := get . "baseObjName" }}
-  {{- $objName := get . "objName" }}
+  {{- $elCicdDefsMap := .elCicdDefsMap }}
+  {{- $destElCicdDefs := .destElCicdDefs }}
+  {{- $baseObjName := .baseObjName }}
+  {{- $objName := .objName }}
 
   {{- range $profile := $.Values.elCicdProfiles }}
     {{- if not (regexMatch $.Values.__EC_PROFILE_REGEX $profile) }}
@@ -102,8 +102,8 @@
   NOTE: This template was created because of potential anamolies with Helm's deepcopy.  Will need to revisit in the future.
 */}}
 {{- define "elcicd-renderer.deepCopyDict" }}
-  {{- $srcDict := get . "srcDict" }}
-  {{- $destDict := get . "destDict" }}
+  {{- $srcDict := .srcDict }}
+  {{- $destDict := .destDict }}
 
   {{- if $srcDict }}
     {{- range $key, $value := $srcDict }}

@@ -51,7 +51,7 @@
 */}}
 {{- define "elcicd-kubernetes.cronjob" }}
   {{- $ := get . "$" }}
-  {{- $cjValues := get . "elCicdTemplate" }}
+  {{- $cjValues := .elCicdTemplate }}
 
   {{- $_ := set $cjValues "kind" "CronJob" }}
   {{- $_ := set $cjValues "apiVersion" ($cjValues.apiVersion | default "batch/v1") }}
@@ -114,7 +114,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.deployment" }}
   {{- $ := get . "$" }}
-  {{- $deployValues := get . "elCicdTemplate" }}
+  {{- $deployValues := .elCicdTemplate }}
 
   {{- $_ := set $deployValues "kind" "Deployment" }}
   {{- $_ := set $deployValues "apiVersion" ($deployValues.apiVersion | default "apps/v1") }}
@@ -204,7 +204,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.horizontalPodAutoscaler" }}
   {{- $ := get . "$" }}
-  {{- $hpaValues := get . "elCicdTemplate" }}
+  {{- $hpaValues := .elCicdTemplate }}
 
   {{- $_ := set $hpaValues "kind" "HorizontalPodAutoscaler" }}
   {{- $_ := set $hpaValues "apiVersion" ($hpaValues.apiVersion | default "autoscaling/v2") }}
@@ -243,7 +243,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.job" }}
   {{- $ := get . "$" }}
-  {{- $jobValues := get . "elCicdTemplate" }}
+  {{- $jobValues := .elCicdTemplate }}
 
   {{- $_ := set $jobValues "kind" "Job" }}
   {{- $_ := set $jobValues "apiVersion" ($jobValues.apiVersion | default "batch/v1") }}
@@ -273,7 +273,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.pod" }}
   {{- $ := get . "$" }}
-  {{- $podValues := get . "elCicdTemplate" }}
+  {{- $podValues := .elCicdTemplate }}
 
   {{- $_ := set $podValues "kind" "Pod" }}
   {{- include "elcicd-common.apiObjectHeader" . }}
@@ -319,7 +319,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.statefulset" }}
   {{- $ := get . "$" }}
-  {{- $stsValues := get . "elCicdTemplate" }}
+  {{- $stsValues := .elCicdTemplate }}
 
   {{- $_ := set $stsValues "kind" "StatefulSet" }}
   {{- $_ := set $stsValues "apiVersion" ($stsValues.apiVersion | default "apps/v1") }}
@@ -375,7 +375,7 @@ spec:
 */}}
 {{- define "elcicd-kubernetes.daemonset" }}
   {{- $ := get . "$" }}
-  {{- $dsValues := get . "elCicdTemplate" }}
+  {{- $dsValues := .elCicdTemplate }}
 
   {{- $_ := set $dsValues "kind" "DaemonSet" }}
   {{- $_ := set $dsValues "apiVersion" ($dsValues.apiVersion | default "apps/v1") }}
