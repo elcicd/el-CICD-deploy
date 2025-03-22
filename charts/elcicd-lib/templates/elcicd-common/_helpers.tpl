@@ -179,7 +179,7 @@ metadata:
   {{- $ := get . "$" }}
   {{- $template := get . "elCicdTemplate" }}
   {{- $whiteList := get . "whiteList" }}
-  {{- $indent := (quote (get . "indent") | default 2 | int) }}
+  {{- $indent := (quote (get . "indent") | int | default 2) }}
 
   {{- include "elcicd-common.setTemplateDefaultValue" . }}
 
