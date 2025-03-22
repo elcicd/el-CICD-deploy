@@ -32,7 +32,7 @@
 */}}
 {{- define "elcicd-kubernetes.namespace" }}
   {{- $ := get . "$" }}
-  {{- $nsValues := get . "elCicdTemplate" }}
+  {{- $nsValues := .elCicdTemplate }}
 
   {{- $_ := set $nsValues "kind" "Namespace" }}
   {{- include "elcicd-common.apiObjectHeader" . }}

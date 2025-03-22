@@ -46,7 +46,7 @@
 */}}
 {{- define "elcicd-kubernetes.clusterRole" }}
   {{- $ := get . "$" }}
-  {{- $roleValues := get . "elCicdTemplate" }}
+  {{- $roleValues := .elCicdTemplate }}
 
   {{- $_ := set $roleValues "kind" "ClusterRole" }}
   {{- include "elcicd-kubernetes.genericRoleDefinition" . }}
@@ -80,7 +80,7 @@
 */}}
 {{- define "elcicd-kubernetes.clusterRoleBinding" }}
   {{- $ := get . "$" }}
-  {{- $clusterRoleBindingValues := get . "elCicdTemplate" }}
+  {{- $clusterRoleBindingValues := .elCicdTemplate }}
 
   {{- $_ := set $clusterRoleBindingValues "kind" "ClusterRoleBinding" }}
   {{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}
@@ -114,7 +114,7 @@
 */}}
 {{- define "elcicd-kubernetes.role" }}
   {{- $ := get . "$" }}
-  {{- $roleValues := get . "elCicdTemplate" }}
+  {{- $roleValues := .elCicdTemplate }}
 
   {{- $_ := set $roleValues "kind" "Role" }}
   {{- include "elcicd-kubernetes.genericRoleDefinition" . }}
@@ -148,7 +148,7 @@
 */}}
 {{- define "elcicd-kubernetes.roleBinding" }}
   {{- $ := get . "$" }}
-  {{- $roleBindingValues := get . "elCicdTemplate" }}
+  {{- $roleBindingValues := .elCicdTemplate }}
 
   {{- $_ := set $roleBindingValues "kind" "RoleBinding" }}
   {{- include "elcicd-kubernetes.genericRoleBindingDefinition" . }}

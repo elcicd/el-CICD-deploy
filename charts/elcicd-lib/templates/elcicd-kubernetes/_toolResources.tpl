@@ -3,7 +3,7 @@ el-CIDC support for templating an a kustomization.  No expectation of known keys
 */}}
 {{- define "elcicd-kubernetes.kustomization" }}
   {{- $ := get . "$" }}
-  {{- $kustValues := get . "elCicdTemplate" }}
+  {{- $kustValues := .elCicdTemplate }}
 
   {{- $_ := set $kustValues "kind" "Kustomization" }}
   {{- $_ := set $kustValues "apiVersion" ($kustValues.apiVersion | default "kustomize.config.k8s.io/v1beta1") }}
@@ -19,7 +19,7 @@ el-CIDC support for templating an a Chart.yaml for generating a Helm Chart.
 */}}
 {{- define "elcicd-kubernetes.chart-yaml" }}
   {{- $ := get . "$" }}
-  {{- $chartValues := get . "elCicdTemplate" }}
+  {{- $chartValues := .elCicdTemplate }}
 
 apiVersion: {{ $chartValues.apiVersion | default "v2" }}
 name: {{ $chartValues.objName }}

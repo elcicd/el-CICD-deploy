@@ -34,7 +34,7 @@
 */}}
 {{- define "elcicd-kubernetes.serviceAccount" }}
 {{- $ := get . "$" }}
-{{- $svcAcctValues := get . "elCicdTemplate" }}
+{{- $svcAcctValues := .elCicdTemplate }}
 
 {{- $_ := set $svcAcctValues "kind" "ServiceAccount" }}
 {{- include "elcicd-common.apiObjectHeader" . }}

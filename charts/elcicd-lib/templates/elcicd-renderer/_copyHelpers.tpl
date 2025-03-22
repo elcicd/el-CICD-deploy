@@ -26,7 +26,7 @@
 */}}
 {{- define "elcicd-renderer.copyResource" }}
   {{- $ := get . "$" }}
-  {{- $template := get . "elCicdTemplate" }}
+  {{- $template := .elCicdTemplate }}
   
   {{- $resource := (lookup ($template.apiVersion | default "v1") 
                             $template.kind 

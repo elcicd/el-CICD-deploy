@@ -1,7 +1,7 @@
 
 {{- define "elcicd-renderer.preProcessFilesAndConfig" }}
   {{- $ := get . "$" }}
-  {{- $tplElCicdDefs := get . "elCicdDefs" }}
+  {{- $tplElCicdDefs := .elCicdDefs }}
   
   {{- range $variable, $value := $tplElCicdDefs }}
     {{- if $value }}
@@ -28,9 +28,9 @@
 
 {{- define "elcicd-renderer.asConfig" }}
   {{- $ := get . "$" }}
-  {{- $variable := get . "variable" }}
-  {{- $value := get . "value" }}
-  {{- $tplElCicdDefs := get . "elCicdDefs" }}
+  {{- $variable := .variable }}
+  {{- $value := .value }}
+  {{- $tplElCicdDefs := .elCicdDefs }}
   
   {{- $_ := unset $tplElCicdDefs $variable }}
   {{- $variable = ( $variable | trimPrefix $.Values.__EC_CONFIG_PREFIX | trimSuffix ">") }}

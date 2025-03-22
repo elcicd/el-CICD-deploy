@@ -43,8 +43,8 @@
 
 {{- define "elcicd-kubernetes.projectedVolumes" }}
   {{- $ := get . "$" }}
-  {{- $podValues := get . "podValues" }}
-  {{- $containerVals := get . "containerVals" }}
+  {{- $podValues := .podValues }}
+  {{- $containerVals := .containerVals }}
   
   {{- $volumeMounts := dict }}
   {{- range $projectedVolume := $containerVals.projectedVolumes }}
@@ -71,8 +71,8 @@
 
 {{- define "elcicd-kubernetes.createProjectedVolume" }}
   {{- $ := get . "$" }}
-  {{- $podValues := get . "podValues" }}
-  {{- $projectedVolume := get . "projectedVolume" }}
+  {{- $podValues := .podValues }}
+  {{- $projectedVolume := .projectedVolume }}
 
   {{- $volume := dict }}
   {{- $_ := set $volume "name" $projectedVolume.name }}
@@ -114,8 +114,8 @@
 
 {{- define "elcicd-kubernetes.addConfigMapsAndSecretsByLabels" }}
   {{- $ := get . "$" }}
-  {{- $podValues := get . "podValues" }}
-  {{- $projectedVolume := get . "projectedVolume" }}
+  {{- $podValues := .podValues }}
+  {{- $projectedVolume := .projectedVolume }}
   
   {{- $resultKey := uuidv4 }}
 

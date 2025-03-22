@@ -56,7 +56,7 @@ Service Prometheus Annotations definition.  Add the following annotations:
 */}}
 {{- define "elcicd-kubernetes.prometheusAnnotations" }}
   {{- $ := get . "$" }}
-  {{- $svcValues := get . "elCicdTemplate" }}
+  {{- $svcValues := .elCicdTemplate }}
 
   {{- $_ := set $svcValues "annotations" ($svcValues.annotations | default dict) }}
 
@@ -86,7 +86,7 @@ Service Prometheus 3Scale definition.  Adds the following annotations:
 */}}
 {{- define "elcicd-kubernetes.3ScaleAnnotations" }}
   {{- $ := get . "$" }}
-  {{- $svcValues := get . "elCicdTemplate" }}
+  {{- $svcValues := .elCicdTemplate }}
 
   {{- $_ := set $svcValues "annotations" ($svcValues.annotations | default dict) }}
   {{- $_ := set $svcValues.annotations "discovery.3scale.net/path" ($svcValues.threeScale.port | default $svcValues.port | default $.Values.elCicdDefaults.port) }}
