@@ -2,14 +2,14 @@ apiVersion: v1
 entries:
   elcicd-chart:
   - apiVersion: v2
-    created: "2025-03-22T23:32:58.637274207Z"
+    created: "2025-06-18T20:02:10.877547341Z"
     dependencies:
     - name: elcicd-lib
       repository: file://../elcicd-lib
       version: 0.1.0
     description: 'An all-in-one chart meant with the ability to define variables and
       deployment profiles in values.yml files. '
-    digest: 97db421d5973f89fc6d31e3cbf8f86d187511c57d896bfedd491cb1c93fe0f2b
+    digest: 1a2bd78a9c72a1bb094350a2896087f70a328c2a7757c187c5f5a18f1fb63900
     keywords:
     - values.yml
     - parameterized
@@ -23,10 +23,10 @@ entries:
     version: 0.1.0
   elcicd-lib:
   - apiVersion: v2
-    created: "2025-03-22T23:32:58.638495358Z"
+    created: "2025-06-18T20:02:10.878311756Z"
     description: 'An all-in-one library chart meant to be added as a dependency for
       enabling variables and deployment profiles in values.yml files. '
-    digest: 88ab5788beb930dff1b8069293198c4a6f7bf7048de5f4d815429e778b30e305
+    digest: b827c2dbd84c99ab62847849efa50e1b49715c7650c87e2da8cb43ca74b63d85
     keywords:
     - values.yml
     - parameterized
@@ -40,4 +40,4 @@ entries:
     urls:
     - elcicd-lib-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-22T23:32:58.636336494Z"
+generated: "2025-06-18T20:02:10.876535515Z"
