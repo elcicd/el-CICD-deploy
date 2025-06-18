@@ -638,10 +638,18 @@
   {{- $matches := regexFindAll $.Values.__EC_PARAM_REGEX $value -1 }}
   {{- $localProcessedVars := list }}
   {{- range $elCicdRef := $matches }}
-    {{- $elCicdVarName := regexReplaceAll $.Values.__EC_PARAM_REGEX $elCicdRef "${1}" }}
+    {{- $varConversion := regexReplaceAll $.Values.__EC_PARAM_REGEX $elCicdRef "${1}" }}
+    {{- $elCicdVarName := regexReplaceAll $.Values.__EC_PARAM_REGEX $elCicdRef "${2}" }}
     {{- if not (has $elCicdRef $localProcessedVars) }}
       {{- $localProcessedVars = append $localProcessedVars $elCicdVarName }}
       {{- $varValue := get $elCicdDefs $elCicdVarName }}
+      {{- if $varConversion }}
+          {{- $varConversionKey := uuidv4 }}
+          {{- include "elcicd-renderer.convertVar"
+              (dict "$" $ "varConversion" $varConversion "varValue" $varValue "resultKey" $varConversionKey) }}
+          {{- $varValue = get $.Values.__EC_RESULT_DICT $varConversionKey }}
+          {{- $_ := unset $.Values.__EC_RESULT_DICT $varConversionKey }}
+      {{- end }}
 
       {{- if (kindIs "string" $varValue) }}
         {{- if not (hasPrefix "$" $elCicdRef) }}
@@ -655,10 +663,10 @@
             {{- $varValue = replace "\n" $indentation $varValue }}
           {{- end }}
         {{- end }}
-        {{- $value = replace $elCicdRef (toString $varValue) $value }}
+        {{- $value = (replace $elCicdRef (toString $varValue) $value) }}
       {{- else }}
-        {{- if gt (len $matches) 1 }}
-          {{- fail (print "Attempting multiple, non-string objects into value: \nSOURCE: " $value "\nVARIABLE(" $elCicdVarName "):" (toYaml $varValue)) }}
+        {{- if (ne $elCicdRef $value) }}
+          {{- fail (print "Attempting to insert non-string variables into string:\n" $elCicdVarName ": " (toYaml $varValue)) }}
         {{- end }}
 
         {{- if (kindIs "map" $varValue) }}
@@ -682,5 +690,50 @@
   {{- $_ := set $.Values.__EC_RESULT_DICT $processedVarsKey (concat $processedVarsList ($localProcessedVars | uniq)) }}
 
   {{- $_ := set $.Values.__EC_RESULT_DICT $resultKey $value }}
+{{- end }}
+
+{{- define "elcicd-renderer.convertVar" }}
+  {{- $ := get . "$" }}
+  {{- $varConversion := .varConversion }}
+  {{- $varValue := .varValue }}
+  {{- $resultKey := .resultKey }}
+
+  {{- if eq $varConversion "atoi" }}
+    {{- $varValue = atoi $varValue }}
+  {{- else if eq $varConversion "float64" }}
+    {{- $varValue = float64 $varValue }}
+  {{- else if eq $varConversion "int" }}
+    {{- $varValue = int $varValue }}
+  {{- else if eq $varConversion "int64" }}
+    {{- $varValue = int64 $varValue }}
+  {{- else if eq $varConversion "toDecimal" }}
+    {{- $varValue = toDecimal $varValue }}
+  {{- else if eq $varConversion "toString" }}
+    {{- $varValue = toString $varValue }}
+  {{- else if eq $varConversion "toStrings" }}
+    {{- $varValue = toStrings $varValue }}
+  {{- else if eq $varConversion "toJson" }}
+    {{- $varValue = toJson $varValue }}
+  {{- else if eq $varConversion "toPrettyJson" }}
+    {{- $varValue = toPrettyJson $varValue }}
+  {{- else if eq $varConversion "toRawJson" }}
+    {{- $varValue = toRawJson $varValue }}
+  {{- else if eq $varConversion "fromYaml" }}
+    {{- $varValue = fromYaml $varValue }}
+  {{- else if eq $varConversion "fromJson" }}
+    {{- $varValue = fromJson $varValue }}
+  {{- else if eq $varConversion "fromJsonArray" }}
+    {{- $varValue = fromJsonArray $varValue }}
+  {{- else if eq $varConversion "toYaml" }}
+    {{- $varValue = toYaml $varValue }}
+  {{- else if eq $varConversion "toToml" }}
+    {{- $varValue = toToml $varValue }}
+  {{- else if eq $varConversion "fromYamlArray" }}
+    {{- $varValue = fromYamlArray $varValue }}
+  {{- else }}
+    {{- fail (printf "INVALID CONVERSION [%s] FOR VARIABLE [%s]" $varConversion $varValue) }}
+  {{- end }}
+  {{- $_ := set $.Values.__EC_RESULT_DICT $resultKey $varValue }}
+
 {{- end }}
 
