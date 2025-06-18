@@ -68,11 +68,12 @@
   {{- $_ := set $.Values "__EC_FILE_PREFIX" "$<FILE|" }}
   {{- $_ := set $.Values "__EC_CONFIG_PREFIX" "$<CONFIG|" }}
   {{- $_ := set $.Values "__EC_GLOB_PREFIX" "$<GLOB|" }}
-  {{- $_ := set $.Values "__EC_IMPORT_FILES_PREFIX_REGEX" "\\$<(?:FILE|CONFIG|GLOB)\\|" }}
+  {{- $_ := set $.Values "__EC_IMPORT_FILES_PREFIX_REGEX" `\$<(?:FILE|CONFIG|GLOB)\|` }}
 
-  {{- $_ := set $.Values "__EC_ESCAPED_REGEX" "[\\\\][\\$][<]" }}
+  {{- $_ := set $.Values "__EC_ESCAPED_REGEX" `[\\][\$][<]` }}
   {{- $_ := set $.Values "__EC_UNESCAPED_REGEX" "$<" }}
-  {{- $_ := set $.Values "__EC_PARAM_REGEX" "(?:^|[^\\\\])\\$<([\\w]+?(?:[-][\\w]+?)*)>" }}
+  
+  {{- $_ := set $.Values "__EC_PARAM_REGEX" `(?:^|[^\\])\$<(?:([\w]+)[|])?([\w]+?(?:[-][\w]+?)*)>` }}
 
   {{- $_ := set $.Values "__EC_OBJNAME_REGEX" "[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*" }}
   {{- $_ := set $.Values "__EC_PROFILE_REGEX" "[A-Z0-9]+(?:[._][A-Z0-9]+)*" }}

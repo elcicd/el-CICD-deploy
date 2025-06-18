@@ -110,7 +110,7 @@
       metadata:
         namespace: bar-2
 
-      If objNames and owere used in the above:
+      If objNames and were used in the above:
       objNames:
       - foo
       - bar
