@@ -642,13 +642,13 @@
     {{- $elCicdVarName := regexReplaceAll $.Values.__EC_PARAM_REGEX $elCicdRef "${2}" }}
     {{- if not (has $elCicdRef $localProcessedVars) }}
       {{- $localProcessedVars = append $localProcessedVars $elCicdVarName }}
-      {{- $varValue := get $elCicdDefs $elCicdVarName }}
+      {{- $varValue := ternary (get $elCicdDefs $elCicdVarName) nil (hasKey $elCicdDefs $elCicdVarName) }}
       {{- if $varConversion }}
-          {{- $varConversionKey := uuidv4 }}
-          {{- include "elcicd-renderer.convertVar"
-              (dict "$" $ "varConversion" $varConversion "varValue" $varValue "resultKey" $varConversionKey) }}
-          {{- $varValue = get $.Values.__EC_RESULT_DICT $varConversionKey }}
-          {{- $_ := unset $.Values.__EC_RESULT_DICT $varConversionKey }}
+        {{- $varConversionKey := uuidv4 }}
+        {{- include "elcicd-renderer.convertVar"
+            (dict "$" $ "varConversion" $varConversion "varValue" $varValue "resultKey" $varConversionKey) }}
+        {{- $varValue = get $.Values.__EC_RESULT_DICT $varConversionKey }}
+        {{- $_ := unset $.Values.__EC_RESULT_DICT $varConversionKey }}
       {{- end }}
 
       {{- if (kindIs "string" $varValue) }}
