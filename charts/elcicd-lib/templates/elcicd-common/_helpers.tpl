@@ -71,14 +71,16 @@ metadata:
   {{- if $metadataValues.annotations }}
   annotations:
     {{- range $key, $value := $metadataValues.annotations }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ ternary ($value | quote) $value (empty $value) }}
     {{- end }}
   {{- end }}
   {{- $_ := set $metadataValues "labels" (mergeOverwrite ($metadataValues.labels | default dict) ($.Values.elCicdDefaults.labels | default dict)) }}
   labels:
     {{- include "elcicd-common.labels" (dict "$" $ "labels" $metadataValues.labels) }}
     {{- $_ := set $metadataValues.labels "elcicd.io/selector" (include "elcicd-common.elcicdLabels" .) }}
-    {{- $metadataValues.labels | toYaml | nindent 4 }}
+    {{- range $key, $value := $metadataValues.labels }}
+    {{ $key }}: {{ ternary ($value | quote) $value (empty $value) }}
+    {{- end }}
   name: {{ required (printf "Unnamed apiObject Name in template: %s!" $metadataValues.templateName) $metadataValues.objName }}
   namespace: {{ $metadataValues.namespace | default $metadataValues.tplElCicdDefs.NAME_SPACE }}
 {{- end }}
@@ -192,7 +194,7 @@ metadata:
         {{- $key | nindent $indent }}:
         {{- $value | toYaml | nindent $indent }}
       {{- else if kindIs "string" $value }}
-        {{- $key | nindent $indent }}: {{ $value | quote }}
+        {{- $key | nindent $indent }}: {{ ternary ($value | quote) $value (empty $value) }}
       {{- else }}
         {{- $key | nindent $indent }}: {{ $value }}
       {{- end }}

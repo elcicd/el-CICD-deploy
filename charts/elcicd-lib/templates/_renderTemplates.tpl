@@ -182,7 +182,7 @@
       {{- $_ := unset $.Values "renderProcessedValues" }}
       {{- $_ := unset $.Values.global "renderProcessedValues" }}
 # renderProcessedValues: true
-      {{- $.Values | toYaml | nindent 0}}
+      {{- $.Values | toYaml | nindent 0 }}
     {{- else }}
       {{- range $template := $.Values.allTemplates }}
         {{- include "elcicd-renderer.renderTemplate" (dict "$" $ "elCicdTemplate" $template) }}
