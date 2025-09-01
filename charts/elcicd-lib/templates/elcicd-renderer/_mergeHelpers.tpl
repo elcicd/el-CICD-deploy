@@ -98,7 +98,7 @@
   Recursively copies all keys and values of a source dictionary into a destination dictionary; i.e. all maps
   contained in the source map and any of its values are copies of the original.  String and lists do not need
   to be copied, since they are immutable.
-  
+
   NOTE: This template was created because of potential anamolies with Helm's deepcopy.  Will need to revisit in the future.
 */}}
 {{- define "elcicd-renderer.deepCopyDict" }}
@@ -112,7 +112,7 @@
         {{- include "elcicd-renderer.deepCopyDict" (dict "srcDict" $value "destDict" $newValue) }}
         {{- $value = $newValue }}
       {{- end }}
-      {{- $_ := set $destDict $key ($value | default "") }}
+      {{- $_ := set $destDict $key $value }}
     {{- end }}
   {{- end }}
 {{- end }}
