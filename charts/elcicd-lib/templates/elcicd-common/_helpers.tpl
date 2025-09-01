@@ -194,7 +194,7 @@ metadata:
         {{- $key | nindent $indent }}:
         {{- $value | toYaml | nindent $indent }}
       {{- else if kindIs "string" $value }}
-        {{- $key | nindent $indent }}: {{ ternary ($value | quote) $value (empty $value) }}
+        {{- $key | nindent $indent }}: {{ $value | quote }}
       {{- else }}
         {{- $key | nindent $indent }}: {{ $value }}
       {{- end }}
