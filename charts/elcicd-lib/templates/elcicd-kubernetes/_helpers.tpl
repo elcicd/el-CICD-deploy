@@ -2,34 +2,34 @@
   ======================================
   elcicd-kubernetes.initElCicdDefaults
   ======================================
-  
+
   Initialize elCicdDefaults for elcicd-kubernetes.  Sets the following defaults if they aren't already set in a *values.yaml:
-  
+
   - deploymentRevisionHistoryLimit -> 0
   - port -> "8080"
   - protocol -> "TCP"
   - ingressRulePath -> "/"
   - ingressRulePathType -> "Prefix"
-  
+
   Prometheus and 3Scale defaults are provided:
-  
+
   - prometheusPort -> "9090"
   - prometheusPath -> "/metrics"
   - prometheusScheme -> "https"
   - prometheusScrape -> "false"
   - prometheusProtocol -> "TCP"
-  
+
   - 3ScaleScheme -> "https"
 */}}
 {{- define "elcicd-kubernetes.initElCicdDefaults" }}
   {{- $ := . }}
-  
+
   {{- $_ := set $.Values.elCicdDefaults "annotations" ($.Values.elCicdDefaults.annotations | default dict) }}
   {{- $_ := set $.Values.elCicdDefaults "labels" ($.Values.elCicdDefaults.labels | default dict) }}
-  
+
   {{- $_ := set $.Values.elCicdDefaults "deploymentRevisionHistoryLimit" ($.Values.elCicdDefaults.deploymentRevisionHistoryLimit | default 0) }}
 
-  {{- $_ := set $.Values.elCicdDefaults "imagePullPolicy" ($.Values.elCicdDefaults.imagePullPolicy | default "Always") }}
+  {{- $_ := set $.Values.elCicdDefaults "imagePullPolicy" ($.Values.elCicdDefaults.imagePullPolicy | default "IfNotPresent") }}
 
   {{- $_ := set $.Values.elCicdDefaults "port" ($.Values.elCicdDefaults.port | default "8080") }}
   {{- $_ := set $.Values.elCicdDefaults "protocol" ($.Values.elCicdDefaults.protocol | default "TCP") }}
