@@ -72,7 +72,7 @@
 
   {{- $_ := set $.Values "__EC_ESCAPED_REGEX" `[\\][\$][<]` }}
   {{- $_ := set $.Values "__EC_UNESCAPED_REGEX" "$<" }}
-  
+
   {{- $_ := set $.Values "__EC_PARAM_REGEX" `(?:^|[^\\])\$<(?:([\w]+)[|])?([\w]+?(?:[-][\w]+?)*)>` }}
 
   {{- $_ := set $.Values "__EC_OBJNAME_REGEX" "[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*" }}

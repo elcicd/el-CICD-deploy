@@ -307,7 +307,7 @@
     {{- $args := dict "$" $ "parentMap" $template "elCicdDefs" $tplElCicdDefs }}
     {{- include "elcicd-renderer.preProcessElCicdDefsMapNames" $args }}
 
-    {{- $args := dict "$" $ 
+    {{- $args := dict "$" $
                       "elCicdDefsMap" $.Values
                       "destElCicdDefs" $tplElCicdDefs
                       "baseObjName" $template.baseObjName
@@ -426,7 +426,7 @@
     {{- $newValue := get $.Values.__EC_RESULT_DICT $resultKey }}
     {{- $_ := unset $.Values.__EC_RESULT_DICT $resultKey }}
 
-    {{- if and (not (and (kindIs "string" $newValue) (empty $newValue))) (not (eq (typeOf $newValue) "<nil>")) }}
+    {{- if (not (eq (typeOf $newValue) "<nil>")) }}
       {{- $_ := set $map $key $newValue }}
       {{- include "elcicd-renderer.replaceRefsInMapKey" (dict "$" $ "map" $map "key" $key "elCicdDefs" $elCicdDefs "resultKey" $resultKey) }}
     {{- else }}
@@ -506,7 +506,7 @@
     {{- $newElement := get $.Values.__EC_RESULT_DICT $sliceResultKey }}
     {{- $_ := unset $.Values.__EC_RESULT_DICT $sliceResultKey }}
 
-    {{- if and (not (and (kindIs "string" $newElement) (empty $newElement))) (not (eq (typeOf $newElement) "<nil>")) }}
+    {{- if (not (eq (typeOf $newElement) "<nil>")) }}
       {{- $newSlice = append $newSlice $newElement }}
     {{- end }}
   {{- end }}
@@ -571,7 +571,7 @@
     {{- else if (kindIs "string" $value) }}
       {{- $processedVarsKey := uuidv4 }}
       {{- include "elcicd-renderer.replaceVarRefsInString"
-                  (dict "$" $ 
+                  (dict "$" $
                         "value" $value
                         "elCicdDefs" $elCicdDefs
                         "processedVarsList" $processedVarsList
