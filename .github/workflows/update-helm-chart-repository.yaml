@@ -28,6 +28,8 @@ on:
 jobs:
   package-charts:
     runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }} #
     permissions:
       contents: write
       packages: write
@@ -50,6 +52,7 @@ jobs:
         git config --global user.name "elcicd"
         git config --global user.email "elcicd@donotreply.org"
         git pull
+        git switch ${BRANCH_NAME}
 
     - name: Helm Installation
       uses: azure/setup-helm@v3
