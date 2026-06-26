@@ -64,7 +64,7 @@ elCicdTemplates:
   - $<MULTI_LINGUAL_PROFILE> # <.>
   elCicdDefs-$<ENGLISH>: # <.>
     PAGE_CONTENT:  $<DEFAULT_PAGE_CONTENT>
-  elCicdDefs-$<ESPANOL>: 
+  elCicdDefs-$<ESPANOL>:
     PAGE_CONTENT: <h1>¡Hola desde $<OBJ_NAME> en el lanzamiento $<HELM_RELEASE_NAME>!<h1>
   data:
     $<OBJ_NAME>: $<HTML_PAGE>
@@ -99,7 +99,7 @@ NOTE: This naming standard was chosen so that resource names, which must follow 
 .... If an `elCicdDefs-*` map ends in just a dash, or has two dashes within it because a variable used to define it is empty, it will be ignored.
 
 ==== Deploy the httpd server without an active deployment profile
-:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --rollback-on-failure -n elcicd-chart-demo --create-namespace -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :result-image: deployment-profiles-default-screenshot.png
 :helm-manifest-file: deployment-profiles-default-manifest
 :kubectl-get-file: deployment-profiles-default-kubectl-get
@@ -133,7 +133,7 @@ include::general-steps/verify-httpd-reachable.adoc[]
 include::general-steps/uninstall-chart.adoc[]
 
 ==== Install the httpd server with the `MULTI_LINGUAL` deployment profile
-:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace --set elCicdProfiles='{MULTI_LINGUAL}' -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --rollback-on-failure -n elcicd-chart-demo --create-namespace --set elCicdProfiles='{MULTI_LINGUAL}' -f elcicd-demo-4.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :result-image: deployment-profiles-multi-lingual-screenshot.png
 :helm-manifest-file: deployment-profiles-multi-lingual-manifest
 :kubectl-get-file: deployment-profiles-multi-lingual-kubectl-get

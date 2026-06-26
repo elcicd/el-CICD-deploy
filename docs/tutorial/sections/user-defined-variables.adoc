@@ -1,5 +1,5 @@
 === User-defined Variables
-:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-3.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --rollback-on-failure -n elcicd-chart-demo --create-namespace -f elcicd-demo-3.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :result-image: user-defined-variables-screenshot.png
 :helm-manifest-file: user-defined-variables-manifest
 :kubectl-get-file: user-defined-variables-kubectl-get

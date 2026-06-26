@@ -642,7 +642,8 @@
     {{- $elCicdVarName := regexReplaceAll $.Values.__EC_PARAM_REGEX $elCicdRef "${2}" }}
     {{- if not (has $elCicdRef $localProcessedVars) }}
       {{- $localProcessedVars = append $localProcessedVars $elCicdVarName }}
-      {{- $varValue := ternary (get $elCicdDefs $elCicdVarName) nil (hasKey $elCicdDefs $elCicdVarName) }}
+      {{- $varValue := get $elCicdDefs $elCicdVarName }}
+
       {{- if $varConversion }}
         {{- $varConversionKey := uuidv4 }}
         {{- include "elcicd-renderer.convertVar"
@@ -666,7 +667,7 @@
         {{- $value = (replace $elCicdRef (toString $varValue) $value) }}
       {{- else }}
         {{- if (ne $elCicdRef $value) }}
-          {{- fail (print "Attempting to insert non-string variables into string:\n" $elCicdVarName ": " (toYaml $varValue)) }}
+          {{- fail (print "Attempting to insert non-string variables into string:\n" $elCicdVarName ": " (toYaml $varValue) " | " $elCicdRef " | " (toYaml $value)) }}
         {{- end }}
 
         {{- if (kindIs "map" $varValue) }}

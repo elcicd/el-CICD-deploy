@@ -111,7 +111,7 @@ NOTE: There is rarely if ever a reason to use a raw template when cl-CICD Chart 
 
 [discrete]
 ==== Tutorial steps
-:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-5.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --rollback-on-failure -n elcicd-chart-demo --create-namespace -f elcicd-demo-5.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :helm-manifest-file: free-form-templates-manifest
 :kubectl-get-file: free-form-templates-kubectl-get
 

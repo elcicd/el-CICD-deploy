@@ -1,5 +1,5 @@
 === Compound el-CICD Chart Templates
-:helm-update-command: helm upgrade --install --atomic -n elcicd-chart-demo --create-namespace -f elcicd-demo-2.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
+:helm-update-command: helm upgrade --install --rollback-on-failure -n elcicd-chart-demo --create-namespace -f elcicd-demo-2.yaml elcicd-chart-demo elcicd-charts/elcicd-chart
 :result-image: rhel-test-page-screenshot.png
 :helm-manifest-file: compound-template-manifest
 :kubectl-get-file: compound-template-kubectl-get
