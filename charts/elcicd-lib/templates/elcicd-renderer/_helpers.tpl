@@ -65,10 +65,15 @@
   {{- $_ := set $.Values "__EC_MAX_DEPTH" 15 }}
   {{- $_ := set $.Values "__EC_ORIG_VALUE_KEY" "__EC_ORIG_VALUE_KEY" }}
 
-  {{- $_ := set $.Values "__EC_FILE_PREFIX" "$<FILE|" }}
+  {{- $_ := set $.Values "__EC_CONFIG_PREFIX" "$<BASE64|" }}
   {{- $_ := set $.Values "__EC_CONFIG_PREFIX" "$<CONFIG|" }}
+
+  {{- $_ := set $.Values "__EC_FILE_PREFIX" "$<FILE|" }}
+  {{- $_ := set $.Values "__EC_FILE_PREFIX" "$<CONFIG_FILE|" }}
+  {{- $_ := set $.Values "__EC_FILE_PREFIX" "$<SECRET_CONFIG_FILE|" }}
   {{- $_ := set $.Values "__EC_GLOB_PREFIX" "$<GLOB|" }}
-  {{- $_ := set $.Values "__EC_IMPORT_FILES_PREFIX_REGEX" `\$<(?:FILE|CONFIG|GLOB)\|` }}
+  {{- $_ := set $.Values "__EC_SECRET_GLOB_PREFIX" "$<SECRET_GLOB|" }}
+  {{- $_ := set $.Values "__EC_IMPORT_FILES_PREFIX_REGEX" `\$<(?:FILE|CONFIG_FILE|SECRET_CONFIG_FILE|GLOB|SECRET_GLOB)\|` }}
 
   {{- $_ := set $.Values "__EC_ESCAPED_REGEX" `[\\][\$][<]` }}
   {{- $_ := set $.Values "__EC_UNESCAPED_REGEX" "$<" }}
