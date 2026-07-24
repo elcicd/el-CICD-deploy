@@ -59,7 +59,6 @@
 spec:
   {{- $whiteList := list "concurrencyPolicy"
                          "failedJobsHistoryLimit"
-                         "parallelism"
                          "schedule"
                          "startingDeadlineSeconds"
                          "successfulJobsHistoryLimit"
