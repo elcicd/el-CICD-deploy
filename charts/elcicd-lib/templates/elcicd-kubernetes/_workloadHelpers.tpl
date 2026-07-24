@@ -94,11 +94,16 @@ Defines the spec.template portion of a Job or JobTemplate (CronJob).
 spec:
   {{- $whiteList := list "activeDeadlineSeconds"
                          "backoffLimit"
+                         "backoffLimitPerIndex"
                          "completionMode"
                          "completions"
                          "manualSelector"
+                         "maxFailedIndexes"
                          "parallelism"
                          "podFailurePolicy"
+                         "podReplacementPolicy"
+                         "selector"
+                         "successPolicy"
                          "suspend"
                          "ttlSecondsAfterFinished" }}
   {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $jobValues "whiteList" $whiteList) }}
