@@ -61,8 +61,7 @@ spec:
                          "failedJobsHistoryLimit"
                          "schedule"
                          "startingDeadlineSeconds"
-                         "successfulJobsHistoryLimit"
-                         "ttlSecondsAfterFinished" }}
+                         "successfulJobsHistoryLimit" }}
   {{- include "elcicd-common.outputToYaml" (dict "$" $ "elCicdTemplate" $cjValues "whiteList" $whiteList) }}
   jobTemplate: {{ include "elcicd-kubernetes.jobTemplate" . | indent 4 }}
 {{- end }}
